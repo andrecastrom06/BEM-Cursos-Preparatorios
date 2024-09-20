@@ -8,11 +8,6 @@
     src="https://img.shields.io/github/commit-activity/t/Fcc2187/BEM-Cursos-Preparatorios?style=flat&logo=github"
     alt="Commit Activity"
   />
-  <a href="LICENSE.md"
-    ><img
-      src="https://img.shields.io/github/license/Fcc2187/BEM-Cursos-Preparatorios"
-      alt="License"
-  /></a>
 </p>
 
 # 📚 BEM CURSOS 📚
