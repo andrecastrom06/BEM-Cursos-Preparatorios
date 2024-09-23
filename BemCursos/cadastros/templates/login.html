@@ -1,32 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+    <script>
+        function toggleLoginFields() {
+            const userType = document.getElementById("user_type").value;
+            const alunoFields = document.getElementById("aluno-fields");
+            const funcionarioFields = document.getElementById("funcionario-fields");
+
+            if (userType === "aluno") {
+                alunoFields.style.display = "block";
+                funcionarioFields.style.display = "none";
+            } else if (userType === "funcionario") {
+                alunoFields.style.display = "none";
+                funcionarioFields.style.display = "block";
+            }
+        }
+    </script>
 </head>
 <body>
-    <h2>Login</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <div>
-            <label for="username">Usuário:</label>
-            <input type="text" name="username" required>
-        </div>
-        <div>
-            <label for="password">Senha:</label>
-            <input type="password" name="password" required>
-        </div>
-        <button type="submit">Entrar</button>
-    </form>
-
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <div class="container">
+        <h2>Login</h2>
+        
+        {% if messages %}
+            <div class="error">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="user_type">Você é:</label>
+                <select id="user_type" name="user_type" onchange="toggleLoginFields()">
+                    <option value="">Selecione...</option>
+                    <option value="aluno">Aluno</option>
+                    <option value="funcionario">Funcionário</option>
+                </select>
+            </div>
+            
+            <div id="aluno-fields" style="display:none;">
+                <div class="form-group">
+                    <label for="username">Nome de Usuário (Aluno):</label>
+                    <input type="text" id="username" name="username" placeholder="Digite seu nome de usuário">
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha (Aluno):</label>
+                    <input type="password" id="password" name="password" placeholder="Digite sua senha">
+                </div>
+            </div>
+            
+            <div id="funcionario-fields" style="display:none;">
+                <div class="form-group">
+                    <label for="func_username">Nome de Usuário (Funcionário):</label>
+                    <input type="text" id="func_username" name="func_username" placeholder="Digite seu nome de usuário">
+                </div>
+                <div class="form-group">
+                    <label for="func_password">Senha (Funcionário):</label>
+                    <input type="password" id="func_password" name="func_password" placeholder="Digite sua senha">
+                </div>
+            </div>
+            <button type="submit" class="btn">Entrar</button>
+        </form>
+    </div>
 </body>
 </html>

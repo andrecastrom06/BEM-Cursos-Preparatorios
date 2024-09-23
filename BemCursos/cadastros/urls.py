@@ -1,8 +1,8 @@
 from django.urls import path
-from . import views
+from .views import LoginView, FuncionarioView, home
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('login/', views.def_login, name='login'),
-    path('principal/', views.principal, name='principal'),
+    path('', home, name='home'),
+    path('login', LoginView.as_view(), name='login'),
+    path('funcionario', FuncionarioView.as_view(), name='funcionario'),  # Nova rota para a página de funcionários
 ]
