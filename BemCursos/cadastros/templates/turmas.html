@@ -37,20 +37,22 @@
             $('.remover-turma').on('click', function() {
                 var turmaId = $(this).data('id');
                 var confirmDelete = confirm('Tem certeza que deseja remover esta turma?');
-
+    
                 if (confirmDelete) {
                     $.ajax({
-                        url: '{% url "remover_turma" 0 %}'.replace('0', turmaId),  // URL para remover
+                        url: '{% url "remover_turma" 0 %}'.replace('0', turmaId),
                         type: 'POST',
                         data: {
-                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                            'method': 'DELETE',  // Passando o método DELETE via POST
+                            'turma_id': turmaId  // Adicionando ID da turma para remoção
                         },
                         success: function(response) {
                             alert(response.status);
-                            $('#turma-' + turmaId).remove();  // Remove a linha da tabela
+                            $('#turma-' + turmaId).remove();
                         },
                         error: function(xhr, status, error) {
-                            alert('Erro ao remover a turma.');
+                            alert('Erro ao remover a turma: ' + xhr.responseText);  // Mostrar a resposta do servidor
                         }
                     });
                 }
