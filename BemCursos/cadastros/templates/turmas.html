@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Turmas</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h2>Lista de Turmas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Unidade</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for turma in turmas %}
+            <tr id="turma-{{ turma.id }}">
+                <td>{{ turma.nome }}</td>
+                <td>{{ turma.unidade }}</td>
+                <td>
+                    <a href="{% url 'editar_turma' turma.id %}">Editar</a>
+                    <button class="remover-turma" data-id="{{ turma.id }}">Remover</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'adicionar_turma' %}">Adicionar Turma</a>
+
+    <script>
+        $(document).ready(function() {
+            $('.remover-turma').on('click', function() {
+                var turmaId = $(this).data('id');
+                var confirmDelete = confirm('Tem certeza que deseja remover esta turma?');
+
+                if (confirmDelete) {
+                    $.ajax({
+                        url: '{% url "remover_turma" 0 %}'.replace('0', turmaId),  // URL para remover
+                        type: 'POST',
+                        data: {
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            alert(response.status);
+                            $('#turma-' + turmaId).remove();  // Remove a linha da tabela
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Erro ao remover a turma.');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
