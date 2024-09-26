@@ -23,6 +23,7 @@
                 <td>{{ turma.unidade }}</td>
                 <td>
                     <a href="{% url 'editar_turma' turma.id %}">Editar</a>
+                    <a href="{% url 'listar_alunos' turma.id %}">Gerenciar Alunos</a> <!-- Novo botão para gerenciar alunos -->
                     <button class="remover-turma" data-id="{{ turma.id }}">Remover</button>
                 </td>
             </tr>

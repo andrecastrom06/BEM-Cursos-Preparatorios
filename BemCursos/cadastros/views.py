@@ -2,7 +2,7 @@ from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
-from .models import Turma
+from .models import Aluno, Turma
 from django.contrib import messages
 
 # superuser
@@ -23,10 +23,6 @@ class LoginView(View):
     def post(self, request):
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return render ('alunos.html')
         if username == 'bemcursos' and password == 'preparatoriobem':
             return redirect('turmas')  # Redirecionar para página de turmas
         else:
@@ -81,3 +77,51 @@ class TurmaView(View):
 
         # Após adicionar ou editar, redirecionar para a lista de turmas
         return redirect('turmas')
+    
+class AlunoView(TurmaView):  # Herda de TurmaView
+    template_name_list = 'alunos.html'
+    template_name_add = 'adicionar_aluno.html'
+    template_name_edit = 'editar_aluno.html'
+
+    # Exibir lista de alunos ou formulário para adicionar/editar
+    def get(self, request, turma_id, aluno_id=None):
+        turma = get_object_or_404(Turma, id=turma_id)
+
+        if aluno_id:  # Editar aluno existente
+            aluno = get_object_or_404(Aluno, id=aluno_id)
+            return render(request, self.template_name_edit, {'turma': turma, 'aluno': aluno})
+        elif request.path.endswith('adicionar/'):  # Página para adicionar novo aluno
+            return render(request, self.template_name_add, {'turma': turma})
+        else:  # Listar alunos da turma
+            alunos = Aluno.objects.filter(turma=turma)
+            return render(request, self.template_name_list, {'turma': turma, 'alunos': alunos})
+
+    # Adicionar ou editar aluno (POST request)
+    def post(self, request, turma_id, aluno_id=None):
+        turma = get_object_or_404(Turma, id=turma_id)
+
+        # Verifica se é uma requisição de exclusão
+        if request.POST.get('method') == 'DELETE':
+            aluno_id = request.POST.get('aluno_id')
+            try:
+                aluno = get_object_or_404(Aluno, id=aluno_id)
+                aluno.delete()
+                return JsonResponse({'status': 'Aluno removido com sucesso!'})
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=400)
+
+        # Se não for uma exclusão, trata como adição ou edição de aluno
+        nome = request.POST.get('nome')
+        idade = request.POST.get('idade')
+
+        if aluno_id:  # Atualizando um aluno existente
+            aluno = get_object_or_404(Aluno, id=aluno_id)
+            aluno.nome = nome
+            aluno.idade = idade
+            aluno.turma = turma  # Associa o aluno à turma
+            aluno.save()
+        else:  # Adicionando um novo aluno
+            Aluno.objects.create(nome=nome, idade=idade, turma=turma)
+            
+        # Após adicionar ou editar, redirecionar para a lista de alunos da turma
+        return redirect('listar_alunos', turma_id=turma_id)
