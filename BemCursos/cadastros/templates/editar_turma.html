@@ -4,24 +4,178 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Turma</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(65, 88, 208);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 20px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar .profile h3 {
+            margin: 10px 0 5px;
+            color: black;
+        }
+
+        .sidebar .profile p {
+            color: #555;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar nav a {
+            text-decoration: none;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: rgb(65, 88, 208);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgb(35, 218, 67);
+        }
+
+        .container {
+            flex: 1;
+            padding: 20px;
+            background-color: rgb(65, 88, 208);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            margin-top: 0;
+        }
+
+        form {
+            background-color: rgb(35, 218, 67);
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 15px;
+            color: white;
+            font-weight: bold;
+        }
+
+        input[type="text"]{
+            width: calc(100% - 20px); 
+            padding: 10px; 
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+        }
+        select {
+            width: calc(100% - 0px); 
+            padding: 10px; 
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            text-align: center;
+            display: block;
+            margin-top: 20px;
+            color: white;
+            text-decoration: none;
+            background-color: rgb(35, 218, 67);
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        a:hover {
+            background-color: rgb(26, 170, 50);
+        }
+    </style>
 </head>
 <body>
-    <h2>Editar Turma</h2>
-    <form method="post">
-        {% csrf_token %}
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" value="{{ turma.nome }}" required>
-        <br>
-        <label for="unidade">Unidade:</label>
-        <select id="unidade" name="unidade" required>
-            <option value="">Selecione a unidade</option>
-            <option value="Casa Forte">Casa Forte</option>
-            <option value="Olinda">Olinda</option>
-            <option value="Boa Viagem">Boa Viagem</option>
-        </select>
-        <br>
-        <button type="submit">Salvar</button>
-    </form>
-    <a href="{% url 'turmas' %}">Voltar</a>
+    
+     <div class="sidebar">
+        <div class="profile">
+            <h3>Nome e Sobrenome</h3>
+            <p>Função</p>
+        </div>
+        <nav>
+            <a href="#">Turmas</a>
+            <a href="#">Ranking Geral</a>
+            <a href="#">Notas</a>
+        </nav>
+    </div>
+
+
+    
+    <div class="container">
+        <h2>Editar Turma</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" value="{{ turma.nome }}" required>
+
+            <label for="unidade">Unidade:</label>
+            <select id="unidade" name="unidade" required>
+                <option value="">Selecione a unidade</option>
+                <option value="Casa Forte" {% if turma.unidade == "Casa Forte" %}selected{% endif %}>Casa Forte</option>
+                <option value="Olinda" {% if turma.unidade == "Olinda" %}selected{% endif %}>Olinda</option>
+                <option value="Boa Viagem" {% if turma.unidade == "Boa Viagem" %}selected{% endif %}>Boa Viagem</option>
+            </select>
+
+            <button type="submit">Salvar</button>
+        </form>
+        <a href="{% url 'turmas' %}">Voltar</a>
+    </div>
+
 </body>
 </html>
