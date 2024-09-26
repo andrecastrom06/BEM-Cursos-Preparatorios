@@ -10,6 +10,6 @@ urlpatterns = [
     path('turmas/<int:turma_id>/remover/', TurmaView.as_view(), name='remover_turma'),
     path('turmas/<int:turma_id>/alunos/', AlunoView.as_view(), name='listar_alunos'),
     path('turmas/<int:turma_id>/alunos/adicionar/', AlunoView.as_view(), name='adicionar_aluno'),
-    path('alunos/<int:aluno_id>/editar/', AlunoView.as_view(), name='editar_aluno'),
-    path('alunos/<int:aluno_id>/remover/', AlunoView.as_view(), name='remover_aluno'),
+    path('turmas/<int:turma_id>/alunos/<int:aluno_id>/editar/', AlunoView.as_view(), name='editar_aluno'),
+    path('turmas/<int:turma_id>/alunos/<int:aluno_id>/remover/', AlunoView.as_view(), name='remover_aluno'),
 ]
