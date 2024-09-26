@@ -21,34 +21,17 @@ class LoginView(View):
         return render(request, self.template_name)
 
     def post(self, request):
-        user_type = request.POST.get('user_type')
-        if user_type == 'aluno':
-            return self._login_aluno(request)
-        elif user_type == 'funcionario':
-            return self._login_funcionario(request)
-        return render(request, self.template_name)
-
-    # Encapsulamento de comportamento de login em métodos específicos para clareza.
-    def _login_aluno(self, request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')  # Redirecionar para a página do aluno
-        else:
-            messages.error(request, 'Credenciais de aluno inválidas.')
-            return render(request, self.template_name)
-
-    def _login_funcionario(self, request):
-        username = request.POST.get('func_username')
-        password = request.POST.get('func_password')
+            return render ('alunos.html')
         if username == 'bemcursos' and password == 'preparatoriobem':
             return redirect('turmas')  # Redirecionar para página de turmas
         else:
-            messages.error(request, 'Credenciais de funcionário inválidas.')
+            messages.error(request, 'Usuário ou senha inválidos.')
             return render(request, self.template_name)
-
 
 # Centralizando todas as operações relacionadas a Turma em uma única classe
 # para simplificar o diagrama de classes e facilitar o desenvolvimento.
