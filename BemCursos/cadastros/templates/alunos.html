@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alunos da Turma</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function confirmarRemocao(form) {
+            const confirmacao = confirm("Você realmente deseja remover este aluno?");
+            if (confirmacao) {
+                form.submit();  // Envia o formulário para remover o aluno
+            }
+        }
+    </script>
 </head>
 <body>
     <h2>Alunos da Turma: {{ turma.nome }}</h2>
@@ -22,10 +30,12 @@
                 <td>{{ aluno.nome }}</td>
                 <td>{{ aluno.idade }}</td>
                 <td>
-                    <a href="{% url 'editar_aluno' aluno.id %}">Editar</a>
-                    <form action="{% url 'remover_aluno' aluno.id %}" method="POST" style="display:inline;">
+                    <a href="{% url 'editar_aluno' turma.id aluno.id %}">Editar</a>
+                    <form method="post" action="{% url 'remover_aluno' turma.id aluno.id %}" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit">Remover</button>
+                        <input type="hidden" name="method" value="DELETE">
+                        <input type="hidden" name="aluno_id" value="{{ aluno.id }}">
+                        <button type="button" onclick="confirmarRemocao(this.form)">Remover Aluno</button>
                     </form>
                 </td>
             </tr>
@@ -34,7 +44,7 @@
     </table>
 
     <h3>Adicionar Novo Aluno</h3>
-    <form method="POST">
+    <form method="POST" action="{% url 'adicionar_aluno' turma.id %}">
         {% csrf_token %}
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" required><br>

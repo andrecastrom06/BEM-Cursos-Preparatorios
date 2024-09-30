@@ -106,9 +106,11 @@ class AlunoView(TurmaView):  # Herda de TurmaView
             try:
                 aluno = get_object_or_404(Aluno, id=aluno_id)
                 aluno.delete()
-                return JsonResponse({'status': 'Aluno removido com sucesso!'})
+                messages.success(request, 'Aluno removido com sucesso!')  # Adiciona uma mensagem de sucesso
             except Exception as e:
-                return JsonResponse({'error': str(e)}, status=400)
+                messages.error(request, 'Erro ao remover o aluno: ' + str(e))  # Mensagem de erro
+
+            return redirect('listar_alunos', turma_id=turma_id)  # Redireciona para a lista de alunos
 
         # Se não for uma exclusão, trata como adição ou edição de aluno
         nome = request.POST.get('nome')
