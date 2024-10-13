@@ -1,46 +1,58 @@
 from django.views import View
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from .models import Aluno, Turma
 from django.contrib import messages
+from django.contrib.auth.models import User
+
 
 # superuser
 # username 'bemcursos'
 # password 'preparatoriobem'
 
-# A home é simples e não precisa de herança, pois só faz um render básico.
+# Redireciona para a página de login ao acessar a home
 def home(request):
-    return render(request, 'login.html')
+    return redirect('login')
 
-#Herda View, metodo basico do Django
 class LoginView(View):
     template_name = 'login.html'
 
     def get(self, request):
+        # Realiza logout automático quando acessa a página de login
+        logout(request)
         return render(request, self.template_name)
 
     def post(self, request):
+        user_type = request.POST.get('user_type')  # Obtém o tipo de usuário
         username = request.POST.get('username')
         password = request.POST.get('password')
-        if username == 'bemcursos' and password == 'preparatoriobem':
-            return redirect('turmas')  # Redirecionar para página de turmas
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)  # Autentica o usuário
+            
+            # Verifica o tipo de usuário e redireciona para a página apropriada
+            if user_type == 'funcionario' and username == 'bemcursos' and password == 'preparatoriobem':
+                return redirect('turmas')  # Altere para a URL do painel do funcionário
+            
+            elif user_type == 'responsavel':
+                return redirect('responsavel')  # Altere para a URL do painel do responsável
         else:
             messages.error(request, 'Usuário ou senha inválidos.')
             return render(request, self.template_name)
 
-# Centralizando todas as operações relacionadas a Turma em uma única classe
-# para simplificar o diagrama de classes e facilitar o desenvolvimento.
-
-#Encapsulamento: Os métodos para manipular os dados das turmas estão todos dentro de uma única classe
-#organizando melhor o código e mantendo a coesão.
-
-class TurmaView(View):
+# Utiliza LoginRequiredMixin para garantir que apenas usuários autenticados acessem essas views
+class TurmaView(LoginRequiredMixin, View):
+    login_url = '/login/'  # Redireciona para login se não autenticado
     template_name_list = 'turmas.html'
     template_name_add = 'adicionar_turma.html'
     template_name_edit = 'editar_turma.html'
 
-    # Listar ou exibir formulário para adicionar/editar turmas
+    # Página de listagem ou adicionar/editar turmas
     def get(self, request, turma_id=None):
         if turma_id:  # Página de editar turma
             turma = get_object_or_404(Turma, id=turma_id)
@@ -53,35 +65,43 @@ class TurmaView(View):
 
     # Adicionar ou editar turma (POST request)
     def post(self, request, turma_id=None):
-        # Verifica se é uma requisição de exclusão
-        if request.POST.get('method') == 'DELETE':  
+        if request.POST.get('method') == 'DELETE':  # Exclusão de turma
             turma_id = request.POST.get('turma_id')
             try:
                 turma = get_object_or_404(Turma, id=turma_id)
-                turma.delete()
-                return JsonResponse({'status': 'Turma removida com sucesso!'})
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=400)  # Retorna um erro em caso de falha
 
-        # Se não for uma requisição de exclusão, trata como adição ou edição
+                # Obter todos os alunos associados à turma
+                alunos = Aluno.objects.filter(turma=turma)
+
+                # Excluir todos os alunos e seus usuários
+                for aluno in alunos:
+                    if aluno.user:  # Verifique se o aluno tem um usuário associado
+                        aluno.user.delete()  # Remove o usuário do banco de dados
+                    aluno.delete()  # Deleta o aluno
+
+                turma.delete()  # Deleta a turma
+                return JsonResponse({'status': 'Turma e alunos removidos com sucesso!'})
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=400)
+
+        # Se não for uma exclusão, trata como adição ou edição de turma
         nome = request.POST.get('nome')
         unidade = request.POST.get('unidade')
 
-        if turma_id:  # Atualizando uma turma existente
+        if turma_id:  # Atualizando turma existente
             turma = get_object_or_404(Turma, id=turma_id)
             turma.nome = nome
             turma.unidade = unidade
             turma.save()
-        else:  # Adicionando uma nova turma
+        else:  # Criando nova turma
             Turma.objects.create(nome=nome, unidade=unidade)
 
-        # Após adicionar ou editar, redirecionar para a lista de turmas
         return redirect('turmas')
-    
+
 class AlunoView(TurmaView):  # Herda de TurmaView
+    login_url = '/login/'  # Redireciona para login se não autenticado
     template_name_list = 'alunos.html'
     template_name_add = 'adicionar_aluno.html'
-    template_name_edit = 'editar_aluno.html'
 
     # Exibir lista de alunos ou formulário para adicionar/editar
     def get(self, request, turma_id, aluno_id=None):
@@ -96,34 +116,58 @@ class AlunoView(TurmaView):  # Herda de TurmaView
             alunos = Aluno.objects.filter(turma=turma)
             return render(request, self.template_name_list, {'turma': turma, 'alunos': alunos})
 
-    # Adicionar ou editar aluno (POST request)
     def post(self, request, turma_id, aluno_id=None):
         turma = get_object_or_404(Turma, id=turma_id)
 
-        # Verifica se é uma requisição de exclusão
-        if request.POST.get('method') == 'DELETE':
-            aluno_id = request.POST.get('aluno_id')
-            try:
-                aluno = get_object_or_404(Aluno, id=aluno_id)
-                aluno.delete()
-                messages.success(request, 'Aluno removido com sucesso!')  # Adiciona uma mensagem de sucesso
-            except Exception as e:
-                messages.error(request, 'Erro ao remover o aluno: ' + str(e))  # Mensagem de erro
+        if request.POST.get('method') == 'DELETE':  # Verifica se a requisição é para deletar
+            aluno_id = request.POST.get('aluno_id')  # Obtém o ID do aluno a ser deletado
+            aluno = get_object_or_404(Aluno, id=aluno_id)
 
+            # Excluir o usuário associado ao aluno
+            if aluno.user:  # Verifique se o aluno tem um usuário associado
+                aluno.user.delete()  # Remove o usuário do banco de dados
+
+            aluno.delete()  # Deleta o aluno
+            messages.success(request, 'Aluno e usuário removidos com sucesso!')  # Mensagem de sucesso
             return redirect('listar_alunos', turma_id=turma_id)  # Redireciona para a lista de alunos
 
-        # Se não for uma exclusão, trata como adição ou edição de aluno
+        # Novo código para adicionar um aluno
         nome = request.POST.get('nome')
+        sobrenome = request.POST.get('sobrenome')
+        cpf = request.POST.get('cpf')
         idade = request.POST.get('idade')
 
-        if aluno_id:  # Atualizando um aluno existente
+        if aluno_id:  # Atualizando aluno existente
             aluno = get_object_or_404(Aluno, id=aluno_id)
             aluno.nome = nome
+            aluno.sobrenome = sobrenome
+            aluno.cpf = cpf
             aluno.idade = idade
-            aluno.turma = turma  # Associa o aluno à turma
+            aluno.turma = turma
             aluno.save()
-        else:  # Adicionando um novo aluno
-            Aluno.objects.create(nome=nome, idade=idade, turma=turma)
-            
-        # Após adicionar ou editar, redirecionar para a lista de alunos da turma
+        else:  # Criando novo aluno
+            aluno = Aluno.objects.create(
+                nome=nome,
+                sobrenome=sobrenome,
+                cpf=cpf,
+                idade=idade,
+                turma=turma
+            )
+            # Gerar login e senha para o responsável
+            username, password = aluno.gerar_login()
+            user = User.objects.create_user(username=username, password=password)
+            aluno.user = user  # Associar o usuário ao aluno
+            aluno.save()  # Salvar as alterações no aluno'
+
         return redirect('listar_alunos', turma_id=turma_id)
+
+    
+class ResponsavelView(LoginRequiredMixin, View):
+    login_url = '/login/'  # Redireciona para login se não autenticado
+    template_name = 'responsavel.html'
+
+    def get(self, request):
+        # Adicionando print para depuração
+        print(f"Usuário logado: {request.user.username}")  # Verifique qual usuário está logado
+        aluno = get_object_or_404(Aluno, user=request.user)  # Busca pelo aluno relacionado ao usuário logado
+        return render(request, self.template_name, {'aluno': aluno})
