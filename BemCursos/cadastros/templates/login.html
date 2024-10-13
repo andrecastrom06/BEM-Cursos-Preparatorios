@@ -11,6 +11,7 @@
             height: 100%;
             font-family: Arial, sans-serif;
         }
+
         .container {
             position: fixed;
             right: 0;
@@ -23,74 +24,85 @@
             align-items: center;
             border-radius: 0px;
         }
+
         .inner-container {
-            width: 500px;
-            height: 300px;
+            width: 31.25rem;
+            height: 18.75rem;
             background-color: rgb(35, 218, 67);
-            border-radius: 35px;
+            border-radius: 2.1875rem;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.5);
+            position: relative;
         }
+
         .side-container {
             position: fixed;
-            left: 400px;
-            width: 250px;
-            height: 80px;
+            left: 25vw; /* Substituí 400px por 25vw para ser relativo à largura da tela */
+            width: 15.625rem; /* 250px convertido para rem */
+            height: 5rem; /* 80px convertido para rem */
             background-color: rgb(65, 88, 208);
             color: white;
             font-weight: bold;
-            font-size: 35px;
-            border-radius: 70px;
+            font-size: 2.1875rem; /* 35px convertido para rem */
+            border-radius: 4.375rem; /* 70px convertido para rem */
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.5); /* 4px e 8px convertidos */
+            text-shadow: 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.7); /* 2px e 4px */
         }
+
         .container h2 {
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); 
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
         }
+
         .form-group input {
             width: 100%;
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
         .btn {
-            position: fixed;
-            top: 485px;
-            right: 400px;
             display: block;
-            width: 120px;
-            padding: 10px;
+            width: 7.5rem;
+            padding: 0.625rem;
             background-color: rgb(65, 88, 208);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 0.75rem;
             cursor: pointer;
-            font-size: 18px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); 
+            font-size: 1.125rem;
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3);
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
+            position: absolute;
+            bottom: 10px;
+            right: 185px;
         }
+
         .btn:hover {
             background-color: rgb(45, 62, 143);
         }
+
         .error {
             color: red;
             text-align: center;
-            margin-bottom: 15px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); 
+            margin-bottom: 0px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
@@ -98,7 +110,7 @@
     <div class="side-container">
         <label>LOGIN</label>
     </div>
-    <img src="/static/BEMcursos.png" alt="BEM" width="350" height="200" style="margin-top: 270px; margin-left: 130px; ">
+    <img src="/static/BEMcursos.png" alt="BEM" width="350" height="200" style="margin-top: 270px; margin-left: 130px;">
     <div class="container">
         <div class="inner-container">
             {% if messages %}
@@ -108,10 +120,10 @@
                     {% endfor %}
                 </div>
             {% endif %}
-        
+
             <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
-                
+
                 <div class="form-group">
                     <label for="username">Nome de Usuário:</label>
                     <input type="text" id="username" name="username" placeholder="Digite seu nome de usuário">
@@ -120,7 +132,6 @@
                     <label for="password">Senha:</label>
                     <input type="password" id="password" name="password" placeholder="Digite sua senha">
                 </div>
-
                 <button type="submit" class="btn">Acessar</button>
             </form>
         </div>
