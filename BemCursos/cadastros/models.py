@@ -20,6 +20,7 @@ class Aluno(models.Model):
         return f'{self.nome} {self.sobrenome}'
 
     def gerar_login(self):
-        username = f"{self.nome.lower()}{self.sobrenome.lower()}{self.turma.nome.lower()}"
+        # Remove espaços nos nomes, sobrenome e turma
+        username = f"{self.nome.replace(' ', '').lower()}{self.sobrenome.replace(' ', '').lower()}{self.turma.nome.replace(' ', '').lower()}"
         password = self.cpf
         return username, password
