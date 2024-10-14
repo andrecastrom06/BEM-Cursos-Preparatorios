@@ -13,8 +13,14 @@
             padding: 0;
             display: flex;
             height: 100vh;
+            flex-direction: column;
         }
 
+        @media (min-width: 768px) {
+            body {
+                flex-direction: row;
+            }
+        }
 
         .sidebar {
             width: 250px;
@@ -24,19 +30,20 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
 
-        .sidebar .profile {
+        .profile {
             text-align: center;
             margin-bottom: 30px;
         }
 
-        .sidebar .profile h3 {
+        .profile h3 {
             margin: 10px 0 5px;
             color: black;
         }
 
-        .sidebar .profile p {
+        .profile p {
             color: #555;
         }
 
@@ -91,16 +98,8 @@
             font-weight: bold;
         }
 
-        input[type="text"]{
+        input[type="text"], select {
             width: calc(100% - 20px); 
-            padding: 10px; 
-            margin-bottom: 20px;
-            border-radius: 5px;
-            border: none;
-            font-size: 14px;
-        }
-        select {
-            width: calc(100% - 0px); 
             padding: 10px; 
             margin-bottom: 20px;
             border-radius: 5px;
@@ -139,11 +138,25 @@
         a:hover {
             background-color: rgb(26, 170, 50);
         }
+        @media (max-width: 767px) {
+            .sidebar {
+                width: 100%;
+                padding: 10px;
+                box-shadow: none;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            form {
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-    
-     <div class="sidebar">
+    <div class="sidebar">
         <div class="profile">
             <h3>Nome e Sobrenome</h3>
             <p>Função</p>
@@ -155,8 +168,6 @@
         </nav>
     </div>
 
-
-    
     <div class="container">
         <h2>Editar Turma</h2>
         <form method="post">
@@ -176,6 +187,5 @@
         </form>
         <a href="{% url 'turmas' %}">Voltar</a>
     </div>
-
 </body>
 </html>
