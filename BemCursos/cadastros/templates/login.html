@@ -12,47 +12,77 @@
             font-family: Arial, sans-serif;
         }
 
+        /* Definições de estilo para garantir que a responsividade seja mantida */
         .container {
             position: fixed;
             right: 0;
             top: 0;
-            width: 60%;
-            height: 100%;
+            width: 60vw;
+            height: 100vh;
             background-color: rgb(65, 88, 208);
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 0px;
+            border-radius: 0;
+        }
+
+        .container-erro {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 60vw;
+            height: 33vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0;
+            opacity: 1;
+            transition: opacity 1s ease-out;
         }
 
         .inner-container {
-            width: 31.25rem;
-            height: 18.75rem;
+            width: 30vw;
+            height: 42vh;
             background-color: rgb(35, 218, 67);
-            border-radius: 2.1875rem;
+            border-radius: 1.5rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
             position: relative;
+            padding: 2vw;
+        }
+
+        .inner-container-erro {
+            width: 32vw;
+            height: 7vh;
+            background-color: rgb(35, 218, 67);
+            border-radius: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+            position: relative;
+            padding: 1vw;
         }
 
         .side-container {
             position: fixed;
-            left: 25vw; /* Substituí 400px por 25vw para ser relativo à largura da tela */
-            width: 15.625rem; /* 250px convertido para rem */
-            height: 5rem; /* 80px convertido para rem */
+            left: 25vw;
+            width: 18vw;
+            height: 10vh;
             background-color: rgb(65, 88, 208);
             color: white;
             font-weight: bold;
-            font-size: 2.1875rem; /* 35px convertido para rem */
-            border-radius: 4.375rem; /* 70px convertido para rem */
+            font-size: 2vw;
+            border-radius: 5vw;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.5); /* 4px e 8px convertidos */
-            text-shadow: 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.7); /* 2px e 4px */
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+            text-shadow: 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.7);
         }
 
         .container h2 {
@@ -61,37 +91,39 @@
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 1.5vw;
+            width: 100%;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 0.4vw;
+            font-size: 1.1vw;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
         }
 
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
-            padding: 8px;
+            padding: 0.8vw;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 0.5vw;
+            font-size: 1vw;
         }
 
         .btn {
             display: block;
-            width: 7.5rem;
-            padding: 0.625rem;
+            width: 8vw;
+            padding: 0.5vw;
             background-color: rgb(65, 88, 208);
             color: white;
             border: none;
-            border-radius: 0.75rem;
+            border-radius: 0.75vw;
             cursor: pointer;
-            font-size: 1.125rem;
-            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3);
+            font-size: 1.25vw;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
             text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
             position: absolute;
-            bottom: 10px;
-            right: 185px;
+            right: 13vw;
         }
 
         .btn:hover {
@@ -104,6 +136,65 @@
             margin-bottom: 0px;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
+
+        @media (max-width: 768px) {
+            .container, .container-erro {
+                width: 100vw;
+                height: 100vh;
+            }
+
+            .side-container {
+                position: static;
+                width: 100%;
+                height: 5vh;
+                font-size: 3vw;
+                margin-bottom: 2vw;
+            }
+
+            .inner-container {
+                width: 90%;
+                height: auto;
+                padding: 3vw;
+                border-radius: 2vw;
+            }
+
+            .btn {
+                width: 100%;
+                bottom: 5vh;
+                right: 0;
+                left: 0;
+                margin: 0 auto;
+                position: static;
+            }
+
+            img {
+                width: 30vw;
+                height: auto;
+                margin: 5vh auto 0 auto;
+                display: block;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .side-container {
+                font-size: 4vw;
+                height: 4vh;
+            }
+
+            .inner-container {
+                padding: 2vw;
+                border-radius: 2vw;
+            }
+
+            img {
+                width: 25vw;
+                margin-top: 5vw;
+            }
+
+            .btn {
+                font-size: 2vw;
+            }
+        }
     </style>
 </head>
 <body>
@@ -113,13 +204,6 @@
     <img src="/static/BEMcursos.png" alt="BEM" width="350" height="200" style="margin-top: 270px; margin-left: 130px;">
     <div class="container">
         <div class="inner-container">
-            {% if messages %}
-                <div class="error">
-                    {% for message in messages %}
-                        <p>{{ message }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
 
             <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
@@ -144,5 +228,30 @@
             </form>
         </div>
     </div>
+
+    {% if messages %}
+        <div class="container-erro" id="erro-container">
+            <div class="inner-container-erro">
+                <div class="error">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <script>
+        // Verifica se o contêiner de erro está presente e adiciona um efeito de fade-out após 5 segundos
+        const erroContainer = document.getElementById('erro-container');
+        if (erroContainer) {
+            setTimeout(() => {
+                erroContainer.style.opacity = '0'; // Inicia o fade-out
+                setTimeout(() => {
+                    erroContainer.style.display = 'none'; // Remove o contêiner após o fade-out
+                }, 1000); // 1 segundo para o efeito de transição
+            }, 5000); // 5 segundos de espera antes de iniciar o fade-out
+        }
+    </script>
 </body>
 </html>
