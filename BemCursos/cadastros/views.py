@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from .models import Aluno, Turma, Unidade
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 # superuser
@@ -101,66 +102,65 @@ class TurmaView(LoginRequiredMixin, View):
 
         return redirect('turmas')
 
-class AlunoView(TurmaView):  # Herda de TurmaView
-    login_url = '/login/'  # Redireciona para login se não autenticado
+class AlunoView(TurmaView):
+    login_url = '/login/'
     template_name_list = 'alunos.html'
     template_name_add = 'adicionar_aluno.html'
 
-    # Exibir lista de alunos ou formulário para adicionar/editar
     def get(self, request, turma_id, aluno_id=None):
         turma = get_object_or_404(Turma, id=turma_id)
 
-        if aluno_id:  # Editar aluno existente
+        if aluno_id:
             aluno = get_object_or_404(Aluno, id=aluno_id)
             return render(request, self.template_name_edit, {'turma': turma, 'aluno': aluno})
-        elif request.path.endswith('adicionar/'):  # Página para adicionar novo aluno
+        elif request.path.endswith('adicionar/'):
             return render(request, self.template_name_add, {'turma': turma})
-        else:  # Listar alunos da turma
+        else:
             alunos = Aluno.objects.filter(turma=turma)
             return render(request, self.template_name_list, {'turma': turma, 'alunos': alunos})
 
     def post(self, request, turma_id, aluno_id=None):
         turma = get_object_or_404(Turma, id=turma_id)
 
-        if request.POST.get('method') == 'DELETE':  # Verifica se a requisição é para deletar
-            aluno_id = request.POST.get('aluno_id')  # Obtém o ID do aluno a ser deletado
+        if request.POST.get('method') == 'DELETE':
+            aluno_id = request.POST.get('aluno_id')
             aluno = get_object_or_404(Aluno, id=aluno_id)
 
-            # Excluir o usuário associado ao aluno
-            if aluno.user:  # Verifique se o aluno tem um usuário associado
-                aluno.user.delete()  # Remove o usuário do banco de dados
+            if aluno.user:
+                aluno.user.delete()
 
-            aluno.delete()  # Deleta o aluno
-            messages.success(request, 'Aluno e usuário removidos com sucesso!')  # Mensagem de sucesso
-            return redirect('listar_alunos', turma_id=turma_id)  # Redireciona para a lista de alunos
+            aluno.delete()
+            messages.success(request, 'Aluno e usuário removidos com sucesso!')
+            return redirect('listar_alunos', turma_id=turma_id)
 
-        # Novo código para adicionar um aluno
         nome = request.POST.get('nome')
         sobrenome = request.POST.get('sobrenome')
         cpf = request.POST.get('cpf')
-        idade = request.POST.get('idade')
+        data_nascimento = request.POST.get('data_nascimento')  # Novo campo para data de nascimento
 
-        if aluno_id:  # Atualizando aluno existente
+        # Verifica se o aluno já existe
+        if aluno_id:
             aluno = get_object_or_404(Aluno, id=aluno_id)
             aluno.nome = nome
             aluno.sobrenome = sobrenome
             aluno.cpf = cpf
-            aluno.idade = idade
-            aluno.turma = turma
+            
+            if data_nascimento:
+                aluno.data_nascimento = timezone.datetime.strptime(data_nascimento, '%Y-%m-%d').date()
+
             aluno.save()
-        else:  # Criando novo aluno
+        else:
             aluno = Aluno.objects.create(
                 nome=nome,
                 sobrenome=sobrenome,
                 cpf=cpf,
-                idade=idade,
+                data_nascimento=timezone.datetime.strptime(data_nascimento, '%Y-%m-%d').date(),  # Armazena a data de nascimento
                 turma=turma
             )
-            # Gerar login e senha para o responsável
             username, password = aluno.gerar_login()
             user = User.objects.create_user(username=username, password=password)
-            aluno.user = user  # Associar o usuário ao aluno
-            aluno.save()  # Salvar as alterações no aluno'
+            aluno.user = user
+            aluno.save()
 
         return redirect('listar_alunos', turma_id=turma_id)
 
@@ -171,6 +171,5 @@ class ResponsavelView(LoginRequiredMixin, View):
 
     def get(self, request):
         # Adicionando print para depuração
-        print(f"Usuário logado: {request.user.username}")  # Verifique qual usuário está logado
         aluno = get_object_or_404(Aluno, user=request.user)  # Busca pelo aluno relacionado ao usuário logado
         return render(request, self.template_name, {'aluno': aluno})
