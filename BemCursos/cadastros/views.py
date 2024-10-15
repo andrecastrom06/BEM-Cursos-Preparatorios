@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from .models import Aluno, Turma
+from .models import Aluno, Turma, Unidade
 from django.contrib import messages
 from django.contrib.auth.models import User
 
@@ -56,9 +56,11 @@ class TurmaView(LoginRequiredMixin, View):
     def get(self, request, turma_id=None):
         if turma_id:  # Página de editar turma
             turma = get_object_or_404(Turma, id=turma_id)
-            return render(request, self.template_name_edit, {'turma': turma})
+            unidades = Unidade.objects.all()  # Obtendo todas as unidades
+            return render(request, self.template_name_edit, {'turma': turma, 'unidades': unidades})
         elif request.path.endswith('adicionar/'):  # Página de adicionar turma
-            return render(request, self.template_name_add)
+            unidades = Unidade.objects.all()  # Obtendo todas as unidades
+            return render(request, self.template_name_add, {'unidades': unidades})
         else:  # Página de listagem de turmas
             turmas = Turma.objects.all()
             return render(request, self.template_name_list, {'turmas': turmas})
@@ -86,7 +88,8 @@ class TurmaView(LoginRequiredMixin, View):
 
         # Se não for uma exclusão, trata como adição ou edição de turma
         nome = request.POST.get('nome')
-        unidade = request.POST.get('unidade')
+        unidade_id = request.POST.get('unidade')  # Obtenha o ID da unidade
+        unidade = get_object_or_404(Unidade, id=unidade_id)  # Busque a unidade
 
         if turma_id:  # Atualizando turma existente
             turma = get_object_or_404(Turma, id=turma_id)

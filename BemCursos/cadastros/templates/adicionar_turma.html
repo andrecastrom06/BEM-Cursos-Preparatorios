@@ -189,14 +189,15 @@
             {% csrf_token %}
             <label for="nome">Nome da Turma:</label>
             <input type="text" id="nome" name="nome" placeholder="Digite o nome da turma" required>
-
+            
             <label for="unidade">Unidade:</label>
             <select id="unidade" name="unidade" required>
                 <option value="">Selecione a unidade</option>
-                <option value="Casa Forte">Casa Forte</option>
-                <option value="Olinda">Olinda</option>
-                <option value="Boa Viagem">Boa Viagem</option>
+                {% for unidade in unidades %}
+                    <option value="{{ unidade.id }}">{{ unidade.nome }}</option>
+                {% endfor %}
             </select>
+            
 
             <button type="submit">Adicionar Turma</button>
         </form>
