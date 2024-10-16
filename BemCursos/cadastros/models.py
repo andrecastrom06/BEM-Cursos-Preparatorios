@@ -37,3 +37,11 @@ class Aluno(models.Model):
         username = f"{self.nome.replace(' ', '').lower()}{self.sobrenome.replace(' ', '').lower()}{self.turma.nome.replace(' ', '').lower()}"
         password = self.cpf
         return username, password
+    
+class Simulado(models.Model):
+    nome = models.CharField(max_length=100)
+    turmas = models.ManyToManyField(Turma, related_name='simulados')  
+    data = models.DateField()
+
+    def __str__(self):
+        return f"{self.nome} - {self.data}"

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Turmas</title>
+    <title>Listar Simulados</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
@@ -66,7 +66,7 @@
             color: white;
         }
 
-        h2 {
+        h2, h1 {
             text-align: center;
             color: #fff;
             margin-top: 20px;
@@ -122,15 +122,15 @@
             margin-right: 10px;
         }
 
-        .remover-turma {
+        .remover-simulado {
             background-color: #D9534F;
         }
 
-        .remover-turma:hover {
+        .remover-simulado:hover {
             background-color: #C9302C;
         }
 
-        .add-turma {
+        .add-simulado {
             display: block;
             text-align: center;
             background-color: rgb(35, 218, 67);
@@ -142,11 +142,43 @@
             margin: 50px auto;
         }
 
-        .add-turma:hover {
+        .add-simulado:hover {
             background-color: rgb(26, 170, 50);
         }
 
-    
+        .form-container {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 800px;
+            background-color: rgb(35, 218, 67);
+            border-radius: 15px;
+        }
+
+        input[type="text"], input[type="date"] {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button.submit {
+            display: block;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button.submit:hover {
+            background-color: #0056b3;
+        }
+
         @media screen and (max-width: 768px) {
             body {
                 flex-direction: column;
@@ -207,75 +239,111 @@
     </style>
 </head>
 <body>
-
-
-    <div class="sidebar">
+<div class="sidebar">
         <div class="profile">
             <h3>Nome e Sobrenome</h3>
             <p>Função</p>
         </div>
         <nav>
-            <a href="#">Turmas</a>
-            <a href="{% url 'listar_simulados' %}">Simulados</a>
+            <a href="{% url 'turmas' %}">Turmas</a>
+            <a href="#">Simulados</a>
         </nav>
     </div>
 
     <!-- Conteúdo principal -->
     <div class="container">
-        <h2>Lista de Turmas</h2>
+        <h1>Simulados</h1>
+
+        <div class="form-container">
+            <h2>Adicionar Simulado</h2>
+            <form id="add-simulado-form">
+                <input type="text" name="nome" placeholder="Nome do Simulado" required>
+                <input type="date" name="data" required>
+                <label for="turmas">Selecione as turmas:</label>
+                <select name="turmas" id="turmas" multiple required>
+                    {% for turma in turmas %}
+                        <option value="{{ turma.id }}">{{ turma.nome }} - {{ turma.unidade.nome }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" class="submit">Adicionar</button>
+            </form>
+        </div>
 
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>Unidade</th>
+                        <th>Data</th>
+                        <th>Turmas</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for turma in turmas %}
-                    <tr id="turma-{{ turma.id }}">
-                        <td>{{ turma.nome }}</td>
-                        <td>{{ turma.unidade }}</td>
+                    {% for simulado in simulados %}
+                    <tr id="simulado-{{ simulado.id }}">
+                        <td>{{ simulado.nome }}</td>
+                        <td>{{ simulado.data }}</td>
                         <td>
-                            <!--<a href="{% url 'editar_turma' turma.id %}">Editar</a>-->
-                            <a href="{% url 'listar_alunos' turma.id %}">Gerenciar Alunos</a>
-                            <button class="remover-turma" data-id="{{ turma.id }}">Remover</button>
+                            <ul>
+                                {% for turma in simulado.turmas.all %}
+                                <li>{{ turma.nome }} - {{ turma.unidade.nome }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td><button class="remover-simulado" data-id="{{ simulado.id }}">Remover</button>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-
-        <a href="{% url 'adicionar_turma' %}" class="add-turma">Adicionar Turma</a>
     </div>
-
     <script>
         $(document).ready(function() {
-            $('.remover-turma').on('click', function() {
-                var turmaId = $(this).data('id');
-                var confirmDelete = confirm('Tem certeza que deseja remover esta turma?');
+            $('.remover-simulado').on('click', function() {
+                var simuladoId = $(this).data('id');
+                var confirmDelete = confirm('Tem certeza que deseja remover este simulado?');
     
                 if (confirmDelete) {
                     $.ajax({
-                        url: '{% url "remover_turma" 0 %}'.replace('0', turmaId),
+                        url: '{% url "remover_simulado" 0 %}'.replace('0', simuladoId),
                         type: 'POST',
                         data: {
                             'csrfmiddlewaretoken': '{{ csrf_token }}',
                             'method': 'DELETE',
-                            'turma_id': turmaId
+                            'simulado_id': simuladoId
                         },
                         success: function(response) {
                             alert(response.status);
-                            $('#turma-' + turmaId).remove();
+                            $('#simulado-' + simuladoId).remove();
                         },
                         error: function(xhr, status, error) {
-                            alert('Erro ao remover a turma: ' + xhr.responseText);
+                            alert('Erro ao remover o simulado: ' + xhr.responseText);
                         }
                     });
                 }
+            });
+
+            // Adicionar novo simulado
+            $('#add-simulado-form').on('submit', function(e) {
+                e.preventDefault();
+
+                var formData = $(this).serialize(); // Coleta os dados do formulário
+
+                $.ajax({
+                    url: '{% url "adicionar_simulado" %}', // URL para a view que adiciona um simulado
+                    type: 'POST',
+                    data: formData + '&csrfmiddlewaretoken={{ csrf_token }}', // Adiciona o token CSRF
+                    success: function(response) {
+                        alert('Simulado adicionado com sucesso!');
+                        location.reload(); // Atualiza a página para mostrar o novo simulado
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Erro ao adicionar o simulado: ' + xhr.responseText);
+                    }
+                });
             });
         });
     </script>

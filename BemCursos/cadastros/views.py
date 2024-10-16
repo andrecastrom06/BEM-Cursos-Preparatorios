@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from .models import Aluno, Turma, Unidade
+from .models import Aluno, Turma, Unidade, Simulado
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -173,3 +173,51 @@ class ResponsavelView(LoginRequiredMixin, View):
         # Adicionando print para depuração
         aluno = get_object_or_404(Aluno, user=request.user)  # Busca pelo aluno relacionado ao usuário logado
         return render(request, self.template_name, {'aluno': aluno})
+    
+class SimuladoView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    template_name_list = 'listar_simulados.html'
+    
+    def get(self, request):
+        simulados = Simulado.objects.all()  # Lista todos os simulados
+        turmas = Turma.objects.all()  # Mostra todas as turmas disponíveis para adicionar simulados
+        return render(request, self.template_name_list, {'simulados': simulados, 'turmas': turmas})
+
+    def post(self, request):
+        # Verifica se é uma solicitação de exclusão
+        if request.POST.get('method') == 'DELETE':
+            simulado_id = request.POST.get('simulado_id')
+            
+            # Verifique se o ID foi passado corretamente
+            if not simulado_id:
+                return JsonResponse({'error': 'ID do simulado não fornecido.'}, status=400)
+            
+            # Tenta encontrar o simulado e deletar
+            simulado = get_object_or_404(Simulado, id=simulado_id)
+            simulado.delete()
+            return JsonResponse({'status': 'Simulado removido com sucesso!'}, status=200)
+
+        # Lógica para adicionar simulado
+        nome = request.POST.get('nome')
+        data = request.POST.get('data')  # A data de aplicação do simulado
+        turmas_ids = request.POST.getlist('turmas')  # Lista de IDs de turmas selecionadas
+        
+        # Verifica se os campos obrigatórios estão preenchidos
+        if not nome or not data or not turmas_ids:
+            messages.error(request, 'Por favor, preencha todos os campos obrigatórios.')
+            return redirect('listar_simulados')
+        
+        # Converte a data para o formato apropriado
+        try:
+            data = timezone.datetime.strptime(data, '%Y-%m-%d').date()  # Ajuste o formato conforme necessário
+        except ValueError:
+            messages.error(request, 'Data inválida. Utilize o formato YYYY-MM-DD.')
+            return redirect('listar_simulados')
+        
+        # Lógica para salvar o novo simulado
+        simulado = Simulado.objects.create(nome=nome, data=data)
+        simulado.turmas.set(turmas_ids)  # Define as turmas associadas ao simulado
+        simulado.save()
+
+        messages.success(request, 'Simulado adicionado com sucesso!')
+        return redirect('listar_simulados')
