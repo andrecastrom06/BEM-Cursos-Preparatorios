@@ -350,9 +350,13 @@
                 <input type="date" name="data" required>
                 <label for="turmas">Selecione as turmas:</label>
                 <select name="turmas" id="turmas" multiple required>
-                    {% for turma in turmas %}
-                        <option value="{{ turma.id }}">{{ turma.nome }} - {{ turma.unidade.nome }}</option>
-                    {% endfor %}
+                    {% if turmas %}
+                        {% for turma in turmas %}
+                            <option value="{{ turma.id }}">{{ turma.nome }} - {{ turma.unidade.nome }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <option disabled>Nenhuma turma encontrada</option>
+                    {% endif %}
                 </select>
 
                 <button type="submit" class="submit">Adicionar</button>
