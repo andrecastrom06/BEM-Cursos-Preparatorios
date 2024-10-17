@@ -84,7 +84,7 @@
             max-width: 800px;
             background-color: rgb(11, 173, 38);
             border-radius: 15px;
-            color: black;
+            color: white;
             width: 100%;
         }
 
@@ -248,10 +248,19 @@
         </nav>
     </div>
 
-   
     <div class="container">
         <h2>Alunos da Turma: {{ turma.nome }}</h2>
-
+        {% if messages %}
+            <div class="container-erro" id="erro-container">
+                <div class="inner-container-erro">
+                    <div class="error">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         <div class="table-container">
             <table>
                 <thead>

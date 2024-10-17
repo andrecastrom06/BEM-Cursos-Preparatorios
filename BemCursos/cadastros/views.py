@@ -105,7 +105,6 @@ class TurmaView(LoginRequiredMixin, View):
 class AlunoView(TurmaView):
     login_url = '/login/'
     template_name_list = 'alunos.html'
-    template_name_add = 'adicionar_aluno.html'
 
     def get(self, request, turma_id, aluno_id=None):
         turma = get_object_or_404(Turma, id=turma_id)
@@ -138,7 +137,15 @@ class AlunoView(TurmaView):
         cpf = request.POST.get('cpf')
         data_nascimento = request.POST.get('data_nascimento')  # Novo campo para data de nascimento
 
-        # Verifica se o aluno já existe
+        if Aluno.objects.filter(nome=nome, sobrenome=sobrenome).exclude(id=aluno_id).exists():
+            messages.error(request, 'Já existe um aluno com esse nome e sobrenome.')
+            return redirect('listar_alunos', turma_id=turma_id)
+
+    # Verifica se existe um aluno com o mesmo CPF, excluindo o aluno atual se for edição
+        if Aluno.objects.filter(cpf=cpf).exclude(id=aluno_id).exists():
+            messages.error(request, 'Já existe um aluno com esse CPF.')
+            return redirect('listar_alunos', turma_id=turma_id)
+
         if aluno_id:
             aluno = get_object_or_404(Aluno, id=aluno_id)
             aluno.nome = nome
