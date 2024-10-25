@@ -50,33 +50,31 @@ class TurmaView(LoginRequiredMixin, View):
     template_name_add = 'adicionar_turma.html'
 
     def get(self, request, turma_id=None):
-        if turma_id:
-            turma = TurmaMediator.obter_turma(turma_id)
-            unidades = Unidade.objects.all()
-            return render(request, self.template_name_edit, {'turma': turma, 'unidades': unidades})
-        elif request.path.endswith('adicionar/'):
+        if request.path.endswith('adicionar/'):
             unidades = Unidade.objects.all()
             return render(request, self.template_name_add, {'unidades': unidades})
         else:
             turmas = TurmaMediator.listar_turmas()
             return render(request, self.template_name_list, {'turmas': turmas})
 
-    def post(self, request):
-        if request.POST.get('method') == 'DELETE':
-            turma_id = request.POST.get('turma_id')
-            try:
-                response = TurmaMediator.excluir_turma(turma_id)
-                return JsonResponse(response)
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=400)
+    def post(self, request, turma_id=None):
+        if 'method' in request.POST and request.POST['method'] == 'DELETE':
+            if turma_id is not None:
+                return self.excluir_turma(turma_id)
+            return JsonResponse({'error': 'ID da turma não fornecido'}, status=400)
 
+        # Lógica para adicionar turma
         nome = request.POST.get('nome')
         unidade_id = request.POST.get('unidade')
-
         TurmaMediator.adicionar_turma(nome, unidade_id)
-
         return redirect('turmas')
 
+    def excluir_turma(self, turma_id):
+        try:
+            response = TurmaMediator.excluir_turma(turma_id)
+            return JsonResponse(response)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
 
 class AlunoView(LoginRequiredMixin, View):
     login_url = '/login/'

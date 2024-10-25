@@ -400,29 +400,26 @@
 
     <script>
         $(document).ready(function() {
-           
             function abrirModalConfirmacao(turmaId, callback) {
                 $('#confirm-modal').fadeIn();
                 $('#confirm-yes').off('click').on('click', function() {
                     $('#confirm-modal').fadeOut();
-                    callback(true); 
+                    callback(true);
                 });
                 $('#confirm-no').off('click').on('click', function() {
                     $('#confirm-modal').fadeOut();
-                    callback(false); 
+                    callback(false);
                 });
             }
 
-          
             function abrirModalSucesso(mensagem, reloadAfter) {
                 $('#success-text').text(mensagem);
                 $('#success-modal').fadeIn();
 
-          
                 $('#success-ok').off('click').on('click', function() {
                     $('#success-modal').fadeOut();
                     if (reloadAfter) {
-                        location.reload(); 
+                        location.reload();
                     }
                 });
             }
@@ -436,7 +433,7 @@
                 abrirModalConfirmacao(turmaId, function(confirmed) {
                     if (confirmed) {
                         $.ajax({
-                            url: '{% url "remover_turma" 0 %}'.replace('0', turmaId),
+                            url: '{% url "remover_turma" turma_id=0 %}'.replace('0', turmaId),
                             type: 'POST',
                             data: {
                                 'csrfmiddlewaretoken': '{{ csrf_token }}',
@@ -447,7 +444,7 @@
                                 abrirModalSucesso('Turma removida com sucesso!', true);
                                 $('#turma-' + turmaId).remove();
                             },
-                            error: function(xhr, status, error) {
+                            error: function(xhr) {
                                 abrirModalSucesso('Erro ao remover a turma: ' + xhr.responseText, false);
                             }
                         });
