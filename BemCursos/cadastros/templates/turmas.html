@@ -343,7 +343,6 @@
         </div>
         <nav>
             <a href="#" id="menu-botoes">Turmas</a>
-            <a href="{% url 'listar_simulados' %}" id="menu-botoes">Simulados</a>
         </nav>
     </div>
 
@@ -365,7 +364,6 @@
                         <td>{{ turma.nome }}</td>
                         <td>{{ turma.unidade }}</td>
                         <td>
-                            <a href="{% url 'listar_alunos' turma.id %}" class="gerenciamento-botao">Gerenciar Alunos</a>
                             <button class="remover-turma gerenciamento-botao2" data-id="{{ turma.id }}">Remover</button>
                         </td>
                     </tr>
