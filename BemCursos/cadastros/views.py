@@ -1,12 +1,11 @@
 from django.views import View
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from .models import Turma, Unidade
+from .models import Unidade
 from django.contrib import messages
+from .mediators import TurmaMediator  # Importando o mediator
 
 
 # superuser
@@ -44,58 +43,36 @@ class LoginView(View):
             messages.error(request, 'Usuário ou senha inválidos.')
             return render(request, self.template_name)
 
-# Utiliza LoginRequiredMixin para garantir que apenas usuários autenticados acessem essas views
+
 class TurmaView(LoginRequiredMixin, View):
-    login_url = '/login/'  # Redireciona para login se não autenticado
+    login_url = '/login/'
     template_name_list = 'turmas.html'
     template_name_add = 'adicionar_turma.html'
-    template_name_edit = 'editar_turma.html'
 
-    # Página de listagem ou adicionar/editar turmas
     def get(self, request, turma_id=None):
-        if turma_id:  # Página de editar turma
-            turma = get_object_or_404(Turma, id=turma_id)
-            unidades = Unidade.objects.all()  # Obtendo todas as unidades
+        if turma_id:
+            turma = TurmaMediator.obter_turma(turma_id)
+            unidades = Unidade.objects.all()
             return render(request, self.template_name_edit, {'turma': turma, 'unidades': unidades})
-        elif request.path.endswith('adicionar/'):  # Página de adicionar turma
-            unidades = Unidade.objects.all()  # Obtendo todas as unidades
+        elif request.path.endswith('adicionar/'):
+            unidades = Unidade.objects.all()
             return render(request, self.template_name_add, {'unidades': unidades})
-        else:  # Página de listagem de turmas
-            turmas = Turma.objects.all()
+        else:
+            turmas = TurmaMediator.listar_turmas()
             return render(request, self.template_name_list, {'turmas': turmas})
 
-    # Adicionar ou editar turma (POST request)
-    def post(self, request, turma_id=None):
-        if request.POST.get('method') == 'DELETE':  # Exclusão de turma
+    def post(self, request):
+        if request.POST.get('method') == 'DELETE':
             turma_id = request.POST.get('turma_id')
             try:
-                turma = get_object_or_404(Turma, id=turma_id)
-
-                # Obter todos os alunos associados à turma
-                #alunos = Aluno.objects.filter(turma=turma)
-
-                # Excluir todos os alunos e seus usuários
-                #for aluno in alunos:
-                #    if aluno.user:  # Verifique se o aluno tem um usuário associado
-                #        aluno.user.delete()  # Remove o usuário do banco de dados
-                #    aluno.delete()  # Deleta o aluno
-
-                turma.delete()  # Deleta a turma
-                return JsonResponse({'status': 'Turma e alunos removidos com sucesso!'})
+                response = TurmaMediator.excluir_turma(turma_id)
+                return JsonResponse(response)
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=400)
 
-        # Se não for uma exclusão, trata como adição ou edição de turma
         nome = request.POST.get('nome')
-        unidade_id = request.POST.get('unidade')  # Obtenha o ID da unidade
-        unidade = get_object_or_404(Unidade, id=unidade_id)  # Busque a unidade
+        unidade_id = request.POST.get('unidade')
 
-        if turma_id:  # Atualizando turma existente
-            turma = get_object_or_404(Turma, id=turma_id)
-            turma.nome = nome
-            turma.unidade = unidade
-            turma.save()
-        else:  # Criando nova turma
-            Turma.objects.create(nome=nome, unidade=unidade)
+        TurmaMediator.adicionar_turma(nome, unidade_id)
 
         return redirect('turmas')
