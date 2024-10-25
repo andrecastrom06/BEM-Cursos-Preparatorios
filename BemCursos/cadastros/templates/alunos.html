@@ -1,0 +1,101 @@
+<div class="container">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<div class="container">
+    <h2>Lista de Alunos</h2>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Sobrenome</th>
+                    <th>CPF</th>
+                    <th>Data de Nascimento</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aluno in alunos %}
+                <tr>
+                    <td>{{ aluno.nome }}</td>
+                    <td>{{ aluno.sobrenome }}</td>
+                    <td>{{ aluno.cpf }}</td>
+                    <td>{{ aluno.data_nascimento }}</td>
+                    <td>
+                        <!-- Botão para abrir o modal de confirmação -->
+                        <button class="btn-remover" data-bs-toggle="modal" data-bs-target="#confirmarRemocaoModal" data-id="{{ aluno.id }}">Remover</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{% url 'adicionar_aluno' turma_id=turma_id %}" class="add-aluno">Adicionar Aluno</a>
+</div>
+
+<!-- Modal de Confirmação -->
+<div class="modal fade" id="confirmarRemocaoModal" tabindex="-1" aria-labelledby="confirmarRemocaoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmarRemocaoModalLabel">Confirmar Remoção</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza de que deseja remover este aluno?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button id="confirmarRemocaoBtn" class="btn btn-danger" data-bs-dismiss="modal">Remover</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para manipulação do Modal -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var removerButtons = document.querySelectorAll('.btn-remover');
+        var confirmarRemocaoBtn = document.getElementById('confirmarRemocaoBtn');
+        var alunoIdToRemove = null; // Variável para armazenar o ID do aluno a ser removido
+
+        removerButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                alunoIdToRemove = this.getAttribute('data-id');
+            });
+        });
+
+        confirmarRemocaoBtn.addEventListener('click', function () {
+            if (alunoIdToRemove) {
+                // Criar o formulário para remoção do aluno
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `{% url 'alunos' turma_id=turma_id %}`; // URL onde o formulário será enviado
+
+                // Adicionar CSRF token
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = 'csrfmiddlewaretoken';
+                csrfToken.value = '{{ csrf_token }}';
+                form.appendChild(csrfToken);
+
+                // Adicionar ID do aluno a ser removido
+                const alunoInput = document.createElement('input');
+                alunoInput.type = 'hidden';
+                alunoInput.name = 'remover_aluno_id';
+                alunoInput.value = alunoIdToRemove;
+                form.appendChild(alunoInput);
+
+                document.body.appendChild(form); // Adicionar o formulário ao body
+                form.submit(); // Enviar o formulário
+            }
+        });
+    });
+</script>

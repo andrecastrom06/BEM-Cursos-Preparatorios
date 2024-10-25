@@ -364,6 +364,7 @@
                         <td>{{ turma.nome }}</td>
                         <td>{{ turma.unidade }}</td>
                         <td>
+                            <a href="{% url 'alunos' turma_id=turma.id %}" class="gerenciar-alunos gerenciamento-botao">Gerenciar Alunos</a>
                             <button class="remover-turma gerenciamento-botao2" data-id="{{ turma.id }}">Remover</button>
                         </td>
                     </tr>
