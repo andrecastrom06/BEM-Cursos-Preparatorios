@@ -1,11 +1,11 @@
 from django.views import View
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from .models import Unidade, Aluno
+from .models import Unidade, Aluno, Simulado
 from django.contrib import messages
-from .mediators import TurmaMediator, AlunoMediator
+from .mediators import TurmaMediator, AlunoMediator, SimuladoMediator
 from datetime import datetime
 
 # superuser
@@ -108,3 +108,30 @@ class AlunoView(LoginRequiredMixin, View):
         AlunoMediator.adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id)
         messages.success(request, "Aluno e usuário criados com sucesso!")
         return redirect('alunos', turma_id=turma_id)
+    
+class SimuladoView(View):
+    template_name_list = 'simulados.html'
+    template_name_add = 'adicionar_simulado.html'
+
+    def get(self, request, simulado_id=None):
+        if request.path.endswith('adicionar/'):
+            return render(request, self.template_name_add)
+        else:
+            simulados = Simulado.objects.all()
+            return render(request, self.template_name_list, {'simulados': simulados})
+
+    def post(self, request, simulado_id=None):
+        if simulado_id:
+            simulado = get_object_or_404(Simulado, id=simulado_id)
+            simulado.delete()
+            return redirect('simulados')
+        
+        nome = request.POST.get('nome')
+        tipo = request.POST.get('tipo')
+        data = request.POST.get('data')
+
+        if not nome or not tipo or not data:
+            return JsonResponse({'error': 'Todos os campos são obrigatórios!'}, status=400)
+
+        Simulado.objects.create(nome=nome, tipo=tipo, data=data)
+        return redirect('simulados')

@@ -59,3 +59,16 @@ class Aluno(models.Model):
     def save(self, *args, **kwargs):
         self.calcular_idade_em_dias()
         super().save(*args, **kwargs)
+
+class Simulado(models.Model):
+    TIPOS_SIMULADO = [
+        ('CM', 'Colégio Militar'),
+        ('EA', 'Escola de Aplicação'),
+    ]
+
+    nome = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=2, choices=TIPOS_SIMULADO)
+    data = models.DateField()
+
+    def __str__(self):
+        return f"{self.nome} ({self.get_tipo_display()}) - {self.data}"

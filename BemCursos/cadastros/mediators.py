@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from .models import Turma, Unidade, Aluno, User
+from .models import Turma, Unidade, Aluno, Simulado, User
 
 class TurmaMediator:
     @staticmethod
@@ -69,3 +69,20 @@ class AlunoMediator:
 
         aluno.delete()
         return {'status': 'Aluno e usuário removidos com sucesso!'}
+
+
+class SimuladoMediator:
+    @staticmethod
+    def listar_simulados():
+        return Simulado.objects.all()
+
+    @staticmethod
+    def adicionar_simulado(nome, tipo, data):
+        if not nome or not tipo or not data:
+            raise ValueError("Todos os campos são obrigatórios!")
+        Simulado.objects.create(nome=nome, tipo=tipo, data=data)
+
+    @staticmethod
+    def excluir_simulado(simulado_id):
+        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado.delete()

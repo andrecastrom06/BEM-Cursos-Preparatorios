@@ -1,0 +1,44 @@
+
+<h2>Simulados</h2>
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    
+    {% endfor %}
+{%endif%}
+<!-- Botão para adicionar um novo simulado -->
+<a href="{% url 'adicionar_simulado' %}" class="btn btn-primary">Adicionar Simulado</a>
+
+<!-- Lista de simulados com botão de remover -->
+<table>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Data</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for simulado in simulados %}
+        <tr>
+            <td>{{ simulado.nome }}</td>
+            <td>{{ simulado.get_tipo_display }}</td>
+            <td>{{ simulado.data }}</td>
+            <td>
+                <form method="post" action="{% url 'excluir_simulado' simulado.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja remover este simulado?');">
+                        Remover
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Nenhum simulado cadastrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
