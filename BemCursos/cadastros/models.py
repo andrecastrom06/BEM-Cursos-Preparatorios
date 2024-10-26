@@ -36,7 +36,6 @@ class Aluno(models.Model):
         return idade_dias
 
     def validar_cpf(self):
-        """Valida o CPF, retornando True se o CPF for válido, ou False se não for."""
         cpf = self.cpf
         if not cpf.isdigit() or len(cpf) != 11 or len(set(cpf)) == 1:
             return False
@@ -49,6 +48,13 @@ class Aluno(models.Model):
         digito1 = calcular_digito(cpf[:9])
         digito2 = calcular_digito(cpf[:10])
         return cpf[-2:] == f"{digito1}{digito2}"
+
+    def gerar_login(self):
+        return f"{self.nome}{self.sobrenome}{self.turma.nome}".lower().strip().replace(' ', '')
+
+    def gerar_senha(self):
+        """Usa o CPF como senha padrão do aluno."""
+        return self.cpf
 
     def save(self, *args, **kwargs):
         self.calcular_idade_em_dias()

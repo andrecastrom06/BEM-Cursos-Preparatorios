@@ -20,12 +20,11 @@ class LoginView(View):
     template_name = 'login.html'
 
     def get(self, request):
-        # Realiza logout automático quando acessa a página de login
         logout(request)
         return render(request, self.template_name)
 
     def post(self, request):
-        user_type = request.POST.get('user_type')  # Obtém o tipo de usuário
+        user_type = request.POST.get('user_type')  
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
@@ -63,7 +62,6 @@ class TurmaView(LoginRequiredMixin, View):
                 return self.excluir_turma(turma_id)
             return JsonResponse({'error': 'ID da turma não fornecido'}, status=400)
 
-        # Lógica para adicionar turma
         nome = request.POST.get('nome')
         unidade_id = request.POST.get('unidade')
         TurmaMediator.adicionar_turma(nome, unidade_id)
@@ -93,11 +91,10 @@ class AlunoView(LoginRequiredMixin, View):
     def post(self, request, turma_id=None):
         if 'remover_aluno_id' in request.POST:
             aluno_id = request.POST.get('remover_aluno_id')
-            AlunoMediator.remover_aluno(aluno_id)
-            messages.success(request, "Aluno removido com sucesso!")
+            resultado = AlunoMediator.remover_aluno(aluno_id)
+            messages.success(request, resultado['status'])
             return redirect('alunos', turma_id=turma_id)
-        
-        # Lógica de adicionar aluno
+  
         nome = request.POST.get('nome')
         sobrenome = request.POST.get('sobrenome')
         cpf = request.POST.get('cpf')
@@ -110,4 +107,5 @@ class AlunoView(LoginRequiredMixin, View):
             return render(request, self.template_name_add, {'turma_id': turma_id})
 
         AlunoMediator.adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id)
+        messages.success(request, "Aluno e usuário criados com sucesso!")
         return redirect('alunos', turma_id=turma_id)
