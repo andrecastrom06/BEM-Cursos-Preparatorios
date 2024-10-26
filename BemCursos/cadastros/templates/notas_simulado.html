@@ -22,18 +22,16 @@
                 <td>
                     <input type="number" name="portugues_{{ aluno.id }}" min="0" max="20" required>
                 </td>
-                <td>
-                    <button type="submit" class="btn btn-success">Salvar</button>
-                </td>
             </tr>
             {% empty %}
             <tr>
                 <td colspan="5">Nenhum aluno encontrado.</td>
             </tr>
             {% endfor %}
+            <td>
+                <button type="submit" class="btn btn-success">Salvar</button>
+            </td>
         </tbody>
     </table>
 </form>
-
-<!-- Botão para ver o ranking -->
 <a href="{% url 'ranking' simulado.id %}" class="btn btn-info">Ver Ranking</a>
