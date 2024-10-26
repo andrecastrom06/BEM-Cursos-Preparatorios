@@ -27,7 +27,6 @@ class TurmaMediator:
                 usuario.delete()  
             aluno.delete()  
 
-        # Exclui a turma
         turma.delete()
         return {'status': 'Turma, alunos e usuários removidos com sucesso!'}
 
@@ -40,7 +39,6 @@ class AlunoMediator:
     def adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id):
         turma = get_object_or_404(Turma, id=turma_id)
         
-        # Cria o aluno
         aluno = Aluno(
             nome=nome,
             sobrenome=sobrenome,
@@ -51,7 +49,6 @@ class AlunoMediator:
         aluno.calcular_idade_em_dias()
         aluno.save()
 
-        # Cria o usuário associado ao aluno
         login = aluno.gerar_login()
         senha = aluno.gerar_senha()
 
@@ -65,12 +62,10 @@ class AlunoMediator:
     def remover_aluno(aluno_id):
         aluno = get_object_or_404(Aluno, id=aluno_id)
         
-        # Busca e exclui o usuário associado
-        login = aluno.gerar_login()  # Gera o login com base nos dados do aluno
+        login = aluno.gerar_login()
         usuario = User.objects.filter(username=login).first()
         if usuario:
             usuario.delete()
 
-        # Exclui o aluno
         aluno.delete()
         return {'status': 'Aluno e usuário removidos com sucesso!'}

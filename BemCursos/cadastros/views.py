@@ -12,7 +12,6 @@ from datetime import datetime
 # username 'bemcursos'
 # password 'preparatoriobem'
 
-# Redireciona para a página de login ao acessar a home
 def home(request):
     return redirect('login')
 
@@ -30,7 +29,7 @@ class LoginView(View):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            login(request, user)  # Autentica o usuário
+            login(request, user)  
             
             # Verifica o tipo de usuário e redireciona para a página apropriada
             if user_type == 'funcionario' and username == 'bemcursos' and password == 'preparatoriobem':
