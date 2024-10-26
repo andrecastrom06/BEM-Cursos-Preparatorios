@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404
-from .models import Turma, Unidade, Aluno, Simulado, User
+from .models import Turma, Unidade, Aluno, Simulado,Nota, User
+from django.db import transaction
+from django.db.models import Avg, F
 
 class TurmaMediator:
     @staticmethod
@@ -78,11 +80,51 @@ class SimuladoMediator:
 
     @staticmethod
     def adicionar_simulado(nome, tipo, data):
-        if not nome or not tipo or not data:
-            raise ValueError("Todos os campos são obrigatórios!")
-        Simulado.objects.create(nome=nome, tipo=tipo, data=data)
+        return Simulado.objects.create(nome=nome, tipo=tipo, data=data)
 
     @staticmethod
     def excluir_simulado(simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado = Simulado.objects.get(id=simulado_id)
         simulado.delete()
+
+
+class NotaMediator:
+    @staticmethod
+    def obter_alunos():
+        return Aluno.objects.all()
+
+    @staticmethod
+    def salvar_notas(simulado_id, request):
+        simulado = Simulado.objects.get(id=simulado_id)
+
+        with transaction.atomic():
+            for aluno in Aluno.objects.all():
+                matematica_acertos = request.POST.get(f'matematica_{aluno.id}')
+                portugues_acertos = request.POST.get(f'portugues_{aluno.id}')
+
+                if matematica_acertos is not None:
+                    Nota.objects.update_or_create(
+                        aluno=aluno,
+                        simulado=simulado,
+                        defaults={'matematica_acertos': int(matematica_acertos)}
+                    )
+                if portugues_acertos is not None:
+                    Nota.objects.update_or_create(
+                        aluno=aluno,
+                        simulado=simulado,
+                        defaults={'portugues_acertos': int(portugues_acertos)}
+                    )
+
+class RankingMediator:
+    @staticmethod
+    def calcular_rankings(simulado):
+        return Nota.objects.filter(simulado=simulado).values(
+            'aluno__nome'
+        ).annotate(
+            media_matematica=Avg(F('matematica_acertos') / 2),
+            media_portugues=Avg(F('portugues_acertos') / 2)
+        ).annotate(
+            media_final=F('media_matematica') + F('media_portugues')
+        ).annotate(
+            media_final=F('media_final') / 2
+        ).order_by('-media_final')

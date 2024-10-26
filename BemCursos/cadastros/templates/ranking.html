@@ -1,0 +1,25 @@
+<h2>Ranking do Simulado: {{ simulado.nome }}</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Média Matemática</th>
+            <th>Média Português</th>
+            <th>Média Final</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ranking in rankings %}
+        <tr>
+            <td>{{ ranking.aluno__nome }}</td>
+            <td>{{ ranking.media_matematica|floatformat:1 }}</td>
+            <td>{{ ranking.media_portugues|floatformat:1 }}</td>
+            <td>{{ ranking.media_final|floatformat:1 }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Nenhum aluno encontrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

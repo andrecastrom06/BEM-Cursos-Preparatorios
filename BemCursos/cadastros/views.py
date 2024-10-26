@@ -3,11 +3,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from .models import Unidade, Aluno, Simulado
+from .models import Unidade, Aluno, Simulado, Nota
 from django.contrib import messages
-from .mediators import TurmaMediator, AlunoMediator, SimuladoMediator
+from .mediators import TurmaMediator, AlunoMediator, SimuladoMediator, NotaMediator, RankingMediator
 from datetime import datetime
-
+from django.db import transaction
+from django.db.models import Avg, F
 # superuser
 # username 'bemcursos'
 # password 'preparatoriobem'
@@ -117,13 +118,12 @@ class SimuladoView(View):
         if request.path.endswith('adicionar/'):
             return render(request, self.template_name_add)
         else:
-            simulados = Simulado.objects.all()
+            simulados = SimuladoMediator.listar_simulados()
             return render(request, self.template_name_list, {'simulados': simulados})
 
     def post(self, request, simulado_id=None):
         if simulado_id:
-            simulado = get_object_or_404(Simulado, id=simulado_id)
-            simulado.delete()
+            SimuladoMediator.excluir_simulado(simulado_id)
             return redirect('simulados')
         
         nome = request.POST.get('nome')
@@ -133,5 +133,34 @@ class SimuladoView(View):
         if not nome or not tipo or not data:
             return JsonResponse({'error': 'Todos os campos são obrigatórios!'}, status=400)
 
-        Simulado.objects.create(nome=nome, tipo=tipo, data=data)
+        SimuladoMediator.adicionar_simulado(nome, tipo, data)
         return redirect('simulados')
+
+
+class NotaView(View):
+    template_name = 'notas_simulado.html'
+
+    def get(self, request, simulado_id):
+        simulado = get_object_or_404(Simulado, id=simulado_id)
+        alunos = NotaMediator.obter_alunos()
+        return render(request, self.template_name, {'simulado': simulado, 'alunos': alunos})
+
+    def post(self, request, simulado_id):
+        simulado = get_object_or_404(Simulado, id=simulado_id)
+        NotaMediator.salvar_notas(simulado_id, request)
+
+        messages.success(request, "Notas salvas com sucesso!")
+        return redirect('notas_simulado', simulado_id=simulado.id)
+
+
+class RankingView(View):
+    template_name = 'ranking.html'
+
+    def get(self, request, simulado_id):
+        simulado = get_object_or_404(Simulado, id=simulado_id)
+        rankings = RankingMediator.calcular_rankings(simulado)
+
+        return render(request, self.template_name, {
+            'simulado': simulado,
+            'rankings': rankings
+        })

@@ -72,3 +72,39 @@ class Simulado(models.Model):
 
     def __str__(self):
         return f"{self.nome} ({self.get_tipo_display()}) - {self.data}"
+    
+    def registrar_notas(self, notas_alunos):
+        """Registra as notas de todos os alunos no simulado."""
+        for aluno, notas in notas_alunos.items():
+            Nota.objects.update_or_create(
+                aluno=aluno,
+                simulado=self,
+                defaults={
+                    'nota_mat': notas.get('mat', None),
+                    'nota_port': notas.get('port', None),
+                }
+            )
+
+    def calcular_resultados(self):
+        """Calcula e ordena os resultados do simulado com base nas notas e critério de desempate."""
+        notas = self.nota_set.all()
+        # Ordenar pela nota final, matemática, e idade em dias
+        return sorted(
+            notas,
+            key=lambda nota: (nota.nota_final, nota.aluno.idade_em_dias),
+            reverse=True
+        )
+
+class Nota(models.Model):
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)  # Relaciona a Nota a um Aluno
+    simulado = models.ForeignKey(Simulado, on_delete=models.CASCADE)  # Relaciona a Nota a um Simulado
+    matematica_acertos = models.IntegerField(default=0)
+    portugues_acertos = models.IntegerField(default=0)
+    
+    @property
+    def nota_final(self):
+        if self.simulado.tipo == "Colégio Militar":
+            return (self.acertos_mat + self.acertos_port) / 2  # Nota final como média
+        elif self.simulado.tipo == "Escola de Aplicação":
+            return self.acertos_mat + self.acertos_port  # Total de acertos
+        return 0
