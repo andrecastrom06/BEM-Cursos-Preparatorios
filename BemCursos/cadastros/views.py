@@ -7,9 +7,6 @@ from .models import Unidade, Aluno, Simulado, Turma
 from django.contrib import messages
 from .mediators import TurmaMediator, AlunoMediator, SimuladoMediator, NotaMediator, RankingMediator
 from datetime import datetime
-# superuser
-# username 'bemcursos'
-# password 'preparatoriobem'
 
 def home(request):
     return redirect('login')
@@ -29,20 +26,15 @@ class LoginView(View):
 
         if user is not None:
             login(request, user)  
-            
-            # Verifica o tipo de usuário e redireciona para a página apropriada
             if user_type == 'funcionario' and username == 'bemcursos' and password == 'preparatoriobem':
-                return redirect('turmas')  # Altere para a URL do painel do funcionário
+                return redirect('turmas') 
             
             elif user_type == 'responsavel':
-                # Aqui você deve obter o aluno associado ao responsável
                 try:
-                    aluno = Aluno.objects.get(user=user)  # Ajuste conforme sua lógica
+                    aluno = Aluno.objects.get(user=user)
                 except Aluno.DoesNotExist:
-                    aluno = None  # Ou trate conforme sua necessidade
-
-                # Renderiza o template do painel do responsável com as informações do aluno
-                return render(request, 'responsavel.html', {'aluno': aluno})  # Altere para o nome do seu template
+                    aluno = None 
+                return render(request, 'responsavel.html', {'aluno': aluno}) 
         else:
             messages.error(request, 'Usuário ou senha inválidos.')
             return render(request, self.template_name)
