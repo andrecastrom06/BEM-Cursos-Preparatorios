@@ -1,0 +1,51 @@
+<h1>Ranking - {{ simulado.nome }} do Tipo: {{ simulado.get_tipo_display }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <label for="turma">Escolha a Turma:</label>
+    <select name="turma_id" id="turma" onchange="this.form.submit()">
+        <option value="">Selecione uma turma</option>
+        {% for turma in turmas %}
+            <option value="{{ turma.id }}" {% if turma and turma.id == turma.id %}selected{% endif %}>
+                {{ turma.nome }}
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
+{% if turma %}
+<h2>Turma: {{ turma.nome }}</h2> 
+
+<table>
+    <thead>
+        <tr>
+            <th>Nome do Aluno</th>
+            <th>Data de Nascimento</th>
+            <th>Matemática</th>
+            <th>Português</th>
+            {% if simulado.tipo == "EA" %}
+                <th>Nota Final (0 a 40)</th>
+            {% else %}
+                <th>Média Final</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for ranking in rankings %}
+        <tr>
+            <td>{{ ranking.aluno__nome }} {{ ranking.aluno__sobrenome }}</td>
+            <td>{{ ranking.aluno__data_nascimento|date:"d/m/Y" }}</td>
+            <td>{{ ranking.media_matematica|floatformat:2 }}</td>
+            <td>{{ ranking.media_portugues|floatformat:2 }}</td>
+            <td>{{ ranking.media_final|floatformat:2 }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">Nenhum aluno encontrado para esta turma.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Selecione uma turma para visualizar o ranking.</p>
+{% endif %}

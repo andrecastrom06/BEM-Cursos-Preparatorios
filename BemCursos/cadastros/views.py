@@ -202,3 +202,29 @@ class ResponsavelView(LoginRequiredMixin, View):
         aluno_login = request.POST.get('aluno_login')
         aluno = get_object_or_404(Aluno, user__username=aluno_login)
         return render(request, self.template_name, {'aluno': aluno})
+
+class RankingTurmaView(View):
+    template_name = 'rankingTurma.html'
+
+    def get(self, request, simulado_id, turma_id=None):
+        simulado = get_object_or_404(Simulado, id=simulado_id)
+        turmas = Turma.objects.all()
+        turma_id = turma_id or request.GET.get('turma_id')
+
+        if turma_id:
+            rankings = RankingMediator.calcular_rankingTurma(simulado, turma_id)
+            turma = get_object_or_404(Turma, id=turma_id)
+        else:
+            rankings = []
+            turma = None
+
+        return render(request, self.template_name, {
+            'simulado': simulado,
+            'rankings': rankings,
+            'turmas': turmas,
+            'turma': turma,
+        })
+
+    def post(self, request, simulado_id):
+        turma_id = request.POST.get('turma_id')
+        return redirect('ranking_por_turma', simulado_id=simulado_id, turma_id=turma_id)
