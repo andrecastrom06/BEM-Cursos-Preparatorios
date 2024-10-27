@@ -225,6 +225,6 @@ class RankingTurmaView(View):
             'turma': turma,
         })
 
-    def post(self, request, simulado_id):
+    def post(self, request, simulado_id, turma_id=None):
         turma_id = request.POST.get('turma_id')
         return redirect('ranking_por_turma', simulado_id=simulado_id, turma_id=turma_id)

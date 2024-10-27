@@ -6,7 +6,7 @@
     <select name="turma_id" id="turma" onchange="this.form.submit()">
         <option value="">Selecione uma turma</option>
         {% for turma in turmas %}
-            <option value="{{ turma.id }}" {% if turma and turma.id == turma.id %}selected{% endif %}>
+            <option value="{{ turma.id }}" {% if turma.id == turma_selecionada.id %}selected{% endif %}>
                 {{ turma.nome }}
             </option>
         {% endfor %}

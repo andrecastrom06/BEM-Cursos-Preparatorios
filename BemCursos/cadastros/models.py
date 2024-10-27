@@ -30,14 +30,12 @@ class Aluno(models.Model):
         return f'{self.nome} {self.sobrenome}'
 
     def calcular_idade_em_dias(self):
-        """Calcula a idade do aluno em dias com base na data de nascimento."""
         hoje = timezone.now().date()
         idade_dias = (hoje - self.data_nascimento).days
         self.idade_em_dias = idade_dias
         return idade_dias
 
     def validar_cpf(self):
-        """Valida o CPF usando o cálculo de dígitos verificadores."""
         cpf = self.cpf
         if not cpf.isdigit() or len(cpf) != 11 or len(set(cpf)) == 1:
             return False
@@ -52,32 +50,24 @@ class Aluno(models.Model):
         return cpf[-2:] == f"{digito1}{digito2}"
 
     def gerar_login(self):
-        """Gera um login único baseado no nome, sobrenome e nome da turma."""
         return f"{self.nome}{self.sobrenome}{self.turma.nome}".lower().strip().replace(' ', '')
 
     def gerar_senha(self):
-        """Usa o CPF como senha padrão do aluno."""
         return self.cpf
 
     def save(self, *args, **kwargs):
-        # Calcula a idade em dias ao salvar
         self.calcular_idade_em_dias()
 
-        # Verifica se um usuário já existe para este aluno
         if not self.user_id:
-            # Cria um novo usuário
             login = self.gerar_login()
             senha = self.gerar_senha()
 
-            # Garante que o login seja único
             if User.objects.filter(username=login).exists():
                 raise ValidationError(f"O nome de usuário '{login}' já existe.")
 
-            # Cria o usuário e associa ao Aluno
             user = User.objects.create_user(username=login, password=senha)
             self.user = user
 
-        # Chama o save padrão da classe após configurar o usuário
         super().save(*args, **kwargs)
 
 class Simulado(models.Model):
@@ -106,9 +96,7 @@ class Simulado(models.Model):
             )
 
     def calcular_resultados(self):
-        """Calcula e ordena os resultados do simulado com base nas notas e critério de desempate."""
         notas = self.nota_set.all()
-        # Ordenar pela nota final, matemática, e idade em dias
         return sorted(
             notas,
             key=lambda nota: (nota.nota_final, nota.aluno.idade_em_dias),
@@ -116,15 +104,15 @@ class Simulado(models.Model):
         )
 
 class Nota(models.Model):
-    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)  # Relaciona a Nota a um Aluno
-    simulado = models.ForeignKey(Simulado, on_delete=models.CASCADE)  # Relaciona a Nota a um Simulado
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)  
+    simulado = models.ForeignKey(Simulado, on_delete=models.CASCADE)  
     matematica_acertos = models.IntegerField(default=0)
     portugues_acertos = models.IntegerField(default=0)
     
     @property
     def nota_final(self):
-        if self.simulado.tipo == "Colégio Militar":
-            return (self.acertos_mat + self.acertos_port) / 2  # Nota final como média
+        if self.simulado.tipo == "Colégio Militar": 
+            return (self.acertos_mat + self.acertos_port) / 2  
         elif self.simulado.tipo == "Escola de Aplicação":
-            return self.acertos_mat + self.acertos_port  # Total de acertos
+            return self.acertos_mat + self.acertos_port  
         return 0
