@@ -118,13 +118,16 @@ class NotaMediator:
 class RankingMediator:
     @staticmethod
     def calcular_rankings(simulado):
-        return Nota.objects.filter(simulado=simulado).values(
-            'aluno__nome'
-        ).annotate(
-            media_matematica=Avg(F('matematica_acertos') / 2),
-            media_portugues=Avg(F('portugues_acertos') / 2)
-        ).annotate(
-            media_final=F('media_matematica') + F('media_portugues')
-        ).annotate(
-            media_final=F('media_final') / 2
-        ).order_by('-media_final')
+        return (
+            Nota.objects.filter(simulado=simulado)
+            .values(
+                'aluno__nome',
+                'aluno__idade_em_dias', 
+            )
+            .annotate(
+                media_matematica=Avg(F('matematica_acertos') / 2),
+                media_portugues=Avg(F('portugues_acertos') / 2),
+                media_final=(F('media_matematica') + F('media_portugues')) / 2
+            )
+            .order_by('-media_final', '-matematica_acertos', '-aluno__idade_em_dias') 
+        )
