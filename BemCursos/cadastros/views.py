@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from .models import Unidade, Aluno, Simulado, Turma
+from .models import Unidade, Aluno, Simulado, Turma, Nota
 from django.contrib import messages
 from .mediators import TurmaMediator, AlunoMediator, SimuladoMediator, NotaMediator, RankingMediator
 from datetime import datetime
@@ -228,3 +228,15 @@ class RankingTurmaView(View):
     def post(self, request, simulado_id, turma_id=None):
         turma_id = request.POST.get('turma_id')
         return redirect('ranking_por_turma', simulado_id=simulado_id, turma_id=turma_id)
+    
+
+class VerNotaView(LoginRequiredMixin, View):
+    template_name = 'ver_nota.html'
+
+    def get(self, request):
+        aluno = get_object_or_404(Aluno, user=request.user)
+        notas = Nota.objects.filter(aluno=aluno)
+        return render(request, self.template_name, {
+            'aluno': aluno,
+            'notas': notas
+        })

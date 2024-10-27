@@ -2,18 +2,40 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Painel do Responsável</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Notas</title>
 </head>
 <body>
-    <h1>Painel do Responsável</h1>
-    
+    <h1>Notas do Aluno</h1>
+
     <h2>Informações do Aluno:</h2>
     {% if aluno %}
         <p><strong>Nome:</strong> {{ aluno.nome }} {{ aluno.sobrenome }}</p>
         <p><strong>CPF:</strong> {{ aluno.cpf }}</p>
         <p><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento }}</p>
         <p><strong>Idade em Dias:</strong> {{ aluno.idade_em_dias }}</p>
-        <!-- Adicione mais informações conforme necessário -->
+
+        <h2>Notas:</h2>
+        <table>
+            <tr>
+                <th>Simulado</th>
+                <th>Matemática Acertos</th>
+                <th>Português Acertos</th>
+                <th>Nota Final</th>
+            </tr>
+            {% for nota in notas %}
+            <tr>
+                <td>{{ nota.simulado.nome }}</td>
+                <td>{{ nota.matematica_acertos }}</td>
+                <td>{{ nota.portugues_acertos }}</td>
+                <td>{{ nota.nota_final }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Nenhuma nota encontrada.</td>
+            </tr>
+            {% endfor %}
+        </table>
     {% else %}
         <p>Nenhum aluno encontrado.</p>
     {% endif %}
