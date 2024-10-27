@@ -104,6 +104,7 @@ class AlunoView(LoginRequiredMixin, View):
             messages.error(request, "CPF inválido. Verifique o número e tente novamente.")
             return render(request, self.template_name_add, {'turma_id': turma_id})
 
+        # Adiciona o aluno e cria o usuário associado
         AlunoMediator.adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id)
         messages.success(request, "Aluno e usuário criados com sucesso!")
         return redirect('alunos', turma_id=turma_id)

@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from datetime import datetime
+from django.core.exceptions import ValidationError
+
 
 class Unidade(models.Model):
     nome = models.CharField(max_length=100, unique=True)
@@ -17,13 +18,13 @@ class Turma(models.Model):
         return f'{self.nome} - {self.unidade.nome}'
 
 class Aluno(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     nome = models.CharField(max_length=50)
     sobrenome = models.CharField(max_length=50)
     cpf = models.CharField(max_length=11, unique=True)
     data_nascimento = models.DateField()
     idade_em_dias = models.PositiveIntegerField(editable=False)
-
-    turma = models.ForeignKey(Turma, on_delete=models.CASCADE, related_name='alunos')
+    turma = models.ForeignKey('Turma', on_delete=models.CASCADE, related_name='alunos')
 
     def __str__(self):
         return f'{self.nome} {self.sobrenome}'
@@ -36,6 +37,7 @@ class Aluno(models.Model):
         return idade_dias
 
     def validar_cpf(self):
+        """Valida o CPF usando o cálculo de dígitos verificadores."""
         cpf = self.cpf
         if not cpf.isdigit() or len(cpf) != 11 or len(set(cpf)) == 1:
             return False
@@ -50,6 +52,7 @@ class Aluno(models.Model):
         return cpf[-2:] == f"{digito1}{digito2}"
 
     def gerar_login(self):
+        """Gera um login único baseado no nome, sobrenome e nome da turma."""
         return f"{self.nome}{self.sobrenome}{self.turma.nome}".lower().strip().replace(' ', '')
 
     def gerar_senha(self):
@@ -57,7 +60,24 @@ class Aluno(models.Model):
         return self.cpf
 
     def save(self, *args, **kwargs):
+        # Calcula a idade em dias ao salvar
         self.calcular_idade_em_dias()
+
+        # Verifica se um usuário já existe para este aluno
+        if not self.user_id:
+            # Cria um novo usuário
+            login = self.gerar_login()
+            senha = self.gerar_senha()
+
+            # Garante que o login seja único
+            if User.objects.filter(username=login).exists():
+                raise ValidationError(f"O nome de usuário '{login}' já existe.")
+
+            # Cria o usuário e associa ao Aluno
+            user = User.objects.create_user(username=login, password=senha)
+            self.user = user
+
+        # Chama o save padrão da classe após configurar o usuário
         super().save(*args, **kwargs)
 
 class Simulado(models.Model):

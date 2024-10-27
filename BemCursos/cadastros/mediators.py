@@ -32,6 +32,7 @@ class TurmaMediator:
         turma.delete()
         return {'status': 'Turma, alunos e usuários removidos com sucesso!'}
 
+
 class AlunoMediator:
     @staticmethod
     def listar_alunos(turma_id):
@@ -41,6 +42,7 @@ class AlunoMediator:
     def adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id):
         turma = get_object_or_404(Turma, id=turma_id)
         
+        # Cria o aluno temporariamente para gerar login e senha
         aluno = Aluno(
             nome=nome,
             sobrenome=sobrenome,
@@ -49,27 +51,24 @@ class AlunoMediator:
             turma=turma
         )
         aluno.calcular_idade_em_dias()
-        aluno.save()
-
+        
+        # Gera o login e a senha
         login = aluno.gerar_login()
         senha = aluno.gerar_senha()
 
-        if not User.objects.filter(username=login).exists():
-            User.objects.create_user(
-                username=login,
-                password=senha
-            )
+        # Cria o usuário e o associa ao aluno
+        usuario = User.objects.create_user(
+            username=login,
+            password=senha
+        )
+        aluno.user = usuario
+        aluno.save()  # Salva o aluno com o usuário associado
 
     @staticmethod
     def remover_aluno(aluno_id):
         aluno = get_object_or_404(Aluno, id=aluno_id)
-        
-        login = aluno.gerar_login()
-        usuario = User.objects.filter(username=login).first()
-        if usuario:
-            usuario.delete()
-
-        aluno.delete()
+        aluno.delete()  
+        aluno.user.delete()
         return {'status': 'Aluno e usuário removidos com sucesso!'}
 
 
