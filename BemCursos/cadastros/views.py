@@ -192,3 +192,15 @@ class RankingPortuguesView(View):
             'simulado': simulado,
             'rankings': rankings
         })
+    
+class ResponsavelView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    template_name = 'responsavel.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        aluno_login = request.POST.get('aluno_login')
+        aluno = get_object_or_404(Aluno, user__username=aluno_login)
+        return render(request, self.template_name, {'aluno': aluno})
