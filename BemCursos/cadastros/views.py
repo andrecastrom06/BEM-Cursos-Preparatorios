@@ -35,12 +35,18 @@ class LoginView(View):
                 return redirect('turmas')  # Altere para a URL do painel do funcionário
             
             elif user_type == 'responsavel':
-                return redirect('responsavel')  # Altere para a URL do painel do responsável
+                # Aqui você deve obter o aluno associado ao responsável
+                try:
+                    aluno = Aluno.objects.get(user=user)  # Ajuste conforme sua lógica
+                except Aluno.DoesNotExist:
+                    aluno = None  # Ou trate conforme sua necessidade
+
+                # Renderiza o template do painel do responsável com as informações do aluno
+                return render(request, 'responsavel.html', {'aluno': aluno})  # Altere para o nome do seu template
         else:
             messages.error(request, 'Usuário ou senha inválidos.')
             return render(request, self.template_name)
-
-
+        
 class TurmaView(LoginRequiredMixin, View):
     login_url = '/login/'
     template_name_list = 'turmas.html'
