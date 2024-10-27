@@ -119,17 +119,12 @@ class NotaMediator:
 class RankingMediator:
     @staticmethod
     def calcular_rankings(simulado):
-        tipo_simulado = simulado.tipo 
+        tipo_simulado = simulado.tipo
         
-        if tipo_simulado == 'CM': 
+        if tipo_simulado == 'CM':  # Colégio Militar
             rankings = (
                 Nota.objects.filter(simulado=simulado)
-                .values(
-                    'aluno__nome',
-                    'aluno__sobrenome',
-                    'aluno__idade_em_dias',
-                    'aluno__data_nascimento'
-                )
+                .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
                 .annotate(
                     media_matematica=Avg(F('matematica_acertos') * 0.5),
                     media_portugues=Avg(F('portugues_acertos') * 0.5),
@@ -137,20 +132,37 @@ class RankingMediator:
                 )
             )
         
-        elif tipo_simulado == 'EA': 
+        elif tipo_simulado == 'EA':  # Escola de Aplicação
             rankings = (
                 Nota.objects.filter(simulado=simulado)
-                .values(
-                    'aluno__nome',
-                    'aluno__sobrenome',
-                    'aluno__idade_em_dias',
-                    'aluno__data_nascimento'
-                )
+                .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
                 .annotate(
-                    media_matematica=Avg(F('matematica_acertos')),  
-                    media_portugues=Avg(F('portugues_acertos')),     
-                    media_final=(F('media_matematica') + F('media_portugues'))  
+                    media_matematica=Avg(F('matematica_acertos')),
+                    media_portugues=Avg(F('portugues_acertos')),
+                    media_final=(F('media_matematica') + F('media_portugues'))
                 )
             )
-
+        
         return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+
+    @staticmethod
+    def calcular_ranking_matematica(simulado):
+        rankings = (
+            Nota.objects.filter(simulado=simulado)
+            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+            .annotate(media_matematica=Avg(F('matematica_acertos') * 0.5))
+            .order_by('-media_matematica', '-aluno__idade_em_dias')
+        )
+        
+        return rankings
+
+    @staticmethod
+    def calcular_ranking_portugues(simulado):
+        rankings = (
+            Nota.objects.filter(simulado=simulado)
+            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+            .annotate(media_portugues=Avg(F('portugues_acertos') * 0.5))
+            .order_by('-media_portugues', '-aluno__idade_em_dias')
+        )
+        
+        return rankings

@@ -3,12 +3,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from .models import Unidade, Aluno, Simulado, Nota
+from .models import Unidade, Aluno, Simulado, Turma
 from django.contrib import messages
 from .mediators import TurmaMediator, AlunoMediator, SimuladoMediator, NotaMediator, RankingMediator
 from datetime import datetime
-from django.db import transaction
-from django.db.models import Avg, F
 # superuser
 # username 'bemcursos'
 # password 'preparatoriobem'
@@ -143,7 +141,12 @@ class NotaView(View):
     def get(self, request, simulado_id):
         simulado = get_object_or_404(Simulado, id=simulado_id)
         alunos = NotaMediator.obter_alunos()
-        return render(request, self.template_name, {'simulado': simulado, 'alunos': alunos})
+        turmas = Turma.objects.all()  # Carregar todas as turmas
+        return render(request, self.template_name, {
+            'simulado': simulado,
+            'alunos': alunos,
+            'turmas': turmas
+        })
 
     def post(self, request, simulado_id):
         simulado = get_object_or_404(Simulado, id=simulado_id)
@@ -159,6 +162,30 @@ class RankingView(View):
     def get(self, request, simulado_id):
         simulado = get_object_or_404(Simulado, id=simulado_id)
         rankings = RankingMediator.calcular_rankings(simulado)
+
+        return render(request, self.template_name, {
+            'simulado': simulado,
+            'rankings': rankings
+        })
+
+class RankingMatematicaView(View):
+    template_name = 'ranking_matematica.html'
+
+    def get(self, request, simulado_id):
+        simulado = get_object_or_404(Simulado, id=simulado_id)
+        rankings = RankingMediator.calcular_ranking_matematica(simulado)
+
+        return render(request, self.template_name, {
+            'simulado': simulado,
+            'rankings': rankings
+        })
+
+class RankingPortuguesView(View):
+    template_name = 'ranking_portugues.html'
+
+    def get(self, request, simulado_id):
+        simulado = get_object_or_404(Simulado, id=simulado_id)
+        rankings = RankingMediator.calcular_ranking_portugues(simulado)
 
         return render(request, self.template_name, {
             'simulado': simulado,

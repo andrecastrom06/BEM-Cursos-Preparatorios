@@ -39,4 +39,9 @@
         </tbody>
     </table>
 </form>
-<a href="{% url 'ranking' simulado.id %}" class="btn btn-info">Ver Ranking</a>
+<br>
+<a href="{% url 'ranking' simulado.id %}" class="btn btn-info">Ranking Geral</a>
+<br>
+<a href="{% url 'ranking_matematica' simulado.id %}" class="btn btn-info">Ranking de Matemática</a>
+<br>
+<a href="{% url 'ranking_portugues' simulado.id %}" class="btn btn-info">Ranking de Português</a>
