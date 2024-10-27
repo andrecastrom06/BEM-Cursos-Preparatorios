@@ -1,20 +1,22 @@
-<h2>Ranking do Simulado: {{ simulado.nome }}</h2>
+<h1>Ranking - {{ simulado.nome }} do Tipo : {{ simulado.get_tipo_display }}</h1>
 <table>
     <thead>
         <tr>
-            <th> Nome  </th>
-            <th> Sobrenome </th>
-            <th> Data de Nascimento </th>
-            <th> Matemática </th>
-            <th> Português </th>
-            <th> Final </th>
+            <th>Nome do Aluno</th>
+            <th>Data de Nascimento</th>
+            <th>Matemática</th>
+            <th>Português</th>
+            {% if simulado.tipo == "EA" %}
+                <th>Nota Final (0 a 40)</th>
+            {% else %}
+                <th>Média Final</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
         {% for ranking in rankings %}
         <tr>
-            <td>{{ ranking.aluno__nome }}</td>
-            <td>{{ ranking.aluno__sobrenome }}</td>
+            <td>{{ ranking.aluno__nome }} {{ ranking.aluno__sobrenome }}</td>
             <td>{{ ranking.aluno__data_nascimento|date:"d/m/Y" }}</td>
             <td>{{ ranking.media_matematica|floatformat:1 }}</td>
             <td>{{ ranking.media_portugues|floatformat:1 }}</td>
@@ -22,7 +24,7 @@
         </tr>
         {% empty %}
         <tr>
-            <td colspan="4">Nenhum aluno encontrado.</td>
+            <td colspan="5">Nenhum aluno encontrado.</td>
         </tr>
         {% endfor %}
     </tbody>

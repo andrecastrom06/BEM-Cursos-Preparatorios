@@ -115,21 +115,42 @@ class NotaMediator:
                         defaults={'portugues_acertos': int(portugues_acertos)}
                     )
 
+
 class RankingMediator:
     @staticmethod
     def calcular_rankings(simulado):
-        return (
-            Nota.objects.filter(simulado=simulado)
-            .values(
-                'aluno__nome',
-                'aluno__sobrenome',
-                'aluno__idade_em_dias', 
-                'aluno__data_nascimento',
+        tipo_simulado = simulado.tipo 
+        
+        if tipo_simulado == 'CM': 
+            rankings = (
+                Nota.objects.filter(simulado=simulado)
+                .values(
+                    'aluno__nome',
+                    'aluno__sobrenome',
+                    'aluno__idade_em_dias',
+                    'aluno__data_nascimento'
+                )
+                .annotate(
+                    media_matematica=Avg(F('matematica_acertos') * 0.5),
+                    media_portugues=Avg(F('portugues_acertos') * 0.5),
+                    media_final=(F('media_matematica') + F('media_portugues')) / 2
+                )
             )
-            .annotate(
-                media_matematica=Avg(F('matematica_acertos') / 2),
-                media_portugues=Avg(F('portugues_acertos') / 2),
-                media_final=(F('media_matematica') + F('media_portugues')) / 2
+        
+        elif tipo_simulado == 'EA': 
+            rankings = (
+                Nota.objects.filter(simulado=simulado)
+                .values(
+                    'aluno__nome',
+                    'aluno__sobrenome',
+                    'aluno__idade_em_dias',
+                    'aluno__data_nascimento'
+                )
+                .annotate(
+                    media_matematica=Avg(F('matematica_acertos')),  
+                    media_portugues=Avg(F('portugues_acertos')),     
+                    media_final=(F('media_matematica') + F('media_portugues'))  
+                )
             )
-            .order_by('-media_final', '-matematica_acertos', '-aluno__idade_em_dias') 
-        )
+
+        return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
