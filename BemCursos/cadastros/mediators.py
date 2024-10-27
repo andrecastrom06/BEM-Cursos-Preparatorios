@@ -122,7 +122,9 @@ class RankingMediator:
             Nota.objects.filter(simulado=simulado)
             .values(
                 'aluno__nome',
+                'aluno__sobrenome',
                 'aluno__idade_em_dias', 
+                'aluno__data_nascimento',
             )
             .annotate(
                 media_matematica=Avg(F('matematica_acertos') / 2),

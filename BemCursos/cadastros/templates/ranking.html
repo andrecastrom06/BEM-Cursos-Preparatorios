@@ -2,16 +2,20 @@
 <table>
     <thead>
         <tr>
-            <th>Nome</th>
-            <th>Média Matemática</th>
-            <th>Média Português</th>
-            <th>Média Final</th>
+            <th> Nome  </th>
+            <th> Sobrenome </th>
+            <th> Data de Nascimento </th>
+            <th> Matemática </th>
+            <th> Português </th>
+            <th> Final </th>
         </tr>
     </thead>
     <tbody>
         {% for ranking in rankings %}
         <tr>
             <td>{{ ranking.aluno__nome }}</td>
+            <td>{{ ranking.aluno__sobrenome }}</td>
+            <td>{{ ranking.aluno__data_nascimento|date:"d/m/Y" }}</td>
             <td>{{ ranking.media_matematica|floatformat:1 }}</td>
             <td>{{ ranking.media_portugues|floatformat:1 }}</td>
             <td>{{ ranking.media_final|floatformat:1 }}</td>
