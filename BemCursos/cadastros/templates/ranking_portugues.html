@@ -12,7 +12,7 @@
         <tr>
             <td>{{ ranking.aluno__nome }} {{ ranking.aluno__sobrenome }}</td>
             <td>{{ ranking.aluno__data_nascimento|date:"d/m/Y" }}</td>
-            <td>{{ ranking.media_portugues|floatformat:1 }}</td>
+            <td>{{ ranking.media_portugues|floatformat:2 }}</td>
         </tr>
         {% endfor %}
     </tbody>

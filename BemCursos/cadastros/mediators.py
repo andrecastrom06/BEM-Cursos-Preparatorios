@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404
 from .models import Turma, Unidade, Aluno, Simulado,Nota, User
 from django.db import transaction
-from django.db.models import Avg, F
+from django.db.models import Avg, F, FloatField
+from django.db.models.functions import Cast
 
 class TurmaMediator:
     @staticmethod
@@ -120,25 +121,25 @@ class RankingMediator:
     def calcular_rankings(simulado):
         tipo_simulado = simulado.tipo
         
-        if tipo_simulado == 'CM':  # Colégio Militar
+        if tipo_simulado == 'CM':  
             rankings = (
                 Nota.objects.filter(simulado=simulado)
                 .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
                 .annotate(
-                    media_matematica=Avg(F('matematica_acertos') * 0.5),
-                    media_portugues=Avg(F('portugues_acertos') * 0.5),
-                    media_final=(F('media_matematica') + F('media_portugues')) / 2
+                    media_matematica=Cast(Avg(F('matematica_acertos') * 0.5), FloatField()),
+                    media_portugues=Cast(Avg(F('portugues_acertos') * 0.5), FloatField()), 
+                    media_final=Cast((F('media_matematica') / 2 + F('media_portugues') / 2), FloatField())
                 )
             )
         
-        elif tipo_simulado == 'EA':  # Escola de Aplicação
+        elif tipo_simulado == 'EA':  
             rankings = (
                 Nota.objects.filter(simulado=simulado)
                 .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
                 .annotate(
-                    media_matematica=Avg(F('matematica_acertos')),
-                    media_portugues=Avg(F('portugues_acertos')),
-                    media_final=(F('media_matematica') + F('media_portugues'))
+                    media_matematica=Cast(Avg(F('matematica_acertos')), FloatField()),  
+                    media_portugues=Cast(Avg(F('portugues_acertos')), FloatField()),  
+                    media_final=Cast((F('media_matematica') + F('media_portugues')), FloatField())
                 )
             )
         
@@ -146,22 +147,38 @@ class RankingMediator:
 
     @staticmethod
     def calcular_ranking_matematica(simulado):
-        rankings = (
-            Nota.objects.filter(simulado=simulado)
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
-            .annotate(media_matematica=Avg(F('matematica_acertos') * 0.5))
-            .order_by('-media_matematica', '-aluno__idade_em_dias')
-        )
+        if simulado.tipo == 'CM':  
+            rankings = (
+                Nota.objects.filter(simulado=simulado)
+                .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+                .annotate(media_matematica=Cast(Avg(F('matematica_acertos') * 0.5), FloatField()))  
+                .order_by('-media_matematica', '-aluno__idade_em_dias')
+            )
+        elif simulado.tipo == 'EA':  
+            rankings = (
+                Nota.objects.filter(simulado=simulado)
+                .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+                .annotate(media_matematica=Cast(Avg(F('matematica_acertos')), FloatField())) 
+                .order_by('-media_matematica', '-aluno__idade_em_dias')
+            )
         
         return rankings
 
     @staticmethod
     def calcular_ranking_portugues(simulado):
-        rankings = (
-            Nota.objects.filter(simulado=simulado)
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
-            .annotate(media_portugues=Avg(F('portugues_acertos') * 0.5))
-            .order_by('-media_portugues', '-aluno__idade_em_dias')
-        )
+        if simulado.tipo == 'CM':  
+            rankings = (
+                Nota.objects.filter(simulado=simulado)
+                .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+                .annotate(media_portugues=Cast(Avg(F('portugues_acertos') * 0.5), FloatField()))  
+                .order_by('-media_portugues', '-aluno__idade_em_dias')
+            )
+        elif simulado.tipo == 'EA':  
+            rankings = (
+                Nota.objects.filter(simulado=simulado)
+                .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+                .annotate(media_portugues=Cast(Avg(F('portugues_acertos')), FloatField()))  
+                .order_by('-media_portugues', '-aluno__idade_em_dias')
+            )
         
         return rankings
