@@ -1,101 +1,281 @@
-<div class="container">
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-<div class="container">
-    <h2>Lista de Alunos</h2>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Alunos</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(65, 88, 208);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Sobrenome</th>
-                    <th>CPF</th>
-                    <th>Data de Nascimento</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for aluno in alunos %}
-                <tr>
-                    <td>{{ aluno.nome }}</td>
-                    <td>{{ aluno.sobrenome }}</td>
-                    <td>{{ aluno.cpf }}</td>
-                    <td>{{ aluno.data_nascimento }}</td>
-                    <td>
-                        <!-- Botão para abrir o modal de confirmação -->
-                        <button class="btn-remover" data-bs-toggle="modal" data-bs-target="#confirmarRemocaoModal" data-id="{{ aluno.id }}">Remover</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 20px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar .profile h3 {
+            margin: 10px 0 5px;
+            color: black;
+        }
+
+        .sidebar .profile p {
+            color: #555;
+        }
+
+        .sidebar nav a {
+            text-decoration: none;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: rgb(65, 88, 208);
+            margin-bottom: 10px;
+            text-align: center;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease; 
+            display: block;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgb(54, 74, 175);
+        }
+
+        .container {
+            flex: 1;
+            padding: 20px;
+            background-color: rgb(65, 88, 208);
+            color: white;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
+        }
+        .button-container {
+            display: flex;
+            justify-content: center; 
+            margin-top: 20px; 
+        }
+
+        .table-container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 800px;
+            background-color: rgb(11, 173, 38);
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #ffffff;
+            color: black; 
+        }
+
+        tr:nth-child(even) {
+            background-color: rgb(11, 173, 38);
+        }
+
+        a, button {
+            background-color: #007BFF; 
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+
+        a:hover, button:hover {
+            background-color: #0056b3;
+        }
+
+        .add-aluno {
+            display: block;
+            text-align: center;
+            background-color: rgb(11, 173, 38);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            width: 250px;
+            margin: 30px auto;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            transition: background-color 0.5s ease; 
+        }
+
+        .add-aluno:hover {
+            background-color: rgb(11, 147, 34);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="profile">
+            <img src="/static/imgfunc.jpg" alt="funcionario" width="100" height="100">
+            <h3>Nome e Sobrenome</h3>
+            <p>Função</p>
+        </div>
+        <nav>
+            <a href="#">Turmas</a>
+            <a href="{% url 'simulados' %}" class="btn btn-primary">Simulados</a>
+        </nav>
     </div>
 
-    <a href="{% url 'adicionar_aluno' turma_id=turma_id %}" class="add-aluno">Adicionar Aluno</a>
-</div>
+    <div class="container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-<!-- Modal de Confirmação -->
-<div class="modal fade" id="confirmarRemocaoModal" tabindex="-1" aria-labelledby="confirmarRemocaoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmarRemocaoModalLabel">Confirmar Remoção</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Tem certeza de que deseja remover este aluno?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button id="confirmarRemocaoBtn" class="btn btn-danger" data-bs-dismiss="modal">Remover</button>
+        <h2>Lista de Alunos</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Sobrenome</th>
+                        <th>CPF</th>
+                        <th>Data de Nascimento</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos %}
+                    <tr>
+                        <td>{{ aluno.nome }}</td>
+                        <td>{{ aluno.sobrenome }}</td>
+                        <td>{{ aluno.cpf }}</td>
+                        <td>{{ aluno.data_nascimento }}</td>
+                        <td>
+                            <button class="btn-remover btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmarRemocaoModal" data-id="{{ aluno.id }}">Remover</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <a href="{% url 'adicionar_aluno' turma_id=turma_id %}" class="add-aluno">Adicionar Aluno</a>
+        <div class="button-container">
+            <button onclick="window.history.back()" class="btn btn-secondary">Voltar</button>
+        </div>
+
+    </div>
+    <div class="modal fade" id="confirmarRemocaoModal" tabindex="-1" aria-labelledby="confirmarRemocaoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    Tem certeza de que deseja remover este aluno?
+                    <br><br>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button id="confirmarRemocaoBtn" class="btn btn-danger">Remover</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Script para manipulação do Modal -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var removerButtons = document.querySelectorAll('.btn-remover');
-        var confirmarRemocaoBtn = document.getElementById('confirmarRemocaoBtn');
-        var alunoIdToRemove = null; // Variável para armazenar o ID do aluno a ser removido
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var removerButtons = document.querySelectorAll('.btn-remover');
+            var confirmarRemocaoBtn = document.getElementById('confirmarRemocaoBtn');
+            var alunoIdToRemove = null; 
 
-        removerButtons.forEach(function (button) {
-            button.addEventListener('click', function () {
-                alunoIdToRemove = this.getAttribute('data-id');
+            removerButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    alunoIdToRemove = this.getAttribute('data-id');
+                });
+            });
+
+            confirmarRemocaoBtn.addEventListener('click', function () {
+                if (alunoIdToRemove) {
+         
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `{% url 'alunos' turma_id=turma_id %}`; 
+
+ 
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = 'csrfmiddlewaretoken';
+                    csrfToken.value = '{{ csrf_token }}';
+                    form.appendChild(csrfToken);
+
+                    const alunoInput = document.createElement('input');
+                    alunoInput.type = 'hidden';
+                    alunoInput.name = 'remover_aluno_id';
+                    alunoInput.value = alunoIdToRemove;
+                    form.appendChild(alunoInput);
+
+                    document.body.appendChild(form); 
+                    form.submit(); 
+                }
             });
         });
-
-        confirmarRemocaoBtn.addEventListener('click', function () {
-            if (alunoIdToRemove) {
-                // Criar o formulário para remoção do aluno
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = `{% url 'alunos' turma_id=turma_id %}`; // URL onde o formulário será enviado
-
-                // Adicionar CSRF token
-                const csrfToken = document.createElement('input');
-                csrfToken.type = 'hidden';
-                csrfToken.name = 'csrfmiddlewaretoken';
-                csrfToken.value = '{{ csrf_token }}';
-                form.appendChild(csrfToken);
-
-                // Adicionar ID do aluno a ser removido
-                const alunoInput = document.createElement('input');
-                alunoInput.type = 'hidden';
-                alunoInput.name = 'remover_aluno_id';
-                alunoInput.value = alunoIdToRemove;
-                form.appendChild(alunoInput);
-
-                document.body.appendChild(form); // Adicionar o formulário ao body
-                form.submit(); // Enviar o formulário
-            }
-        });
-    });
-</script>
+    </script>
+</body>
+</html>

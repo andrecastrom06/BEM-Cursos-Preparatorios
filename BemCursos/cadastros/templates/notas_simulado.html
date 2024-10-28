@@ -1,49 +1,246 @@
-<h2>Notas do Simulado: {{ simulado.nome }}</h2>
-{% if messages %}
-<ul>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-{% endif %}
-<form method="post">
-    {% csrf_token %}
-    <table>
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Matemática</th>
-                <th>Português</th>
-                <th>Média</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for aluno in alunos %}
-            <tr>
-                <td>{{ aluno.nome }}</td>
-                <td>
-                    <input type="number" name="matematica_{{ aluno.id }}" min="0" max="20" required>
-                </td>
-                <td>
-                    <input type="number" name="portugues_{{ aluno.id }}" min="0" max="20" required>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5">Nenhum aluno encontrado.</td>
-            </tr>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas do Simulado</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(65, 88, 208);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 20px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar .profile h3 {
+            margin: 10px 0 5px;
+            color: black;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar .profile p {
+            color: #555;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar nav a {
+            text-decoration: none;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: rgb(65, 88, 208);
+            margin-bottom: 10px;
+            text-align: center;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgb(54, 74, 175);
+        }
+
+
+        .container {
+            flex: 1;
+            padding: 20px;
+            background-color: rgb(65, 88, 208);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+
+        table {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table thead {
+            background-color: rgb(11, 173, 38);
+            color: white;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background-color: #e6e6e6;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        button, .btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 10px;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover, .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-info {
+            background-color: rgb(11, 173, 38);
+            font-size: large;
+            color: black;
+        }
+
+        .btn-info:hover {
+            background-color: rgb(11, 173, 38);
+        }
+
+        /* Responsividade */
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .container {
+                padding: 10px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .sidebar {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="profile">
+            <img src="/static/imgfunc.jpg" alt="funcionario" width="100" height="100">
+            <h3>Nome e Sobrenome</h3>
+            <p>Função</p>
+        </div>
+        <nav>
+            <a href="#">Turmas</a>
+            <a href="{% url 'simulados' %}">Simulados</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <h2>Notas do Simulado: {{ simulado.nome }}</h2>
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
             {% endfor %}
-            <td>
-                <button type="submit" class="btn btn-success">Salvar</button>
-            </td>
-        </tbody>
-    </table>
-</form>
-<br>
-<a href="{% url 'ranking' simulado.id %}" class="btn btn-info">Ranking Geral</a>
-<br>
-<a href="{% url 'ranking_turma' simulado.id %}" class="btn btn-info">Ranking da Turma</a>
-<br>
-<a href="{% url 'ranking_matematica' simulado.id %}" class="btn btn-info">Ranking de Matemática</a>
-<br>
-<a href="{% url 'ranking_portugues' simulado.id %}" class="btn btn-info">Ranking de Português</a>
+        </ul>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Matemática</th>
+                        <th>Português</th>
+                        <th>Média</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos %}
+                    <tr>
+                        <td>{{ aluno.nome }}</td>
+                        <td><input type="number" name="matematica_{{ aluno.id }}" min="0" max="20" required></td>
+                        <td><input type="number" name="portugues_{{ aluno.id }}" min="0" max="20" required></td>
+                        <td>-</td>
+                        <td><button type="submit" class="btn btn-success">Salvar</button></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">Nenhum aluno encontrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+        <div>
+            <a href="{% url 'ranking' simulado.id %}" class="btn btn-info">Ranking Geral</a>
+            <a href="{% url 'ranking_turma' simulado.id %}" class="btn btn-info">Ranking da Turma</a>
+            <a href="{% url 'ranking_matematica' simulado.id %}" class="btn btn-info">Ranking de Matemática</a>
+            <a href="{% url 'ranking_portugues' simulado.id %}" class="btn btn-info">Ranking de Português</a>
+        </div>
+    </div>
+</body>
+</html>
