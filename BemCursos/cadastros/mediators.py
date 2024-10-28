@@ -170,9 +170,3 @@ class RankingMediator:
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
         return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
-    
-
-class NotaMediator:
-    @staticmethod
-    def obter_notas_aluno(aluno):
-        return Nota.objects.filter(aluno=aluno)
