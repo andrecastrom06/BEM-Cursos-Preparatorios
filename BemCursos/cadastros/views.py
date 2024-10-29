@@ -96,14 +96,14 @@ class AlunoView(LoginRequiredMixin, View):
         cpf = request.POST.get('cpf')
         data_nascimento_str = request.POST.get('data_nascimento')
         data_nascimento = datetime.strptime(data_nascimento_str, "%Y-%m-%d").date()
+        is_ver_geral = bool(request.POST.get('is_ver_geral'))
 
-        aluno_temp = Aluno(nome=nome, sobrenome=sobrenome, cpf=cpf, data_nascimento=data_nascimento, turma_id=turma_id)
+        aluno_temp = Aluno(nome=nome, sobrenome=sobrenome, cpf=cpf, data_nascimento=data_nascimento, turma_id=turma_id, is_ver_geral=is_ver_geral)
         if not aluno_temp.validar_cpf():
             messages.error(request, "CPF inválido. Verifique o número e tente novamente.")
             return render(request, self.template_name_add, {'turma_id': turma_id})
 
-        # Adiciona o aluno e cria o usuário associado
-        AlunoMediator.adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id)
+        AlunoMediator.adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id, is_ver_geral)
         messages.success(request, "Aluno e usuário criados com sucesso!")
         return redirect('alunos', turma_id=turma_id)
     

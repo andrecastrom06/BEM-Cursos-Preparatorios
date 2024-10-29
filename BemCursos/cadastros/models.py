@@ -25,6 +25,7 @@ class Aluno(models.Model):
     data_nascimento = models.DateField()
     idade_em_dias = models.PositiveIntegerField(editable=False)
     turma = models.ForeignKey('Turma', on_delete=models.CASCADE, related_name='alunos')
+    is_ver_geral = models.BooleanField(default=False, verbose_name="Permissão para Visualizar Ranking Geral")
 
     def __str__(self):
         return f'{self.nome} {self.sobrenome}'

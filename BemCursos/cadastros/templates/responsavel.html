@@ -15,27 +15,29 @@
         <p><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento }}</p>
         <p><strong>Idade em Dias:</strong> {{ aluno.idade_em_dias }}</p>
 
-        <h2>Notas:</h2>
-        <table>
-            <tr>
-                <th>Simulado</th>
-                <th>Matemática Acertos</th>
-                <th>Português Acertos</th>
-                <th>Nota Final</th>
-            </tr>
-            {% for nota in notas %}
-            <tr>
-                <td>{{ nota.simulado.nome }}</td>
-                <td>{{ nota.matematica_acertos }}</td>
-                <td>{{ nota.portugues_acertos }}</td>
-                <td>{{ nota.nota_final }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">Nenhuma nota encontrada.</td>
-            </tr>
-            {% endfor %}
-        </table>
+        {% for simulado in simulados %}
+            <h2>Notas:</h2>
+            <table>
+                <tr>
+                    <th>Simulado</th>
+                    <th>Matemática Acertos</th>
+                    <th>Português Acertos</th>
+                    <th>Nota Final</th>
+                </tr>
+                {% for nota in notas %}
+                <tr>
+                    <td>{{ nota.simulado.nome }}</td>
+                    <td>{{ nota.matematica_acertos }}</td>
+                    <td>{{ nota.portugues_acertos }}</td>
+                    <td>{{ nota.nota_final }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">Nenhuma nota encontrada.</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
     {% else %}
         <p>Nenhum aluno encontrado.</p>
     {% endif %}

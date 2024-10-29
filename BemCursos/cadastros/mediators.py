@@ -41,7 +41,7 @@ class AlunoMediator:
         return Aluno.objects.filter(turma__id=turma_id)
 
     @staticmethod
-    def adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id):
+    def adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id, is_ver_geral):
         turma = get_object_or_404(Turma, id=turma_id)
         
         aluno = Aluno(
@@ -49,7 +49,8 @@ class AlunoMediator:
             sobrenome=sobrenome,
             cpf=cpf,
             data_nascimento=data_nascimento,
-            turma=turma
+            turma=turma,
+            is_ver_geral=is_ver_geral
         )
         aluno.calcular_idade_em_dias()
         
