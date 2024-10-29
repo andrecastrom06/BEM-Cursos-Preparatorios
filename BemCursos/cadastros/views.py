@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from .models import Unidade, Aluno, Simulado, Turma
 from django.contrib import messages
-from .mediators import TurmaMediator, AlunoMediator, SimuladoMediator, NotaMediator, RankingMediator
+from .mediators import TurmaMediator, AlunoMediator, SimuladoMediator, NotaMediator, RankingMediator, RankingResponsavelMediator
 from datetime import datetime
 from django.urls import reverse
 
@@ -200,14 +200,12 @@ class RankingTurmaView(View):
         simulado = get_object_or_404(Simulado, id=simulado_id)
         turmas = Turma.objects.all()
         turma_id = turma_id or request.GET.get('turma_id')
-
         if turma_id:
             rankings = RankingMediator.calcular_rankingTurma(simulado, turma_id)
             turma = get_object_or_404(Turma, id=turma_id)
         else:
             rankings = []
             turma = None
-
         return render(request, self.template_name, {
             'simulado': simulado,
             'rankings': rankings,
@@ -218,16 +216,33 @@ class RankingTurmaView(View):
     def post(self, request, simulado_id, turma_id=None):
         turma_id = request.POST.get('turma_id')
         return redirect('ranking_por_turma', simulado_id=simulado_id, turma_id=turma_id)
-    
+
 class ResponsavelView(LoginRequiredMixin, View):
     template_name = 'responsavel.html'
-
     def get(self, request):
+        aluno = aluno = get_object_or_404(Aluno, user=request.user)
         simulados = SimuladoMediator.listar_simulados()
-        return render(request, self.template_name, {'simulados': simulados})
+        turmas = Turma.objects.all()
+        return render(request, self.template_name, {'aluno': aluno, 'simulados': simulados, 'turmas': turmas})
 
     def post(self, request):
         aluno_login = request.POST.get('aluno_login')
         aluno = get_object_or_404(Aluno, user__username=aluno_login)
         simulados = SimuladoMediator.listar_simulados()
-        return render(request, self.template_name, {'aluno': aluno, 'simulados': simulados})
+        turmas = Turma.objects.all() 
+        return render(request, self.template_name, {'aluno': aluno, 'simulados': simulados, 'turmas': turmas})
+
+class RankingPorTurmaResponsavelView(View):
+    template_name = 'ranking_turma_responsavel.html'
+
+    def get(self, request, simulado_id):
+        simulado = get_object_or_404(Simulado, id=simulado_id)
+        aluno = get_object_or_404(Aluno, user=request.user)
+        turma = aluno.turma
+        rankings = RankingMediator.calcular_rankingTurma(simulado, turma.id)
+
+        return render(request, self.template_name, {
+            'simulado': simulado,
+            'rankings': rankings,
+            'turma': turma,
+        })

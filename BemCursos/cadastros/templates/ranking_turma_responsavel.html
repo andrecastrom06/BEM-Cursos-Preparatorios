@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking - {{ simulado.nome }} do Tipo: {{ simulado.get_tipo_display }}</title>
+    <style>
+        /* Estilos Gerais */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(65, 88, 208);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Conteúdo Principal */
+        .container {
+            padding: 20px;
+            background-color: rgb(11, 173, 38);
+            border-radius: 10px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            text-align: center;
+            color: white;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        h1, h2 {
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        /* Tabela */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            color: #333;
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table thead {
+            background-color: rgb(65, 88, 208);
+            color: white;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background-color: #e6e6e6;
+        }
+
+        /* Botão Voltar */
+        .voltar-botao {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .voltar-botao:hover {
+            background-color: #0056b3;
+        }
+
+        /* Responsivo */
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            table th, table td {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Ranking da Turma - {{ simulado.nome }} (Tipo: {{ simulado.get_tipo_display }})</h1>
+
+        {% if turma %}
+            <h2>Turma: {{ turma.nome }}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome do Aluno</th>
+                        <th>Data de Nascimento</th>
+                        <th>Matemática</th>
+                        <th>Português</th>
+                        {% if simulado.tipo == "EA" %}
+                            <th>Nota Final (0 a 40)</th>
+                        {% else %}
+                            <th>Média Final</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ranking in rankings %}
+                    <tr>
+                        <td>{{ ranking.aluno__nome }} {{ ranking.aluno__sobrenome }}</td>
+                        <td>{{ ranking.aluno__data_nascimento|date:"d/m/Y" }}</td>
+                        <td>{{ ranking.media_matematica|floatformat:2 }}</td>
+                        <td>{{ ranking.media_portugues|floatformat:2 }}</td>
+                        <td>{{ ranking.media_final|floatformat:2 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">Nenhum aluno encontrado para esta turma.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Você não tem turmas associadas.</p>
+        {% endif %}
+
+        <button onclick="window.history.back()" class="voltar-botao">Voltar</button>
+    </div>
+</body>
+</html>

@@ -171,3 +171,41 @@ class RankingMediator:
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
         return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+
+class RankingResponsavelMediator:
+    @staticmethod
+    def _calcular_medias(queryset, tipo_simulado):
+        if tipo_simulado == 'CM':
+            return queryset.annotate(
+                media_matematica=Cast(Avg(F('matematica_acertos') * 0.5), FloatField()),
+                media_portugues=Cast(Avg(F('portugues_acertos') * 0.5), FloatField()),
+                media_final=Cast((F('media_matematica') / 2 + F('media_portugues') / 2), FloatField())
+            )
+        elif tipo_simulado == 'EA':
+            return queryset.annotate(
+                media_matematica=Cast(Avg(F('matematica_acertos')), FloatField()),
+                media_portugues=Cast(Avg(F('portugues_acertos')), FloatField()),
+                media_final=Cast((F('media_matematica') + F('media_portugues')), FloatField())
+            )
+        return queryset
+
+    @staticmethod
+    def calcular_rankings_gerais(simulado):
+        tipo_simulado = simulado.tipo
+        rankings = (
+            Nota.objects.filter(simulado=simulado)
+            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+        )
+        rankings = RankingResponsavelMediator._calcular_medias(rankings, tipo_simulado)
+        return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+
+    @staticmethod
+    def calcular_ranking_turma(simulado, turma_id):
+        tipo_simulado = simulado.tipo
+        notas_turma = Nota.objects.filter(simulado=simulado, aluno__turma_id=turma_id)
+        rankings = (
+            notas_turma
+            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+        )
+        rankings = RankingResponsavelMediator._calcular_medias(rankings, tipo_simulado)
+        return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
