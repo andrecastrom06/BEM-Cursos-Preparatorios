@@ -12,6 +12,7 @@
         <p><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento|date:"d/m/Y" }}</p>
         <p><strong>Turma:</strong> {{ aluno.turma }}</p>
         <p><strong>CPF:</strong> {{ aluno.cpf }}</p>
+        <p>Pode ver ranking geral: {{ aluno.is_ver_geral }}</p>
     {% endif %}
 
     <h1>Ranking da Turma</h1>
@@ -31,6 +32,9 @@
                 <a href="{% url 'ranking_turma_responsavel' simulado.id %}">
                     <button>Ver Ranking da Turma do simulado: {{ simulado.nome }}</button>
                 </a>
+                {% if request.user.aluno.is_ver_geral %}
+                <a href="{% url 'ranking_geral_responsavel' simulado.id %}" class="ranking-geral-botao">Ver Ranking Geral</a>
+            {% endif %}
             </li>
         {% endfor %}
     </ul>

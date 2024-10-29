@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranking - {{ simulado.nome }} do Tipo: {{ simulado.get_tipo_display }}</title>
+    <title>Ranking Geral - Responsável</title>
     <style>
         /* Estilos Gerais */
         body {
@@ -67,8 +67,8 @@
             background-color: #e6e6e6;
         }
 
-        /* Botão Voltar e Ranking Geral */
-        .voltar-botao, .ranking-geral-botao {
+        /* Botão Voltar */
+        .voltar-botao {
             background-color: #007BFF;
             color: white;
             padding: 10px 20px;
@@ -82,7 +82,7 @@
             margin-top: 20px;
         }
 
-        .voltar-botao:hover, .ranking-geral-botao:hover {
+        .voltar-botao:hover {
             background-color: #0056b3;
         }
 
@@ -113,38 +113,38 @@
 <body>
 
     <div class="container">
-        <h1>Ranking da Turma - {{ simulado.nome }} (Tipo: {{ simulado.get_tipo_display }})</h1>
-            <h2>Turma: {{ turma.nome }}</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nome do Aluno</th>
-                        <th>Data de Nascimento</th>
-                        <th>Matemática</th>
-                        <th>Português</th>
-                        {% if simulado.tipo == "EA" %}
-                            <th>Nota Final (0 a 40)</th>
-                        {% else %}
-                            <th>Média Final</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for ranking in rankings %}
-                    <tr>
-                        <td>{{ ranking.aluno__nome }} {{ ranking.aluno__sobrenome }}</td>
-                        <td>{{ ranking.aluno__data_nascimento|date:"d/m/Y" }}</td>
-                        <td>{{ ranking.media_matematica|floatformat:2 }}</td>
-                        <td>{{ ranking.media_portugues|floatformat:2 }}</td>
-                        <td>{{ ranking.media_final|floatformat:2 }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5">Nenhum aluno encontrado para esta turma.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <h1>Ranking Geral</h1>
+        <h2>Simulado: {{ simulado.nome }} (Tipo: {{ simulado.get_tipo_display }})</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome do Aluno</th>
+                    <th>Data de Nascimento</th>
+                    <th>Matemática</th>
+                    <th>Português</th>
+                    {% if simulado.tipo == "EA" %}
+                        <th>Nota Final (0 a 40)</th>
+                    {% else %}
+                        <th>Média Final</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for ranking in rankings %}
+                <tr>
+                    <td>{{ ranking.aluno__nome }} {{ ranking.aluno__sobrenome }}</td>
+                    <td>{{ ranking.aluno__data_nascimento|date:"d/m/Y" }}</td>
+                    <td>{{ ranking.media_matematica|floatformat:2 }}</td>
+                    <td>{{ ranking.media_portugues|floatformat:2 }}</td>
+                    <td>{{ ranking.media_final|floatformat:2 }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">Nenhum aluno encontrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         <button onclick="window.history.back()" class="voltar-botao">Voltar</button>
     </div>
 </body>

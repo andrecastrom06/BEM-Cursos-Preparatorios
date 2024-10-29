@@ -246,3 +246,25 @@ class RankingPorTurmaResponsavelView(View):
             'rankings': rankings,
             'turma': turma,
         })
+
+class RankingGeralResponsavelView(View):
+    template_name = 'ranking_geral_responsavel.html'
+
+    def get(self, request, simulado_id):
+        simulado = get_object_or_404(Simulado, id=simulado_id)
+        rankings = RankingResponsavelMediator.calcular_rankings_gerais(simulado)
+        
+        return render(request, self.template_name, {
+            'simulado': simulado,
+            'rankings': rankings,
+        })
+
+    def post(self, request):
+        simulado_id = request.POST.get('simulado_id')
+        simulado = get_object_or_404(Simulado, id=simulado_id)
+        rankings = RankingResponsavelMediator.calcular_rankings_gerais(simulado)
+
+        return render(request, self.template_name, {
+            'simulado': simulado,
+            'rankings': rankings,
+        })

@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import TurmaView, LoginView, AlunoView,SimuladoView,NotaView,RankingView,RankingMatematicaView,RankingPortuguesView
-from .views import ResponsavelView, RankingTurmaView,RankingPorTurmaResponsavelView, home
+from .views import ResponsavelView, RankingTurmaView,RankingPorTurmaResponsavelView, RankingGeralResponsavelView,home
 
 urlpatterns = [
 
@@ -24,4 +24,5 @@ urlpatterns = [
     path('ranking/turma/<int:simulado_id>/', RankingTurmaView.as_view(), name='ranking_turma'),
     path('ranking/turma/<int:simulado_id>/<int:turma_id>/', RankingTurmaView.as_view(), name='ranking_por_turma'),
     path('ranking/turma/responsavel/<int:simulado_id>/', RankingPorTurmaResponsavelView.as_view(), name='ranking_turma_responsavel'),
+    path('ranking/geral/responsavel/<int:simulado_id>/', RankingGeralResponsavelView.as_view(), name='ranking_geral_responsavel'),
 ]
