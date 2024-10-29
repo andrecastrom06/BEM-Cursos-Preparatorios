@@ -12,7 +12,8 @@
         <p><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento|date:"d/m/Y" }}</p>
         <p><strong>Turma:</strong> {{ aluno.turma }}</p>
         <p><strong>CPF:</strong> {{ aluno.cpf }}</p>
-        <p>Pode ver ranking geral: {{ aluno.is_ver_geral }}</p>
+        <p>Pode ver ranking geral: {% if aluno.is_ver_geral%}<p>Sim</p>{%else%}<p>Não</p>{%endif%}
+</p>
     {% endif %}
 
     <h1>Ranking da Turma</h1>
