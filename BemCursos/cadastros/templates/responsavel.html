@@ -31,7 +31,7 @@
             <li>
                 <strong>{{ simulado.nome }}</strong> - Data: {{ simulado.data|date:"d/m/Y" }}
                 <a href="{% url 'ranking_turma_responsavel' simulado.id %}">
-                    <button>Ver Ranking da Turma do simulado: {{ simulado.nome }}</button>
+                    <button>Ver Ranking da Turma</button>
                 </a>
                 {% if request.user.aluno.is_ver_geral %}
                 <a href="{% url 'ranking_geral_responsavel' simulado.id %}" class="ranking-geral-botao">Ver Ranking Geral</a>
