@@ -2,43 +2,185 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking da Turma - Responsável</title>
+    <style>
+        /* Estilos Gerais */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(65, 88, 208);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .page-content {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 20px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar .profile h3 {
+            margin: 10px 0 5px;
+            color: black;
+        }
+
+        .sidebar .profile p {
+            color: #555;
+        }
+
+        .sidebar nav a {
+            text-decoration: none;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: rgb(65, 88, 208);
+            margin-bottom: 10px;
+            text-align: center;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgb(54, 74, 175);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        /* Conteúdo Principal */
+        .container {
+            flex: 1;
+            padding: 20px;
+            background-color: rgb(11, 173, 38);
+            border-radius: 10px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            text-align: center;
+            color: white;
+            margin-left: 270px; /* Espaço para a sidebar fixa */
+            max-width: 900px;
+        }
+
+        h1, h2 {
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        /* Estilos do Container de Dados do Aluno */
+        .aluno-container {
+            background-color: white;
+            color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+
+        .aluno-container h2 {
+            text-align: center;
+            color: rgb(65, 88, 208);
+            margin-bottom: 15px;
+        }
+
+        .aluno-container p {
+            margin: 8px 0;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Botões */
+        button, .ranking-geral-botao {
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        button:hover, .ranking-geral-botao:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    {% if aluno %}
-        <h2>Dados do Aluno</h2>
-        <p><strong>Nome:</strong> {{ aluno.nome }}</p>
-        <p><strong>Sobrenome:</strong> {{ aluno.sobrenome }}</p>
-        <p><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento|date:"d/m/Y" }}</p>
-        <p><strong>Turma:</strong> {{ aluno.turma }}</p>
-        <p><strong>CPF:</strong> {{ aluno.cpf }}</p>
-        <p>Pode ver ranking geral: {% if aluno.is_ver_geral%}<p>Sim</p>{%else%}<p>Não</p>{%endif%}
-</p>
-    {% endif %}
+    <div class="sidebar">
+        <div class="profile">
+            <img src="/static/imgfunc.jpg" alt="funcionario" width="100" height="100">
+            <h3>Nome e Sobrenome</h3>
+            <p>Função</p>
+        </div>
+        <nav>
+            <ul>
+                {% for simulado in simulados %}
+                    <li>
+                        <strong>{{ simulado.nome }}</strong> - Data: {{ simulado.data|date:"d/m/Y" }}
+                        <a href="{% url 'ranking_turma_responsavel' simulado.id %}">Ranking Turma</a>
+                        {% if request.user.aluno.is_ver_geral %}
+                        <a href="{% url 'ranking_geral_responsavel' simulado.id %}" class="ranking-geral-botao">Ranking Geral</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>    
+        </nav>
+    </div>
 
-    <h1>Ranking da Turma</h1>
-    <ul>
-        {% for ranking in rankings %}
-            <li>
-                <strong>{{ ranking.nome }}</strong> - Nota: {{ ranking.nota }}
-            </li>
-        {% endfor %}
-    </ul>
-
-    <h2>Simulados</h2>
-    <ul>
-        {% for simulado in simulados %}
-            <li>
-                <strong>{{ simulado.nome }}</strong> - Data: {{ simulado.data|date:"d/m/Y" }}
-                <a href="{% url 'ranking_turma_responsavel' simulado.id %}">
-                    <button>Ver Ranking da Turma</button>
-                </a>
-                {% if request.user.aluno.is_ver_geral %}
-                <a href="{% url 'ranking_geral_responsavel' simulado.id %}" class="ranking-geral-botao">Ver Ranking Geral</a>
+    <div class="page-content">
+        <div class="container">
+            {% if aluno %}
+                <div class="aluno-container">
+                    <h2>Dados do Aluno</h2>
+                    <p><strong>Nome:</strong> {{ aluno.nome }}</p>
+                    <p><strong>Sobrenome:</strong> {{ aluno.sobrenome }}</p>
+                    <p><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento|date:"d/m/Y" }}</p>
+                    <p><strong>Turma:</strong> {{ aluno.turma }}</p>
+                    <p><strong>CPF:</strong> {{ aluno.cpf }}</p>
+                    <p><strong>Pode ver ranking geral:</strong> {% if aluno.is_ver_geral %}Sim{% else %}Não{% endif %}</p>
+                </div>
             {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
+        </div>
+    </div>
 </body>
 </html>
-
