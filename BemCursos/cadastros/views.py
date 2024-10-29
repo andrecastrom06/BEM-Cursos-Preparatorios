@@ -7,6 +7,7 @@ from .models import Unidade, Aluno, Simulado, Turma
 from django.contrib import messages
 from .mediators import TurmaMediator, AlunoMediator, SimuladoMediator, NotaMediator, RankingMediator
 from datetime import datetime
+from django.urls import reverse
 
 def home(request):
     return redirect('login')
@@ -34,7 +35,7 @@ class LoginView(View):
                     aluno = Aluno.objects.get(user=user)
                 except Aluno.DoesNotExist:
                     aluno = None 
-                return render(request, 'responsavel.html', {'aluno': aluno}) 
+                return redirect(reverse('responsavel'))  
         else:
             messages.error(request, 'Usuário ou senha inválidos.')
             return render(request, self.template_name)
@@ -140,7 +141,7 @@ class NotaView(View):
     def get(self, request, simulado_id):
         simulado = get_object_or_404(Simulado, id=simulado_id)
         alunos = NotaMediator.obter_alunos()
-        turmas = Turma.objects.all()  # Carregar todas as turmas
+        turmas = Turma.objects.all()
         return render(request, self.template_name, {
             'simulado': simulado,
             'alunos': alunos,
@@ -191,17 +192,6 @@ class RankingPortuguesView(View):
             'rankings': rankings
         })
     
-class ResponsavelView(LoginRequiredMixin, View):
-    login_url = '/login/'
-    template_name = 'responsavel.html'
-
-    def get(self, request):
-        return render(request, self.template_name)
-
-    def post(self, request):
-        aluno_login = request.POST.get('aluno_login')
-        aluno = get_object_or_404(Aluno, user__username=aluno_login)
-        return render(request, self.template_name, {'aluno': aluno})
 
 class RankingTurmaView(View):
     template_name = 'rankingTurma.html'
@@ -228,3 +218,16 @@ class RankingTurmaView(View):
     def post(self, request, simulado_id, turma_id=None):
         turma_id = request.POST.get('turma_id')
         return redirect('ranking_por_turma', simulado_id=simulado_id, turma_id=turma_id)
+    
+class ResponsavelView(LoginRequiredMixin, View):
+    template_name = 'responsavel.html'
+
+    def get(self, request):
+        simulados = SimuladoMediator.listar_simulados()
+        return render(request, self.template_name, {'simulados': simulados})
+
+    def post(self, request):
+        aluno_login = request.POST.get('aluno_login')
+        aluno = get_object_or_404(Aluno, user__username=aluno_login)
+        simulados = SimuladoMediator.listar_simulados()
+        return render(request, self.template_name, {'aluno': aluno, 'simulados': simulados})

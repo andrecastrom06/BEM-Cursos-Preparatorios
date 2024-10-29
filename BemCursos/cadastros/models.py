@@ -6,7 +6,6 @@ from django.core.exceptions import ValidationError
 
 class Unidade(models.Model):
     nome = models.CharField(max_length=100, unique=True)
-
     def __str__(self):
         return self.nome
 
@@ -76,7 +75,7 @@ class Simulado(models.Model):
         ('CM', 'Colégio Militar'),
         ('EA', 'Escola de Aplicação'),
     ]
-
+    
     nome = models.CharField(max_length=100)
     tipo = models.CharField(max_length=2, choices=TIPOS_SIMULADO)
     data = models.DateField()

@@ -1,45 +1,22 @@
-<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ver Notas</title>
+    <title>Responsável</title>
 </head>
 <body>
-    <h1>Notas do Aluno</h1>
-
-    <h2>Informações do Aluno:</h2>
     {% if aluno %}
-        <p><strong>Nome:</strong> {{ aluno.nome }} {{ aluno.sobrenome }}</p>
-        <p><strong>CPF:</strong> {{ aluno.cpf }}</p>
-        <p><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento }}</p>
-        <p><strong>Idade em Dias:</strong> {{ aluno.idade_em_dias }}</p>
-
-        {% for simulado in simulados %}
-            <h2>Notas:</h2>
-            <table>
-                <tr>
-                    <th>Simulado</th>
-                    <th>Matemática Acertos</th>
-                    <th>Português Acertos</th>
-                    <th>Nota Final</th>
-                </tr>
-                {% for nota in notas %}
-                <tr>
-                    <td>{{ nota.simulado.nome }}</td>
-                    <td>{{ nota.matematica_acertos }}</td>
-                    <td>{{ nota.portugues_acertos }}</td>
-                    <td>{{ nota.nota_final }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4">Nenhuma nota encontrada.</td>
-                </tr>
-                {% endfor %}
-            </table>
-        {% endfor %}
-    {% else %}
-        <p>Nenhum aluno encontrado.</p>
+        <p>{{ aluno.nome }} - {{ aluno.sobrenome }}</p>
     {% endif %}
+    <h1>Simulados</h1>
+    <ul>
+        {% for simulado in simulados %}
+            <li>
+                {{ simulado.nome }} - Data: {{ simulado.data }}
+                <a href="{% url 'ranking_turma' simulado.id %}">
+                    <button>Ver Ranking da Turma do simulado: {{ simulado.nome }}</button>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
