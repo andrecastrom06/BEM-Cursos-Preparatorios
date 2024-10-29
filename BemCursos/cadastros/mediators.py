@@ -188,7 +188,7 @@ class RankingResponsavelMediator:
                 media_final=Cast((F('media_matematica') + F('media_portugues')), FloatField())
             )
         return queryset
-
+    
     @staticmethod
     def calcular_rankings_gerais(simulado):
         tipo_simulado = simulado.tipo
