@@ -199,6 +199,7 @@
                 <thead>
                     <tr>
                         <th>Nome do Aluno</th>
+                        <th>Turma</th>
                         <th>Data de Nascimento</th>
                         <th>Matemática</th>
                         <th>Português</th>
@@ -213,10 +214,29 @@
                     {% for ranking in rankings %}
                     <tr>
                         <td>{{ ranking.aluno__nome }} {{ ranking.aluno__sobrenome }}</td>
+                        <td>{{ ranking.aluno__turma__nome }}</td>
                         <td>{{ ranking.aluno__data_nascimento|date:"d/m/Y" }}</td>
-                        <td>{{ ranking.media_matematica|floatformat:2 }}</td>
-                        <td>{{ ranking.media_portugues|floatformat:2 }}</td>
-                        <td>{{ ranking.media_final|floatformat:2 }}</td>
+                        <td>
+                            {% if tipo_simulado == 'CM' %}
+                                {{ ranking.media_matematica|floatformat:2 }}
+                            {% else %}
+                                {{ ranking.media_matematica }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if tipo_simulado == 'CM' %}
+                                {{ ranking.media_portugues|floatformat:2 }}
+                            {% else %}
+                                {{ ranking.media_portugues }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if tipo_simulado == 'CM' %}
+                                {{ ranking.media_final|floatformat:2 }}
+                            {% else %}
+                                {{ ranking.media_final }}
+                            {% endif %}
+                        </td>
                     </tr>
                     {% empty %}
                     <tr>

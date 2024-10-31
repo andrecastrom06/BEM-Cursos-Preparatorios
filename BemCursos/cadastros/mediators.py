@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from .models import Turma, Unidade, Aluno, Simulado,Nota, User
 from django.db import transaction
-from django.db.models import Avg, F, FloatField, Q
+from django.db.models import Avg, F, FloatField, IntegerField,Q
 from django.db.models.functions import Cast
 
 
@@ -125,9 +125,9 @@ class RankingMediator:
             )
         elif tipo_simulado == 'EA':
             return queryset.annotate(
-                media_matematica=Cast(Avg(F('matematica_acertos')), FloatField()),
-                media_portugues=Cast(Avg(F('portugues_acertos')), FloatField()),
-                media_final=Cast((F('media_matematica') + F('media_portugues')), FloatField())
+                media_matematica=Cast(Avg(F('matematica_acertos')), IntegerField()),
+                media_portugues=Cast(Avg(F('portugues_acertos')), IntegerField()),
+                media_final=Cast((F('media_matematica') + F('media_portugues')), IntegerField())
             )
         return queryset
 
@@ -136,7 +136,7 @@ class RankingMediator:
         tipo_simulado = simulado.tipo
         rankings = (
             Nota.objects.filter(simulado=simulado)
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome')
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
         return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
@@ -146,7 +146,7 @@ class RankingMediator:
         tipo_simulado = simulado.tipo
         rankings = (
             Nota.objects.filter(simulado=simulado)
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome')
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
         return rankings.order_by('-media_matematica', '-aluno__idade_em_dias')
@@ -156,7 +156,7 @@ class RankingMediator:
         tipo_simulado = simulado.tipo
         rankings = (
             Nota.objects.filter(simulado=simulado)
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome')
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
         return rankings.order_by('-media_portugues', '-aluno__idade_em_dias')
@@ -167,7 +167,7 @@ class RankingMediator:
         notas_turma = Nota.objects.filter(simulado=simulado, aluno__turma_id=turma_id)
         rankings = (
             notas_turma
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome')
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
         return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
@@ -179,7 +179,7 @@ class RankingResponsavelMediator:
         tipo_simulado = simulado.tipo
         rankings = (
             Nota.objects.filter(simulado=simulado)
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome')
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
         return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
@@ -190,7 +190,7 @@ class RankingResponsavelMediator:
         notas_turma = Nota.objects.filter(simulado=simulado, aluno__turma_id=turma_id)
         rankings = (
             notas_turma
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento')
+            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome')
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
         return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
