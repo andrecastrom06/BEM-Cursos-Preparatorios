@@ -235,6 +235,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Posição</th>
                             <th>Nome do Aluno</th>
                             <th>Data de Nascimento</th>
                             <th>Matemática</th>
@@ -249,6 +250,7 @@
                     <tbody>
                         {% for ranking in rankings %}
                         <tr>
+                            <td>{{ ranking.posicao }}</td>
                             <td>{{ ranking.aluno__nome }} {{ ranking.aluno__sobrenome }}</td>
                             <td>{{ ranking.aluno__data_nascimento|date:"d/m/Y" }}</td>
                             <td>

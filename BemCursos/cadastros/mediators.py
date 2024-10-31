@@ -136,30 +136,57 @@ class RankingMediator:
         tipo_simulado = simulado.tipo
         rankings = (
             Nota.objects.filter(simulado=simulado)
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome')
+            .values(
+                'aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 
+                'aluno__data_nascimento', 'aluno__turma__nome'
+            )
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
-        return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+
+        # Ordenar conforme critérios e adicionar posições
+        ordered_rankings = rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+        for posicao, aluno in enumerate(ordered_rankings, start=1):
+            aluno['posicao'] = posicao
+
+        return ordered_rankings
 
     @staticmethod
     def calcular_ranking_matematica(simulado):
         tipo_simulado = simulado.tipo
         rankings = (
             Nota.objects.filter(simulado=simulado)
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome')
+            .values(
+                'aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 
+                'aluno__data_nascimento', 'aluno__turma__nome'
+            )
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
-        return rankings.order_by('-media_matematica', '-aluno__idade_em_dias')
+
+        # Ordenar e adicionar posições para Matemática
+        ordered_rankings = rankings.order_by('-media_matematica', '-aluno__idade_em_dias')
+        for posicao, aluno in enumerate(ordered_rankings, start=1):
+            aluno['posicao'] = posicao
+
+        return ordered_rankings
 
     @staticmethod
     def calcular_ranking_portugues(simulado):
         tipo_simulado = simulado.tipo
         rankings = (
             Nota.objects.filter(simulado=simulado)
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome')
+            .values(
+                'aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 
+                'aluno__data_nascimento', 'aluno__turma__nome'
+            )
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
-        return rankings.order_by('-media_portugues', '-aluno__idade_em_dias')
+
+        # Ordenar e adicionar posições para Português
+        ordered_rankings = rankings.order_by('-media_portugues', '-aluno__idade_em_dias')
+        for posicao, aluno in enumerate(ordered_rankings, start=1):
+            aluno['posicao'] = posicao
+
+        return ordered_rankings
 
     @staticmethod
     def calcular_rankingTurma(simulado, turma_id):
@@ -167,10 +194,19 @@ class RankingMediator:
         notas_turma = Nota.objects.filter(simulado=simulado, aluno__turma_id=turma_id)
         rankings = (
             notas_turma
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome')
+            .values(
+                'aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 
+                'aluno__data_nascimento', 'aluno__turma__nome'
+            )
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
-        return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+
+        # Ordenar e adicionar posições para a turma
+        ordered_rankings = rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+        for posicao, aluno in enumerate(ordered_rankings, start=1):
+            aluno['posicao'] = posicao
+
+        return ordered_rankings
 
 class RankingResponsavelMediator:
     
@@ -179,10 +215,19 @@ class RankingResponsavelMediator:
         tipo_simulado = simulado.tipo
         rankings = (
             Nota.objects.filter(simulado=simulado)
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome')
+            .values(
+                'aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 
+                'aluno__data_nascimento', 'aluno__turma__nome'
+            )
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
-        return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+
+        # Ordenar conforme critérios e adicionar posições
+        ordered_rankings = rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+        for posicao, aluno in enumerate(ordered_rankings, start=1):
+            aluno['posicao'] = posicao
+
+        return ordered_rankings
 
     @staticmethod
     def calcular_ranking_turma(simulado, turma_id):
@@ -190,7 +235,16 @@ class RankingResponsavelMediator:
         notas_turma = Nota.objects.filter(simulado=simulado, aluno__turma_id=turma_id)
         rankings = (
             notas_turma
-            .values('aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome')
+            .values(
+                'aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 
+                'aluno__data_nascimento', 'aluno__turma__nome'
+            )
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
-        return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+
+        # Ordenar e adicionar posições para a turma
+        ordered_rankings = rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+        for posicao, aluno in enumerate(ordered_rankings, start=1):
+            aluno['posicao'] = posicao
+
+        return ordered_rankings
