@@ -173,6 +173,7 @@ class RankingMediator:
         return rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
 
 class RankingResponsavelMediator:
+    
     @staticmethod
     def calcular_rankings_gerais(simulado):
         tipo_simulado = simulado.tipo
