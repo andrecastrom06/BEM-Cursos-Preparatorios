@@ -33,12 +33,17 @@ class LoginView(View):
             elif user_type == 'responsavel':
                 try:
                     aluno = Aluno.objects.get(user=user)
+                    return redirect(reverse('responsavel'))
                 except Aluno.DoesNotExist:
-                    aluno = None 
-                return redirect(reverse('responsavel'))  
+                    messages.error(request, 'Nenhum aluno encontrado para este responsável.')
+                    return render(request, self.template_name)
         else:
             messages.error(request, 'Usuário ou senha inválidos.')
             return render(request, self.template_name)
+        
+        messages.error(request, 'Usuário, senha ou aluno inválidos.')
+        return render(request, self.template_name)
+
         
 class TurmaView(LoginRequiredMixin, View):
     login_url = '/login/'
