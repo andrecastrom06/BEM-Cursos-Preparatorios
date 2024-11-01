@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -8,37 +8,34 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <div class="side-container">
-        <label>LOGIN</label>
-    </div>
-    <img src="/static/BEMcursos.png" alt="BEM" width="350" height="200" style="margin-top: 270px; margin-left: 130px;">
-    <div class="container">
-        <div class="inner-container">
-
-            <form method="post" action="{% url 'login' %}">
+    <div class="main-login">
+        <div class="left-login">
+            <img src="{% static 'img/BEMcursos.png' %}" alt="BEM">
+        </div>
+        <div class="right-login">
+            <div class="card-login">
+                <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
-                
-                <div class="form-group">
-                    <label for="user_type">Tipo de Usuário:</label>
-                    <select id="user_type" name="user_type">
-                        <option value="funcionario">Funcionário</option>
-                        <option value="responsavel">Responsável</option>
-                    </select>
-                </div>
-            
-                <div class="form-group">
-                    <label for="username">Nome de Usuário:</label>
-                    <input type="text" id="username" name="username" placeholder="Digite seu nome de usuário" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Senha:</label>
-                    <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
-                </div>
-                <button type="submit" class="btn">Acessar</button>
-            </form>
+                    <div class="form-group">
+                        <label for="user_type">Tipo de Usuário:</label>
+                        <select id="user_type" name="user_type">
+                            <option value="funcionario">Funcionário</option>
+                            <option value="responsavel">Responsável</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Nome de Usuário:</label>
+                        <input type="text" id="username" name="username" placeholder="Usuário" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha:</label>
+                        <input type="password" id="password" name="password" placeholder="Senha" required>
+                    </div>
+                    <button type="submit" class="btn-login">Acessar</button>
+                </form>
+            </div>
         </div>
     </div>
-
     {% if messages %}
         <div class="container-erro" id="erro-container">
             <div class="inner-container-erro">
@@ -50,17 +47,15 @@
             </div>
         </div>
     {% endif %}
-
     <script>
-        // Verifica se o contêiner de erro está presente e adiciona um efeito de fade-out após 5 segundos
         const erroContainer = document.getElementById('erro-container');
         if (erroContainer) {
             setTimeout(() => {
-                erroContainer.style.opacity = '0'; // Inicia o fade-out
+                erroContainer.style.opacity = '0';
                 setTimeout(() => {
-                    erroContainer.style.display = 'none'; // Remove o contêiner após o fade-out
-                }, 1000); // 1 segundo para o efeito de transição
-            }, 5000); // 5 segundos de espera antes de iniciar o fade-out
+                    erroContainer.style.display = 'none';
+                }, 1000); 
+            }, 5000); 
         }
     </script>
 </body>
