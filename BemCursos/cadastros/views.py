@@ -216,6 +216,7 @@ class RankingTurmaView(View):
     def post(self, request, simulado_id, turma_id=None):
         turma_id = request.POST.get('turma_id')
         return redirect('ranking_por_turma', simulado_id=simulado_id, turma_id=turma_id)
+    
 
 class ResponsavelView(LoginRequiredMixin, View):
     template_name = 'responsavel.html'
@@ -231,40 +232,40 @@ class ResponsavelView(LoginRequiredMixin, View):
         simulados = SimuladoMediator.listar_simulados()
         turmas = Turma.objects.all() 
         return render(request, self.template_name, {'aluno': aluno, 'simulados': simulados, 'turmas': turmas})
+    
 
-class RankingPorTurmaResponsavelView(View):
+
+class RankingPorTurmaResponsavelView(LoginRequiredMixin, View):
     template_name = 'ranking_turma_responsavel.html'
-
     def get(self, request, simulado_id):
         simulado = get_object_or_404(Simulado, id=simulado_id)
         aluno = get_object_or_404(Aluno, user=request.user)
         turma = aluno.turma
-        rankings = RankingMediator.calcular_rankingTurma(simulado, turma.id)
+        # Obter o ranking da turma e a posição do aluno
+        rankings_turma = RankingResponsavelMediator.calcular_rankings_turma(simulado, turma.id)
+        ranking_aluno = RankingResponsavelMediator.calcular_ranking_aluno_turma(simulado, aluno.id, turma.id)
 
         return render(request, self.template_name, {
             'simulado': simulado,
-            'rankings': rankings,
+            'rankings': rankings_turma,
+            'ranking_aluno': ranking_aluno,
             'turma': turma,
         })
+    
 
-class RankingGeralResponsavelView(View):
+
+class RankingGeralResponsavelView(LoginRequiredMixin, View):
     template_name = 'ranking_geral_responsavel.html'
 
     def get(self, request, simulado_id):
         simulado = get_object_or_404(Simulado, id=simulado_id)
-        rankings = RankingResponsavelMediator.calcular_rankings_gerais(simulado)
+        aluno = get_object_or_404(Aluno, user=request.user)
         
-        return render(request, self.template_name, {
-            'simulado': simulado,
-            'rankings': rankings,
-        })
-
-    def post(self, request):
-        simulado_id = request.POST.get('simulado_id')
-        simulado = get_object_or_404(Simulado, id=simulado_id)
-        rankings = RankingResponsavelMediator.calcular_rankings_gerais(simulado)
+        # Calcula apenas o ranking do aluno logado no ranking geral
+        aluno_ranking = RankingResponsavelMediator.calcular_ranking_aluno(simulado, aluno.id)
 
         return render(request, self.template_name, {
             'simulado': simulado,
-            'rankings': rankings,
+            'aluno_ranking': aluno_ranking,
         })
+    

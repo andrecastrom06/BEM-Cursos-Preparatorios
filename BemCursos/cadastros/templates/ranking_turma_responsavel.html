@@ -113,11 +113,12 @@
 <body>
 
     <div class="container">
-        <h1>Ranking da Turma - {{ simulado.nome }} (Tipo: {{ simulado.get_tipo_display }})</h1>
+        <h1>Ranking - {{ simulado.nome }} (Tipo: {{ simulado.get_tipo_display }})</h1>
             <h2>Turma: {{ turma.nome }}</h2>
             <table>
                 <thead>
                     <tr>
+                        <th>Posição</th>
                         <th>Nome do Aluno</th>
                         <th>Data de Nascimento</th>
                         <th>Matemática</th>
@@ -130,37 +131,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for ranking in rankings %}
-                    <tr>
-                        <td>{{ ranking.aluno__nome }} {{ ranking.aluno__sobrenome }}</td>
-                        <td>{{ ranking.aluno__data_nascimento|date:"d/m/Y" }}</td>
-                        <td>
-                            {% if tipo_simulado == 'CM' %}
-                                {{ ranking.media_matematica|floatformat:2 }}
-                            {% else %}
-                                {{ ranking.media_matematica }}
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if tipo_simulado == 'CM' %}
-                                {{ ranking.media_portugues|floatformat:2 }}
-                            {% else %}
-                                {{ ranking.media_portugues }}
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if tipo_simulado == 'CM' %}
-                                {{ ranking.media_final|floatformat:2 }}
-                            {% else %}
-                                {{ ranking.media_final }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5">Nenhum aluno encontrado para esta turma.</td>
-                    </tr>
-                    {% endfor %}
+                    {% if ranking_aluno %}
+                <tr>
+                    <td>{{ ranking_aluno.posicao }}</td>
+                    <td>{{ ranking_aluno.aluno__nome }} {{ ranking_aluno.aluno__sobrenome }}</td>
+                    <td>{{ ranking_aluno.aluno__data_nascimento|date:"d/m/Y" }}</td>
+                    <td>
+                        {% if simulado.tipo == 'CM' %}
+                            {{ ranking_aluno.media_matematica|floatformat:2 }}
+                        {% else %}
+                            {{ ranking_aluno.media_matematica }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if simulado.tipo == 'CM' %}
+                            {{ ranking_aluno.media_portugues|floatformat:2 }}
+                        {% else %}
+                            {{ ranking_aluno.media_portugues }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if simulado.tipo == 'CM' %}
+                            {{ ranking_aluno.media_final|floatformat:2 }}
+                        {% else %}
+                            {{ ranking_aluno.media_final }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
                 </tbody>
             </table>
         <button onclick="window.history.back()" class="voltar-botao">Voltar</button>

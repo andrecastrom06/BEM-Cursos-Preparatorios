@@ -115,54 +115,53 @@
     <div class="container">
         <h1>Ranking Geral</h1>
         <h2>Simulado: {{ simulado.nome }} (Tipo: {{ simulado.get_tipo_display }})</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nome do Aluno</th>
-                    <th>Turma</th>
-                    <th>Data de Nascimento</th>
-                    <th>Matemática</th>
-                    <th>Português</th>
-                    {% if simulado.tipo == "EA" %}
-                        <th>Nota Final (0 a 40)</th>
-                    {% else %}
-                        <th>Média Final</th>
-                    {% endif %}
-                </tr>
-            </thead>
             <tbody>
-                {% for ranking in rankings %}
-                <tr>
-                    <td>{{ ranking.aluno__nome }} {{ ranking.aluno__sobrenome }}</td>
-                    <td>{{ ranking.aluno__turma__nome }}</td>
-                    <td>{{ ranking.aluno__data_nascimento|date:"d/m/Y" }}</td>
-                    <td>
-                        {% if tipo_simulado == 'CM' %}
-                            {{ ranking.media_matematica|floatformat:2 }}
-                        {% else %}
-                            {{ ranking.media_matematica }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if tipo_simulado == 'CM' %}
-                            {{ ranking.media_portugues|floatformat:2 }}
-                        {% else %}
-                            {{ ranking.media_portugues }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if tipo_simulado == 'CM' %}
-                            {{ ranking.media_final|floatformat:2 }}
-                        {% else %}
-                            {{ ranking.media_final }}
-                        {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5">Nenhum aluno encontrado.</td>
-                </tr>
-                {% endfor %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Posição</th>
+                                <th>Nome do Aluno</th>
+                                <th>Turma</th>
+                                <th>Data de Nascimento</th>
+                                <th>Matemática</th>
+                                <th>Português</th>
+                                {% if simulado.tipo == "EA" %}
+                                    <th>Nota Final (0 a 40)</th>
+                                {% else %}
+                                    <th>Média Final</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ aluno_ranking.posicao }}</td>
+                                <td>{{ aluno_ranking.aluno__nome }} {{ aluno_ranking.aluno__sobrenome }}</td>
+                                <td>{{ aluno_ranking.aluno__turma__nome }}</td>
+                                <td>{{ aluno_ranking.aluno__data_nascimento|date:"d/m/Y" }}</td>
+                                <td>
+                                    {% if tipo_simulado == 'CM' %}
+                                        {{ aluno_ranking.media_matematica|floatformat:2 }}
+                                    {% else %}
+                                        {{ aluno_ranking.media_matematica }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if tipo_simulado == 'CM' %}
+                                        {{ aluno_ranking.media_portugues|floatformat:2 }}
+                                    {% else %}
+                                        {{ aluno_ranking.media_portugues }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if tipo_simulado == 'CM' %}
+                                        {{ aluno_ranking.media_final|floatformat:2 }}
+                                    {% else %}
+                                        {{ aluno_ranking.media_final }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
             </tbody>
         </table>
         <button onclick="window.history.back()" class="voltar-botao">Voltar</button>

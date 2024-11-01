@@ -137,8 +137,8 @@ class RankingMediator:
         rankings = (
             Nota.objects.filter(simulado=simulado)
             .values(
-                'aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 
-                'aluno__data_nascimento', 'aluno__turma__nome'
+                'aluno__id', 'aluno__nome', 'aluno__sobrenome', 
+                'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome'
             )
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
@@ -156,8 +156,8 @@ class RankingMediator:
         rankings = (
             Nota.objects.filter(simulado=simulado)
             .values(
-                'aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 
-                'aluno__data_nascimento', 'aluno__turma__nome'
+                'aluno__id', 'aluno__nome', 'aluno__sobrenome', 
+                'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome'
             )
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
@@ -175,8 +175,8 @@ class RankingMediator:
         rankings = (
             Nota.objects.filter(simulado=simulado)
             .values(
-                'aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 
-                'aluno__data_nascimento', 'aluno__turma__nome'
+                'aluno__id', 'aluno__nome', 'aluno__sobrenome', 
+                'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome'
             )
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
@@ -195,56 +195,82 @@ class RankingMediator:
         rankings = (
             notas_turma
             .values(
-                'aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 
-                'aluno__data_nascimento', 'aluno__turma__nome'
+                'aluno__id', 'aluno__nome', 'aluno__sobrenome', 
+                'aluno__idade_em_dias', 'aluno__data_nascimento', 'aluno__turma__nome'
             )
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
-
-        # Ordenar e adicionar posições para a turma
+        
+        #Ordenar e adicionar posições
         ordered_rankings = rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
         for posicao, aluno in enumerate(ordered_rankings, start=1):
             aluno['posicao'] = posicao
 
-        return ordered_rankings
+        return list(ordered_rankings) 
+
 
 class RankingResponsavelMediator:
-    
     @staticmethod
     def calcular_rankings_gerais(simulado):
         tipo_simulado = simulado.tipo
-        rankings = (
-            Nota.objects.filter(simulado=simulado)
-            .values(
-                'aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 
-                'aluno__data_nascimento', 'aluno__turma__nome'
-            )
+        rankings = Nota.objects.filter(simulado=simulado).values(
+            'aluno__id', 'aluno__nome', 'aluno__sobrenome', 
+            'aluno__idade_em_dias', 'aluno__data_nascimento', 
+            'aluno__turma__nome'
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
-
-        # Ordenar conforme critérios e adicionar posições
         ordered_rankings = rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
         for posicao, aluno in enumerate(ordered_rankings, start=1):
             aluno['posicao'] = posicao
 
-        return ordered_rankings
+        return list(ordered_rankings)
 
     @staticmethod
-    def calcular_ranking_turma(simulado, turma_id):
-        tipo_simulado = simulado.tipo
-        notas_turma = Nota.objects.filter(simulado=simulado, aluno__turma_id=turma_id)
-        rankings = (
-            notas_turma
-            .values(
-                'aluno__nome', 'aluno__sobrenome', 'aluno__idade_em_dias', 
-                'aluno__data_nascimento', 'aluno__turma__nome'
-            )
+    def calcular_rankings_turma(simulado, turma_id):
+        rankings = Nota.objects.filter(simulado=simulado, aluno__turma_id=turma_id).values(
+            'aluno__id', 'aluno__nome', 'aluno__sobrenome', 
+            'aluno__idade_em_dias', 'aluno__data_nascimento', 
+            'aluno__turma__nome'
         )
-        rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
+        rankings = RankingMediator._calcular_medias(rankings, simulado.tipo)
 
-        # Ordenar e adicionar posições para a turma
+        #Ordenar e adicionar posições
         ordered_rankings = rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
         for posicao, aluno in enumerate(ordered_rankings, start=1):
             aluno['posicao'] = posicao
 
-        return ordered_rankings
+        return list(ordered_rankings)
+
+    @staticmethod
+    def calcular_ranking_aluno(simulado, aluno_id):
+        tipo_simulado = simulado.tipo
+        rankings = Nota.objects.filter(simulado=simulado).values(
+            'aluno__id', 'aluno__nome', 'aluno__sobrenome', 
+            'aluno__idade_em_dias', 'aluno__data_nascimento', 
+            'aluno__turma__nome'
+        )
+        rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
+
+        ordered_rankings = rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+        for posicao, aluno in enumerate(ordered_rankings, start=1):
+            if aluno['aluno__id'] == aluno_id:
+                aluno['posicao'] = posicao
+                return aluno
+
+        return None
+
+    @staticmethod
+    def calcular_ranking_aluno_turma(simulado, aluno_id, turma_id):
+        rankings = Nota.objects.filter(simulado=simulado, aluno__turma_id=turma_id).values(
+            'aluno__id', 'aluno__nome', 'aluno__sobrenome', 
+            'aluno__idade_em_dias', 'aluno__data_nascimento', 
+            'aluno__turma__nome'
+        )
+        rankings = RankingMediator._calcular_medias(rankings, simulado.tipo)
+
+        ordered_rankings = rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
+        for posicao, aluno in enumerate(ordered_rankings, start=1):
+            if aluno['aluno__id'] == aluno_id:
+                aluno['posicao'] = posicao
+                return aluno
+        return None
