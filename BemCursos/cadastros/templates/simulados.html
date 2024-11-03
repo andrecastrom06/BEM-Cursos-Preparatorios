@@ -24,6 +24,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar .profile {
@@ -34,12 +35,12 @@
         .sidebar .profile h3 {
             margin: 10px 0 5px;
             color: black;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         .sidebar .profile p {
             color: #555;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         .sidebar nav a {
@@ -48,12 +49,13 @@
             padding: 15px;
             border-radius: 5px;
             background-color: rgb(65, 88, 208);
-            margin-bottom: 10px;
+            margin: 10px auto; /* Centraliza horizontalmente os links */
+            width: 80%; /* Diminui a largura para que fiquem mais centralizados */
             text-align: center;
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
             font-size: 14px;
             cursor: pointer;
-            transition: background-color 0.3s ease; 
+            transition: background-color 0.3s ease;
             display: block;
         }
 
@@ -142,7 +144,6 @@
             background-color: rgb(11, 147, 34);
         }
 
-      
         .gerenciamento-botao {
             background-color: #007bff;
             color: white;
@@ -166,6 +167,7 @@
         .gerenciamento-botao2:hover {
             background-color: #892523;
         }
+
         @media screen and (max-width: 768px) {
             body {
                 flex-direction: column;
@@ -197,7 +199,6 @@
 </head>
 <body>
 
-
     <div class="sidebar">
         <div class="profile">
             <img src="/static/imgfunc.jpg" alt="funcionario" width="100" height="100">
@@ -205,13 +206,12 @@
             <p>Função</p>
         </div>
         <nav>
-            <a href="{% url 'turmas' %}">Turmas</a>
+            <a href="{% url 'turmas' %}" class="btn btn-primary">Turmas</a>
             <a href="{% url 'simulados' %}" class="btn btn-primary">Simulados</a>
         </nav>
     </div>
 
     <div class="container">
-
         <h2>Simulados</h2>
         {% if messages %}
         <ul>
