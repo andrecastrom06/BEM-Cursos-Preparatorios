@@ -143,7 +143,6 @@ class RankingMediator:
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
 
-        # Ordenar conforme critérios e adicionar posições
         ordered_rankings = rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
         for posicao, aluno in enumerate(ordered_rankings, start=1):
             aluno['posicao'] = posicao
@@ -162,7 +161,6 @@ class RankingMediator:
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
 
-        # Ordenar e adicionar posições para Matemática
         ordered_rankings = rankings.order_by('-media_matematica', '-aluno__idade_em_dias')
         for posicao, aluno in enumerate(ordered_rankings, start=1):
             aluno['posicao'] = posicao
@@ -180,7 +178,6 @@ class RankingMediator:
             )
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
-        # Ordenar e adicionar posições para Português
         ordered_rankings = rankings.order_by('-media_portugues', '-aluno__idade_em_dias')
         for posicao, aluno in enumerate(ordered_rankings, start=1):
             aluno['posicao'] = posicao
@@ -199,7 +196,6 @@ class RankingMediator:
             )
         )
         rankings = RankingMediator._calcular_medias(rankings, tipo_simulado)
-        #Ordenar e adicionar posições
         ordered_rankings = rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
         for posicao, aluno in enumerate(ordered_rankings, start=1):
             aluno['posicao'] = posicao
@@ -232,7 +228,6 @@ class RankingResponsavelMediator:
         )
         rankings = RankingMediator._calcular_medias(rankings, simulado.tipo)
 
-        #Ordenar e adicionar posições
         ordered_rankings = rankings.order_by('-media_final', '-media_matematica', '-aluno__idade_em_dias')
         for posicao, aluno in enumerate(ordered_rankings, start=1):
             aluno['posicao'] = posicao

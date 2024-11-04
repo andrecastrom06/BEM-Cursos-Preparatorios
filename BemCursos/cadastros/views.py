@@ -246,7 +246,6 @@ class RankingPorTurmaResponsavelView(LoginRequiredMixin, View):
         simulado = get_object_or_404(Simulado, id=simulado_id)
         aluno = get_object_or_404(Aluno, user=request.user)
         turma = aluno.turma
-        # Obter o ranking da turma e a posição do aluno
         rankings_turma = RankingResponsavelMediator.calcular_rankings_turma(simulado, turma.id)
         ranking_aluno = RankingResponsavelMediator.calcular_ranking_aluno_turma(simulado, aluno.id, turma.id)
 
@@ -256,8 +255,6 @@ class RankingPorTurmaResponsavelView(LoginRequiredMixin, View):
             'ranking_aluno': ranking_aluno,
             'turma': turma,
         })
-    
-
 
 class RankingGeralResponsavelView(LoginRequiredMixin, View):
     template_name = 'ranking_geral_responsavel.html'
@@ -266,11 +263,9 @@ class RankingGeralResponsavelView(LoginRequiredMixin, View):
         simulado = get_object_or_404(Simulado, id=simulado_id)
         aluno = get_object_or_404(Aluno, user=request.user)
         
-        # Calcula apenas o ranking do aluno logado no ranking geral
         aluno_ranking = RankingResponsavelMediator.calcular_ranking_aluno(simulado, aluno.id)
 
         return render(request, self.template_name, {
             'simulado': simulado,
             'aluno_ranking': aluno_ranking,
         })
-    
