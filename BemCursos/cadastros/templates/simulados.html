@@ -1,0 +1,263 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Lista de Turmas e Simulados</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(65, 88, 208);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 20px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar .profile h3 {
+            margin: 10px 0 5px;
+            color: black;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar .profile p {
+            color: #555;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar nav a {
+            text-decoration: none;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: rgb(65, 88, 208);
+            margin: 10px auto; /* Centraliza horizontalmente os links */
+            width: 80%; /* Diminui a largura para que fiquem mais centralizados */
+            text-align: center;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgb(54, 74, 175);
+        }
+
+        .container {
+            flex: 1;
+            padding: 20px;
+            background-color: rgb(65, 88, 208);
+            color: white;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+            margin-top: 20px;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
+        }
+
+        .table-container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 800px;
+            background-color: rgb(11, 173, 38);
+            border-radius: 15px;
+            color: rgb(255, 255, 255);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            color: white;
+        }
+
+        th {
+            background-color: rgb(54, 74, 175);
+            color: white;
+            font-weight: bold;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(54, 74, 175, 0.2);
+        }
+
+        a, button {
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+
+        a:hover, button:hover {
+            background-color: #0056b3;
+        }
+
+        .add-turma, .btn-primary {
+            display: block;
+            text-align: center;
+            background-color: rgb(11, 173, 38);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            width: 250px;
+            margin: 20px auto;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            transition: background-color 0.5s ease;
+        }
+
+        .add-turma:hover, .btn-primary:hover {
+            background-color: rgb(11, 147, 34);
+        }
+
+        .gerenciamento-botao {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .gerenciamento-botao:hover {
+            background-color: rgba(20, 106, 198, 0.8);
+        }
+
+        .gerenciamento-botao2 {
+            background-color: #C9302C;
+            padding: 8px 12px;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.5s ease;
+        }
+
+        .gerenciamento-botao2:hover {
+            background-color: #892523;
+        }
+
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .container {
+                padding: 10px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .sidebar {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="profile">
+            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="100" height="100" style="margin-top: 20px; margin-left: 10px;">
+            <h3>Nome e Último Nome</h3>
+            <p>Função</p>
+        </div>
+        <nav>
+            <a href="{% url 'turmas' %}" class="btn btn-primary">Turmas</a>
+            <a href="{% url 'simulados' %}" class="btn btn-primary">Simulados</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <h2>Simulados</h2>
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <a href="{% url 'adicionar_simulado' %}" class="btn btn-primary">Adicionar Simulado</a>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Tipo</th>
+                        <th>Data</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for simulado in simulados %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'notas_simulado' simulado.id %}">{{ simulado.nome }}</a>
+                        </td>
+                        <td>{{ simulado.get_tipo_display }}</td>
+                        <td>{{ simulado.data }}</td>
+                        <td>
+                            <form method="post" action="{% url 'excluir_simulado' simulado.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja remover este simulado?');">Remover</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">Nenhum simulado cadastrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

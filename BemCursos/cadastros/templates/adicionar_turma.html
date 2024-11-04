@@ -1,20 +1,212 @@
-<form method="post" action="{% url 'adicionar_turma' %}">
-    {% csrf_token %}
-    
-    <label for="nome">Nome da Turma:</label>
-    <input type="text" id="nome" name="nome" placeholder="Digite o nome da turma" required>
-    <br><br>
-    
-    <label for="unidade">Unidade:</label>
-    <select id="unidade" name="unidade" required>
-        <option value="">Selecione a unidade</option>
-        <option value="Casa Forte">Casa Forte</option>
-        <option value="Olinda">Olinda</option>
-        <option value="Boa Viagem">Boa Viagem</option>
-    </select>
-    <br><br>
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Adicionar Turma</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(65, 88, 208);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+        }
 
-    <button type="submit">Adicionar Turma</button>
-</form>
+        @media (min-width: 768px) {
+            body {
+                flex-direction: row;
+            }
+        }
 
-<a href="{% url 'turmas' %}">Voltar para a lista de turmas</a>
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 20px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar .profile h3 {
+            margin: 10px 0 5px;
+            color: black;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar .profile p {
+            color: #555;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar nav a {
+            text-decoration: none;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: rgb(65, 88, 208);
+            margin: 10px auto;
+            width: 80%;
+            text-align: center;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgb(54, 74, 175);
+        }
+
+        .container {
+            flex: 1;
+            padding: 20px;
+            background-color: rgb(65, 88, 208);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            margin-top: 0;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
+        }
+
+        form {
+            background-color: rgb(11, 173, 38);
+            padding: 20px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 400px;
+            color: white;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="text"], select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            text-align: center;
+            display: block;
+            margin-top: 20px;
+            color: white;
+            text-decoration: none;
+            background-color: rgb(11, 173, 38);
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 250px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            transition: background-color 0.5s ease;
+        }
+
+        a:hover {
+            background-color: rgb(11, 147, 34);
+        }
+
+        @media (max-width: 767px) {
+            .sidebar {
+                width: 100%;
+                padding: 10px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            form {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            input[type="text"], select {
+                width: 100%;
+            }
+
+            button, a {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="profile">
+            <h3>Nome e Último Nome</h3>
+            <p>Função</p>
+        </div>
+        <nav>
+            <a href="{% url 'turmas' %}" class="btn btn-primary">Turmas</a>
+            <a href="{% url 'simulados' %}" class="btn btn-primary">Simulados</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <h2>Adicionar Turma</h2>
+        <form method="post" action="{% url 'adicionar_turma' %}">
+            {% csrf_token %}
+            <label for="nome">Nome da Turma:</label>
+            <input type="text" id="nome" name="nome" placeholder="Digite o nome da turma" required>
+            
+            <label for="unidade">Unidade:</label>
+            <select id="unidade" name="unidade" required>
+                <option value="">Selecione a unidade</option>
+                {% for unidade in unidades %}
+                    <option value="{{ unidade.id }}">{{ unidade.nome }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Adicionar Turma</button>
+        </form>
+        <a href="{% url 'turmas' %}">Voltar</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,214 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Adicionar Simulado</title>
+    <style>
+        /* Estilos Gerais */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(65, 88, 208);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 20px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar .profile h3 {
+            margin: 10px 0 5px;
+            color: black;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar .profile p {
+            color: #555;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar nav a {
+            text-decoration: none;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: rgb(65, 88, 208);
+            margin-bottom: 10px;
+            text-align: center;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+           
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgb(54, 74, 175);
+        }
+
+        /* Conteúdo Principal */
+        .container {
+            flex: 1;
+            padding: 20px;
+            background-color: rgb(65, 88, 208);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Formulário */
+        .form-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: rgb(11, 173, 38);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h2 {
+            color: white;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: white;
+            margin: 10px 0 5px;
+            text-align: left;
+        }
+
+        input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+            color: black;
+        }
+
+        /* Botões */
+        button, .back-button {
+            background-color: #007BFF;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        button:hover, .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        .back-button {
+            width: auto;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        /* Responsividade */
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .container {
+                padding: 10px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .sidebar {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="sidebar">
+        <div class="profile">
+            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="100" height="100" style="margin-top: 20px; margin-left: 10px;">
+            <h3>Nome e Último Nome</h3>
+            <p>Função</p>
+        </div>
+        <nav>
+            <a href="{% url 'turmas' %}" class="btn btn-primary">Turmas</a>
+            <a href="{% url 'simulados' %}" class="btn btn-primary">Simulados</a>
+        </nav>
+    </div>
+
+
+    <div class="container">
+
+  
+        <div class="form-container">
+            <h2>Adicionar Simulado</h2>
+            <form method="post">
+                {% csrf_token %}
+                <label for="nome">Nome do Simulado:</label>
+                <input type="text" id="nome" name="nome" required>
+
+                <label for="tipo">Tipo:</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="CM">Colégio Militar</option>
+                    <option value="EA">Escola de Aplicação</option>
+                </select>
+
+                <label for="data">Data:</label>
+                <input type="date" id="data" name="data" required>
+
+                <button type="submit">Adicionar Simulado</button>
+                <br><br>
+                <a href="{% url 'simulados' %}" class="back-button">Voltar</a>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

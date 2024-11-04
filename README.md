@@ -35,6 +35,8 @@
 
    - Miro: https://miro.com/welcomeonboard/MFd0VFhWVVQxMzlzQTJmQUQ3UVJ5U1VEaE9kZDMwR29CaE5XUHJoTGNGQThhSmFjMEJGbTJRYTRPWEV6RFN3aXwzNDU4NzY0NTYyNzUxNTA5MzA5fDI=?share_link_id=300311518034
 
+   - Slide SR1 : https://www.canva.com/design/DAGTwnGu6qo/KAxqvsUj_u1QfcIMs2Pyog/edit
+
 </details>
 
 <details>
