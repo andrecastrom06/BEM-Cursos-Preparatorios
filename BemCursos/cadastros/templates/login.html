@@ -11,8 +11,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
 
 :root {
-    --primary-bg: rgb(52, 82, 160); /* Cor de fundo da área direita */
-    --secondary-bg: #f5f5f5; /* Cor de fundo da área esquerda */
+    --primary-bg: rgb(52, 82, 160); /* Cor de fundo da área direita */    --secondary-bg: white; /* Cor de fundo da área esquerda */
     --card-bg: rgb(115, 187, 106); /* Cor de fundo da card-login */
     --text-color: white; /* Cor do texto nos rótulos e nos botões */
     --button-hover-bg: #e0e0e0; /* Cor de fundo ao passar o mouse no botão */
@@ -63,6 +62,7 @@ body * {
 
 .card-login {
     width: 60%;
+    margin-bottom: 70px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -211,11 +211,12 @@ h1{
     font-size: 2.25rem;
     font-weight: 800;
 }
+
 </style>
 <body>
     <div class="main-login">
         <div class="left-login">
-            <img src="{% static 'img/BEMcursos.png' %}" alt="BEM">
+            <img src="{% static 'img/A3.jpg' %}" alt="BEM" style="height: 60%; width: 60%;">
         </div>
         <div class="right-login">
             <h1>Login</h1>
