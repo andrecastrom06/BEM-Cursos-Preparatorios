@@ -27,7 +27,7 @@ class LoginView(View):
 
         if user is not None:
             login(request, user)  
-            if user_type == 'funcionario' and username == 'bemcursos' and password == 'preparatoriobem':
+            if request.user.is_superuser:
                 return redirect('turmas') 
             
             elif user_type == 'responsavel':

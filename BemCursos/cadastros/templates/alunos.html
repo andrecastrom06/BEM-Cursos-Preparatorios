@@ -1,8 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <title>Lista de Alunos</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
@@ -169,8 +171,8 @@
 <body>
     <div class="sidebar">
         <div class="profile">
-            <img src="/static/imgfunc.jpg" alt="funcionario" width="100" height="100">
-            <h3>Nome e Sobrenome</h3>
+            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="100" height="100" style="margin-top: 20px; margin-left: 10px;">
+            <h3>Nome e Último Nome</h3>
             <p>Função</p>
         </div>
         <nav>
@@ -195,7 +197,7 @@
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>Sobrenome</th>
+                        <th>Último Nome</th>
                         <th>CPF</th>
                         <th>Data de Nascimento</th>
                         <th>Pode ver Ranking Geral</th>
