@@ -64,7 +64,6 @@
   - Marina Machado - mmaf@cesar.school 📩
     
   - Rodrigo Torres - rtmr@cesar.school 📩
-
 </details>
 
 <details>
