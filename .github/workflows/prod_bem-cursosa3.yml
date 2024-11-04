@@ -40,9 +40,10 @@ jobs:
 
       - name: Zip artifact for deployment
         run: |
-            cd BemCursos/
-            zip release.zip ./* -
-            cd ..
+          cd BemCursos/
+          zip release.zip ./* -r
+          cd ..
+          mv BemCursos/release.zip .
 
 
       - name: Upload artifact for deployment jobs
