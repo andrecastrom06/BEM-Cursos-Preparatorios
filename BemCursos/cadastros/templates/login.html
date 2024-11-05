@@ -88,7 +88,7 @@
     .form-group > select {
         width: 100%;
         border: none;
-        border-radius: 10px;
+        border-radius: 30px;
         padding: 15px;
         background: white;
         color: black;
@@ -110,17 +110,17 @@
     }
 
     .btn-login {
-        width: 100%;
+        width: 60%;
         padding: 15px;
         margin-top: 20px;
         border: none;
-        border-radius: 8px;
+        border-radius: 25px;
         outline: none;
         text-transform: uppercase;
         font-weight: 550;
         letter-spacing: 3px;
-        color: black;
-        background: white;
+        color: white;
+        background: var(--primary-bg);
         cursor: pointer;
         box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.15);
         transition: background 0.3s ease;
@@ -251,7 +251,9 @@
                         <label for="password">Senha:</label>
                         <input type="password" id="password" name="password" placeholder="Senha" required>
                     </div>
-                    <button type="submit" class="btn-login" style="box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);">Acessar</button>
+                    <div style="text-align: center;"> <!-- Adicione esta linha -->
+                        <button type="submit" class="btn-login" style="box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);">Acessar</button>
+                    </div> 
                 </form>
             </div>
         </div>
