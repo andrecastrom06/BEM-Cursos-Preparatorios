@@ -8,6 +8,7 @@ from django.contrib import messages
 from .mediators import TurmaMediator, AlunoMediator, SimuladoMediator, NotaMediator, RankingMediator, RankingResponsavelMediator
 from datetime import datetime
 from django.urls import reverse
+from django.views.decorators.csrf import requires_csrf_token
 
 def home(request):
     return redirect('login')
@@ -269,3 +270,9 @@ class RankingGeralResponsavelView(LoginRequiredMixin, View):
             'simulado': simulado,
             'aluno_ranking': aluno_ranking,
         })
+    
+
+@requires_csrf_token
+def csrf_failure(request, reason=""):
+    messages.error(request, "Sessão expirada. Faça login novamente.")
+    return redirect('login')
