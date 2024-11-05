@@ -15,7 +15,7 @@
         --secondary-bg: white; /* Cor de fundo da área esquerda */
         --card-bg: rgb(115, 187, 106); /* Cor de fundo da card-login */
         --text-color: white; /* Cor do texto nos rótulos e nos botões */
-        --button-hover-bg: #e0e0e0; /* Cor de fundo ao passar o mouse no botão */
+        --button-hover-bg: rgb(42, 121, 190); /* Cor de fundo ao passar o mouse no botão */
         --error-bg: red; /* Cor de fundo do erro */
     }
 
@@ -59,6 +59,7 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     }
 
     .card-login {
@@ -229,7 +230,7 @@
 <body>
     <div class="main-login">
         <div class="left-login">
-            <img src="{% static 'img/A3.jpg' %}" alt="BEM" style="height: 60%; width: 60%;">
+            <img src="{% static 'img/A3.jpg' %}" alt="A3" style="height: 60%; width: 60%; margin-top: 7%;">
         </div>
         <div class="right-login">
             <h1>Login</h1>

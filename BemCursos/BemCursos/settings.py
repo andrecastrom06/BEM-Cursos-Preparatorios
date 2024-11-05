@@ -119,6 +119,12 @@ CSRF_FAILURE_VIEW = 'cadastros.views.csrf_failure'
 STATIC_URL = os.environ.get('DJANGO_STATIC_URL', "/static/")
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA ADICIONADA PARA USO FUTURO (IMAGENS)
+
 STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
