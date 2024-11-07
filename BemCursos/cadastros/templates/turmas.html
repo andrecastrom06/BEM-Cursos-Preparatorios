@@ -13,6 +13,7 @@
         --primary-bg: rgb(52, 82, 160); /* Cor de fundo da área direita */    
         --secondary-bg: white; /* Cor de fundo da área esquerda */
         --card-bg: rgb(115, 187, 106); /* Cor de fundo da card-login */
+        --card-bg-hover: rgb(88, 146, 81);
         --text-color: white; /* Cor do texto nos rótulos e nos botões */
         --button-hover-bg: rgb(42, 121, 190); /* Cor de fundo ao passar o mouse no botão */
         --error-bg: red; /* Cor de fundo do erro */
@@ -39,6 +40,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    height: 100vh;
 }
 
 .sidebar .profile {
@@ -117,15 +119,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
 }
 
 .table-container {
         display: flex;
         flex-direction: column;
-        padding: 20px;
+        padding-bottom: 20px;
         width: 90%; 
         max-width: 900px;
-        background-color: #f1faee;
+        background-color: #ffffff;
         border-radius: 20px; 
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
         align-items: center;
@@ -140,11 +143,22 @@
 
     th, td {
         text-align: left;
-        padding: 15px; /* Aumentado de 12px para 15px */
-        border-bottom: 1px solid #ddd;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+    }
+
+    td.los-botoes{
+        text-align: right;
+        padding-right: 10px;
+    }
+    th.los-botoes{
+        text-align: right;
     }
 
     th {
+        padding-top: 15px;
+        padding-bottom: 15px;
         background-color: var(--card-bg);
         color: #f1faee;
         font-weight: bold;
@@ -164,18 +178,20 @@
 
         .gerenciamento-botao {
             background-color: var(--primary-bg);
+            border-radius: 12px;
         }
 
         .gerenciamento-botao:hover {
-            background-color: #544bdc;
+            background-color: rgb(33, 52, 101);
         }
 
         .gerenciamento-botao2 {
             background-color: #e63946;
+            border-radius: 12px;
         }
 
         .gerenciamento-botao2:hover {
-            background-color: #d62828;
+            background-color: #c02424;
         }
 
         .add-turma {
@@ -186,12 +202,12 @@
             color: white;
             padding: 10px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 12px;
             cursor: pointer;
             text-align: center;
         }
         .add-turma:hover {
-            background-color: #544bdc;
+            background-color: rgb(33, 52, 101);
         }
         .modal {
             display: none;
@@ -237,6 +253,81 @@
                 align-items: center;
             }
         }
+        /* Modal base styles */
+    .modal {
+        display: none; /* Oculto por padrão */
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Fundo mais escuro */
+    }
+
+    .modal-content {
+        background-color: #f1faee; /* Fundo semelhante à tabela */
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd; /* Borda semelhante à tabela */
+        width: 80%;
+        max-width: 400px;
+        border-radius: 20px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+        text-align: center;
+        color: #333; /* Cor do texto padrão */
+    }
+
+    /* Modal header and close button */
+    .modal-content h3 {
+        color: #333; /* Texto branco */
+        font-weight: bold;
+        padding: 5px;
+        border-radius: 5px;
+        margin-top: 0;
+    }
+
+    .modal-content .close {
+        color: #333;
+        float: right;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* Modal buttons */
+    .modal-buttons {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .btn-confirm, .btn-cancel {
+        padding: 15px 20px;
+        border-radius: 15px;
+        font-weight: bold;
+        color: #f1faee;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-confirm {
+        background-color: var(--card-bg); /* Cor de confirmação consistente */
+    }
+
+    .btn-confirm:hover {
+        background-color: var(--card-bg-hover);
+    }
+
+    .btn-cancel {
+        background-color: #e63946; /* Cor de cancelamento */
+    }
+
+    .btn-cancel:hover {
+        background-color: #d62828;
+    }        
     </style>
 </head>
 <body>
@@ -263,7 +354,7 @@
                     <tr>
                         <th>Nome</th>
                         <th>Unidade</th>
-                        <th></th>
+                        <th class="los-botoes"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -271,9 +362,9 @@
                     <tr id="turma-{{ turma.id }}">
                         <td>{{ turma.nome }}</td>
                         <td>{{ turma.unidade }}</td>
-                        <td>
-                            <a href="{% url 'alunos' turma_id=turma.id %}" class="gerenciamento-botao">Gerenciar Alunos</a>
-                            <button class="remover-turma gerenciamento-botao2" data-id="{{ turma.id }}">Remover</button>
+                        <td class="los-botoes">
+                            <a href="{% url 'alunos' turma_id=turma.id %}" class="gerenciamento-botao">🖉</a>
+                            <button class="remover-turma gerenciamento-botao2" data-id="{{ turma.id }}"> 🗑 </button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -288,8 +379,8 @@
             <h3>Confirmação</h3>
             <p>Tem certeza que deseja remover esta turma?</p>
             <div class="modal-buttons">
-                <button id="confirm-yes" class="btn-confirm">Sim</button>
-                <button id="confirm-no" class="btn-cancel">Não</button>
+                <button id="confirm-yes" class="btn-confirm">SIM</button>
+                <button id="confirm-no" class="btn-cancel">NÃO</button>
             </div>
         </div>
     </div>
