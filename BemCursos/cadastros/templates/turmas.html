@@ -109,48 +109,46 @@
 }
 
         /* Main Content */
-        .container {
-            flex: 1;
-            margin: 0;
-            padding: 20px;
-            background-color: #ffffff;
-        }
+.container {
+    flex: 1;
+    margin: 0;
+    padding: 20px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        /* Table Styles */
-        .table-container {
-            margin: 0 auto;
-            display: flex;
-            padding: 20px;
-            max-width: 800px;
-            background-color: #f1faee;
-            border-radius: 10px;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-            margin: 0;
-            justify-content: center;
-            max-width: 800px;
-            align-items: center;
-        }
+.table-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    background-color: #f1faee;
+    border-radius: 20px; 
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    align-items: center;
+}
 
-        table {
-            width: 75%;
-            height: 20%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            border-radius: 15px;
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 15px;
+    overflow: hidden; /* Para manter o arredondamento nos cantos */
+}
 
-        th, td {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-        }
+th, td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
 
-        th {
-            background-color: var(--card-bg);
-            color: #f1faee;
-            font-weight: bold;
-            height: 20%;
-        }
+th {
+    background-color: var(--card-bg);
+    color: #f1faee;
+    font-weight: bold;
+}
 
         /* Buttons */
         .gerenciamento-botao, .gerenciamento-botao2 {
@@ -182,20 +180,19 @@
         }
 
         .add-turma {
-            display: block;
-            text-align: center;
-            background-color: var(--primary-bg);
-            color: #f1faee;
-            padding: 12px 20px;
-            border-radius: 8px;
             text-decoration: none;
-            width: 250px;
-            margin: 20px auto;
-            transition: background-color 0.3s ease;
+            display: block;
+            margin: 20px auto 0 auto; 
+            background-color: var(--primary-bg); 
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
         }
-
         .add-turma:hover {
-            background-color: #1d7874;
+            background-color: #2e901f;
         }
 
         /* Modal */
@@ -261,10 +258,10 @@
         <a href="{% url 'login' %}">Sair</a>
     </div>
 
-    <!-- Main Content -->
     <div class="container">    
         <img src="{% static 'img/A3.jpg' %}" alt="A3" style="height: 10%; width: 5.5%; position: absolute; top: 10px; right: 10px;">
-   
+    
+        <div class="table-container">
             <table>
                 <thead>
                     <tr>
@@ -286,8 +283,8 @@
                     {% endfor %}
                 </tbody>
             </table>
-        
-        <a href="{% url 'adicionar_turma' %}" class="add-turma">Adicionar Turma</a>
+            <a href="{% url 'adicionar_turma' %}" class="add-turma">Adicionar Turma</a>
+        </div>
     </div>
     <div id="confirm-modal" class="modal">
         <div class="modal-content">
