@@ -8,9 +8,21 @@
     <title>Lista de Turmas e Simulados</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
+
+        :root {
+        --primary-bg: rgb(52, 82, 160); /* Cor de fundo da área direita */    
+        --secondary-bg: white; /* Cor de fundo da área esquerda */
+        --card-bg: rgb(115, 187, 106); /* Cor de fundo da card-login */
+        --card-bg-hover: rgb(88, 146, 81);
+        --text-color: white; /* Cor do texto nos rótulos e nos botões */
+        --button-hover-bg: rgb(42, 121, 190); /* Cor de fundo ao passar o mouse no botão */
+        --error-bg: red; /* Cor de fundo do erro */
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: rgb(65, 88, 208);
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f2f5f9;
             color: #333;
             margin: 0;
             padding: 0;
@@ -20,13 +32,13 @@
 
         .sidebar {
             width: 250px;
-            background-color: white;
+            background-color: var(--primary-bg);
             padding: 20px;
-            color: black;
+            color: white;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            height: 100vh;
         }
 
         .sidebar .profile {
@@ -34,87 +46,122 @@
             margin-bottom: 30px;
         }
 
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+        }
+
         .sidebar .profile h3 {
             margin: 10px 0 5px;
-            color: black;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            color: #f1faee;
+            font-weight: bold;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
         }
 
         .sidebar .profile p {
-            color: #555;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            color: #a8dadc;
+            font-size: 0.9em;
         }
 
         .sidebar nav a {
+            display: block;
             text-decoration: none;
             color: white;
-            padding: 15px;
-            border-radius: 5px;
-            background-color: rgb(65, 88, 208);
-            margin: 10px auto; /* Centraliza horizontalmente os links */
-            width: 80%; /* Diminui a largura para que fiquem mais centralizados */
+            padding: 10px 15px;
+            border-radius: 10px;
+            background-color: transparent;
+            margin-bottom: 10px;
             text-align: center;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: block;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .sidebar nav a:nth-child(2) {
+            background-color: white;
+            color: var(--primary-bg);
         }
 
         .sidebar nav a:hover {
-            background-color: rgb(54, 74, 175);
+            background-color: #1d3557;
+            color: #a8dadc;
+        }
+
+        .sidebar a[href="{% url 'login' %}"] {
+            margin-top: auto;
+            background-color: white;
+            color: var(--primary-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            max-width: 40%;
+            font-weight: bold;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar a[href="{% url 'login' %}"]:hover {
+            background-color: #f1faee;
+            color: var(--primary-bg);
         }
 
         .container {
             flex: 1;
-            padding: 20px;
-            background-color: rgb(65, 88, 208);
-            color: white;
-        }
-
-        h2 {
-            text-align: center;
-            color: #fff;
-            margin-top: 20px;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
+            margin: 0;
+            padding-top: 40px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: first baseline;
+            height: 100vh;
         }
 
         .table-container {
-            margin: 0 auto;
-            padding: 20px;
-            max-width: 800px;
-            background-color: rgb(11, 173, 38);
-            border-radius: 15px;
-            color: rgb(255, 255, 255);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 20px;
+            width: 90%; 
+            max-width: 900px;
+            background-color: #ffffff;
+            border-radius: 20px; 
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            align-items: center;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            border-radius: 15px;
+            overflow: hidden; 
         }
 
         th, td {
             text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            color: white;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        td.los-botoes{
+            text-align: right;
+            padding-right: 10px;
+        }
+        th.los-botoes{
+            text-align: right;
         }
 
         th {
-            background-color: rgb(54, 74, 175);
-            color: white;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            background-color: var(--card-bg);
+            color: #f1faee;
             font-weight: bold;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
-        }
-
-        tr:nth-child(even) {
-            background-color: rgba(54, 74, 175, 0.2);
         }
 
         a, button {
-            background-color: #007BFF;
+            background-color: var(--primary-bg);
             color: white;
             text-decoration: none;
             padding: 8px 12px;
@@ -125,33 +172,36 @@
         }
 
         a:hover, button:hover {
-            background-color: #0056b3;
+            background-color: rgb(33, 52, 101);
         }
 
-        .add-turma, .btn-primary {
-            display: block;
-            text-align: center;
-            background-color: rgb(11, 173, 38);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
+        .add-turma {
             text-decoration: none;
-            width: 250px;
-            margin: 20px auto;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            transition: background-color 0.5s ease;
-        }
-
-        .add-turma:hover, .btn-primary:hover {
-            background-color: rgb(11, 147, 34);
-        }
-
-        .gerenciamento-botao {
-            background-color: #007bff;
+            display: block;
+            margin: 20px auto 0 auto; 
+            background-color: var(--primary-bg); 
             color: white;
-            padding: 8px 12px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .add-turma:hover {
+            background-color: rgb(33, 52, 101);
+        }
+
+        .gerenciamento-botao, .gerenciamento-botao2 {
+            padding: 10px 12px;
             border-radius: 5px;
+            color: #f1faee;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
             transition: background-color 0.3s ease;
+            text-decoration: none;
         }
 
         .gerenciamento-botao:hover {
@@ -159,31 +209,26 @@
         }
 
         .gerenciamento-botao2 {
-            background-color: #C9302C;
-            padding: 8px 12px;
-            border-radius: 5px;
-            color: white;
-            transition: background-color 0.5s ease;
+            background-color: #e63946;
+            border-radius: 12px;
         }
 
         .gerenciamento-botao2:hover {
-            background-color: #892523;
+            background-color: #c02424;
         }
 
         @media screen and (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-
             .sidebar {
                 width: 100%;
                 height: auto;
-                flex-direction: row;
+                display: flex;
                 justify-content: space-between;
+                flex-direction: row;
             }
 
-            .container {
-                padding: 10px;
+            .sidebar nav {
+                flex-direction: row;
+                justify-content: space-around;
             }
         }
 
@@ -192,29 +237,101 @@
                 flex-direction: column;
                 align-items: center;
             }
-
-            .container {
-                padding: 15px;
-            }
         }
+
+        .modal {
+        display: none; /* Oculto por padrão */
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Fundo mais escuro */
+    }
+
+    .modal-content {
+        background-color: #f1faee; /* Fundo semelhante à tabela */
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd; /* Borda semelhante à tabela */
+        width: 80%;
+        max-width: 400px;
+        border-radius: 20px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+        text-align: center;
+        color: #333; /* Cor do texto padrão */
+    }
+
+    /* Modal header and close button */
+    .modal-content h3 {
+        color: #333; /* Texto branco */
+        font-weight: bold;
+        padding: 5px;
+        border-radius: 5px;
+        margin-top: 0;
+    }
+
+    .modal-content .close {
+        color: #333;
+        float: right;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* Modal buttons */
+    .modal-buttons {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .btn-confirm, .btn-cancel {
+        padding: 15px 20px;
+        border-radius: 15px;
+        font-weight: bold;
+        color: #f1faee;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-confirm {
+        background-color: var(--card-bg); /* Cor de confirmação consistente */
+    }
+
+    .btn-confirm:hover {
+        background-color: var(--card-bg-hover);
+    }
+
+    .btn-cancel {
+        background-color: #e63946; /* Cor de cancelamento */
+    }
+
+    .btn-cancel:hover {
+        background-color: #d62828;
+    }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
         <div class="profile">
-            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="100" height="100" style="margin-top: 20px; margin-left: 10px;">
-            <h3>Nome e Último Nome</h3>
-            <p>Função</p>
+            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="80" height="80">
+            <h3>Bem-Cursos-Preparatorios</h3>
+            <p>Funcionário</p>
         </div>
         <nav>
-            <a href="{% url 'turmas' %}" class="btn btn-primary">Turmas</a>
-            <a href="{% url 'simulados' %}" class="btn btn-primary">Simulados</a>
+            <a href="{% url 'turmas' %}">Turmas</a>
+            <a href="{% url 'simulados' %}">Simulados</a>
         </nav>
+        <a href="{% url 'login' %}">Sair</a>
     </div>
 
     <div class="container">
-        <h2>Simulados</h2>
+        <img src="{% static 'img/A3.jpg' %}" alt="A3" style="height: 10%; width: 5.5%; position: absolute; top: 10px; right: 10px;">
         {% if messages %}
         <ul>
             {% for message in messages %}
@@ -222,7 +339,6 @@
             {% endfor %}
         </ul>
         {% endif %}
-        <a href="{% url 'adicionar_simulado' %}" class="btn btn-primary">Adicionar Simulado</a>
 
         <div class="table-container">
             <table>
@@ -231,7 +347,7 @@
                         <th>Nome</th>
                         <th>Tipo</th>
                         <th>Data</th>
-                        <th>Ações</th>
+                        <th class="los-botoes"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -242,11 +358,8 @@
                         </td>
                         <td>{{ simulado.get_tipo_display }}</td>
                         <td>{{ simulado.data }}</td>
-                        <td>
-                            <form method="post" action="{% url 'excluir_simulado' simulado.id %}" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja remover este simulado?');">Remover</button>
-                            </form>
+                        <td class="los-botoes">
+                            <button class="remover-simulado gerenciamento-botao2" data-id="{{ simulado.id }}"> 🗑 </button>
                         </td>
                     </tr>
                     {% empty %}
@@ -256,8 +369,83 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <a href="{% url 'adicionar_turma' %}" class="add-turma">Adicionar Turma</a>
         </div>
     </div>
-
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Confirmação</h3>
+            <p>Tem certeza que deseja remover esse simulado?</p>
+            <div class="modal-buttons">
+                <button id="confirm-yes" class="btn-confirm">SIM</button>
+                <button id="confirm-no" class="btn-cancel">NÃO</button>
+            </div>
+        </div>
+    </div>
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Sucesso</h3>
+            <p id="success-text"></p>
+            <button id="success-ok" class="btn-confirm">Ok</button>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            function abrirModalConfirmacao(simuladoId, callback) {
+                $('#confirm-modal').fadeIn();
+                $('#confirm-yes').off('click').on('click', function() {
+                    $('#confirm-modal').fadeOut();
+                    callback(true);
+                });
+                $('#confirm-no').off('click').on('click', function() {
+                    $('#confirm-modal').fadeOut();
+                    callback(false);
+                });
+            }
+    
+            function abrirModalSucesso(mensagem, reloadAfter) {
+                $('#success-text').text(mensagem);
+                $('#success-modal').fadeIn();
+    
+                $('#success-ok').off('click').on('click', function() {
+                    $('#success-modal').fadeOut();
+                    if (reloadAfter) {
+                        location.reload();
+                    }
+                });
+            }
+    
+            $('.close').on('click', function() {
+                $(this).closest('.modal').fadeOut();
+            });
+    
+            $('.remover-simulado').on('click', function(event) {
+                event.preventDefault();
+                var simuladoId = $(this).data('id');
+                abrirModalConfirmacao(simuladoId, function(confirmed) {
+                    if (confirmed) {
+                        $.ajax({
+                            url: '{% url "excluir_simulado" 0 %}'.replace('0', simuladoId),
+                            type: 'POST',
+                            data: {
+                                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                'method': 'DELETE',
+                                'simulado_id': simuladoId
+                            },
+                            success: function(response) {
+                                abrirModalSucesso('Simulado removido com sucesso!', true);
+                                $('#simulado-' + simuladoId).remove();
+                            },
+                            error: function(xhr) {
+                                abrirModalSucesso('Erro ao remover o simulado: ' + xhr.responseText, false);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>    
 </body>
 </html>

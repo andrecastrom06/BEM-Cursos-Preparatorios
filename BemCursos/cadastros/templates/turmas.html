@@ -18,6 +18,7 @@
         --button-hover-bg: rgb(42, 121, 190); /* Cor de fundo ao passar o mouse no botão */
         --error-bg: red; /* Cor de fundo do erro */
         }
+        
         body {
             font-family: 'Noto Sans', sans-serif;
             background-color: #f2f5f9;
@@ -29,82 +30,82 @@
         }
 
         .sidebar {
-    width: 250px;
-    background-color: var(--primary-bg);
-    padding: 20px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    height: 100vh;
-}
+            width: 250px;
+            background-color: var(--primary-bg);
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 100vh;
+        }
 
-.sidebar .profile {
-    text-align: center;
-    margin-bottom: 30px;
-}
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-.sidebar .profile img {
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-}
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+        }
 
-.sidebar .profile h3 {
-    margin: 10px 0 5px;
-    color: #f1faee;
-    font-weight: bold;
-    text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
-}
+        .sidebar .profile h3 {
+            margin: 10px 0 5px;
+            color: #f1faee;
+            font-weight: bold;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
+        }
 
-.sidebar .profile p {
-    color: #a8dadc;
-    font-size: 0.9em;
-}
+        .sidebar .profile p {
+            color: #a8dadc;
+            font-size: 0.9em;
+        }
 
-.sidebar nav a {
-    display: block;
-    text-decoration: none;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 10px;
-    background-color: transparent;
-    margin-bottom: 10px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 18px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
+        .sidebar nav a {
+            display: block;
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            background-color: transparent;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
 
-.sidebar nav a:first-child {
-    background-color: white;
-    color: var(--primary-bg);
-}
+        .sidebar nav a:first-child {
+            background-color: white;
+            color: var(--primary-bg);
+        }
 
-.sidebar nav a:hover {
-    background-color: #1d3557;
-    color: #a8dadc;
-}
+        .sidebar nav a:hover {
+            background-color: #1d3557;
+            color: #a8dadc;
+        }
 
-.sidebar a[href="{% url 'login' %}"] {
-    margin-top: auto;
-    background-color: white;
-    color: var(--primary-bg);
-    padding: 10px 20px;
-    border-radius: 20px;
-    max-width: 40%;
-    font-weight: bold;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    text-decoration: none;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
+        .sidebar a[href="{% url 'login' %}"] {
+            margin-top: auto;
+            background-color: white;
+            color: var(--primary-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            max-width: 40%;
+            font-weight: bold;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
 
-.sidebar a[href="{% url 'login' %}"]:hover {
-    background-color: #f1faee;
-    color: var(--primary-bg);
-}
+        .sidebar a[href="{% url 'login' %}"]:hover {
+            background-color: #f1faee;
+            color: var(--primary-bg);
+        }
 
         /* Main Content */
 .container {
