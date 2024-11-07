@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -25,6 +26,11 @@
             display: flex;
             height: 100vh;
         }
+
+        .no-padding {
+    padding: 0;
+}
+
         .sidebar {
     width: 250px;
     background-color: var(--primary-bg);
@@ -88,8 +94,11 @@
     color: var(--primary-bg);
     padding: 10px 20px;
     border-radius: 20px;
+    max-width: 40%;
     font-weight: bold;
     text-align: center;
+    margin-left: auto;
+    margin-right: auto;
     text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -102,6 +111,7 @@
         /* Main Content */
         .container {
             flex: 1;
+            margin: 0;
             padding: 20px;
             background-color: #ffffff;
         }
@@ -109,17 +119,24 @@
         /* Table Styles */
         .table-container {
             margin: 0 auto;
+            display: flex;
             padding: 20px;
             max-width: 800px;
             background-color: #f1faee;
             border-radius: 10px;
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            margin: 0;
+            justify-content: center;
+            max-width: 800px;
+            align-items: center;
         }
 
         table {
-            width: 100%;
+            width: 75%;
+            height: 20%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            border-radius: 15px;
         }
 
         th, td {
@@ -129,13 +146,10 @@
         }
 
         th {
-            background-color: #457b9d;
+            background-color: var(--card-bg);
             color: #f1faee;
             font-weight: bold;
-        }
-
-        tr:nth-child(even) {
-            background-color: #a8dadc;
+            height: 20%;
         }
 
         /* Buttons */
@@ -148,10 +162,11 @@
             cursor: pointer;
             border: none;
             transition: background-color 0.3s ease;
+            text-decoration: none;
         }
 
         .gerenciamento-botao {
-            background-color: #1d3557;
+            background-color: var(--primary-bg);
         }
 
         .gerenciamento-botao:hover {
@@ -169,7 +184,7 @@
         .add-turma {
             display: block;
             text-align: center;
-            background-color: #2a9d8f;
+            background-color: var(--primary-bg);
             color: #f1faee;
             padding: 12px 20px;
             border-radius: 8px;
@@ -247,8 +262,9 @@
     </div>
 
     <!-- Main Content -->
-    <div class="container">
-        <div class="table-container">
+    <div class="container">    
+        <img src="{% static 'img/A3.jpg' %}" alt="A3" style="height: 10%; width: 5.5%; position: absolute; top: 10px; right: 10px;">
+   
             <table>
                 <thead>
                     <tr>
@@ -270,7 +286,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
+        
         <a href="{% url 'adicionar_turma' %}" class="add-turma">Adicionar Turma</a>
     </div>
     <div id="confirm-modal" class="modal">
