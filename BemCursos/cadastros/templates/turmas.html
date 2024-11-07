@@ -120,39 +120,38 @@
 }
 
 .table-container {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    width: 80%;
-    max-width: 600px;
-    background-color: #f1faee;
-    border-radius: 20px; 
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-    align-items: center;
-}
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        width: 90%; 
+        max-width: 900px;
+        background-color: #f1faee;
+        border-radius: 20px; 
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        align-items: center;
+    }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 15px;
-    overflow: hidden; /* Para manter o arredondamento nos cantos */
-}
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 15px;
+        overflow: hidden; 
+    }
 
-th, td {
-    text-align: left;
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-}
+    th, td {
+        text-align: left;
+        padding: 15px; /* Aumentado de 12px para 15px */
+        border-bottom: 1px solid #ddd;
+    }
 
-th {
-    background-color: var(--card-bg);
-    color: #f1faee;
-    font-weight: bold;
-}
+    th {
+        background-color: var(--card-bg);
+        color: #f1faee;
+        font-weight: bold;
+    }
 
-        /* Buttons */
         .gerenciamento-botao, .gerenciamento-botao2 {
-            padding: 8px 12px;
+            padding: 10px 12px;
             border-radius: 5px;
             color: #f1faee;
             text-align: center;
@@ -168,7 +167,7 @@ th {
         }
 
         .gerenciamento-botao:hover {
-            background-color: #457b9d;
+            background-color: #544bdc;
         }
 
         .gerenciamento-botao2 {
@@ -192,10 +191,8 @@ th {
             text-align: center;
         }
         .add-turma:hover {
-            background-color: #2e901f;
+            background-color: #544bdc;
         }
-
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -219,7 +216,6 @@ th {
             text-align: center;
         }
 
-        /* Responsive Adjustments */
         @media screen and (max-width: 768px) {
             .sidebar {
                 width: 100%;
