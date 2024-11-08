@@ -88,7 +88,7 @@
         }
 
         .sidebar a[href="{% url 'login' %}"] {
-            margin-top: auto;
+            margin-top: 480px;
             background-color: white;
             color: var(--primary-bg);
             padding: 10px 20px;
@@ -358,7 +358,7 @@
                         <td>{{ turma.nome }}</td>
                         <td>{{ turma.unidade }}</td>
                         <td class="los-botoes">
-                            <a href="{% url 'alunos' turma_id=turma.id %}" class="gerenciamento-botao">🖉</a>
+                            <a href="{% url 'alunos' turma_id=turma.id %}" class="gerenciamento-botao">Alunos</a>
                             <button class="remover-turma gerenciamento-botao2" data-id="{{ turma.id }}"> 🗑 </button>
                         </td>
                     </tr>
