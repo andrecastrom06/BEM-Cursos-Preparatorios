@@ -319,16 +319,15 @@
     }
 
     .btn-cancel {
-        background-color: var(--card-bg-hover); /* Cor de cancelamento */
+        background-color: var(--primary-bg); /* Cor de cancelamento */
     }
 
     .btn-cancel:hover {
-        background-color: var(--card-bg-hover);
+        background-color: var(--primary-bg);
     }        
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
     <div class="sidebar">
         <div class="profile">
             <img src="/static/img/imgfunc.jpg" alt="funcionario" width="80" height="80">
@@ -343,8 +342,7 @@
     </div>
 
     <div class="container">    
-        <img src="{% static 'img/A3.jpg' %}" alt="A3" style="height: 10%; width: 5.5%; position: absolute; top: 10px; right: 10px;">
-    
+        <img src="{% static 'img/logo.png' %}" alt="A3" style="height: 12%; width: 6%; position: absolute; top: 10px; right: 10px;">
         <div class="table-container">
             <table>
                 <thead>
@@ -375,6 +373,7 @@
             <span class="close">&times;</span>
             <h3>Confirmação</h3>
             <p>Tem certeza que deseja remover esta turma?</p>
+            <p>Obs: Ao deletar a turma, os alunos/usuarios dessa turma serão removidos também</p>
             <div class="modal-buttons">
                 <button id="confirm-yes" class="btn-confirm">SIM</button>
                 <button id="confirm-no" class="btn-cancel">NÃO</button>
