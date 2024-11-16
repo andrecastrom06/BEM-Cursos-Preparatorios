@@ -343,6 +343,19 @@
 
     <div class="container">    
         <img src="{% static 'img/logo.png' %}" alt="A3" style="height: 12%; width: 6%; position: absolute; top: 10px; right: 10px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <label for="ordenar" style="font-size: 16px; color: white;">Filtrar por unidade:</label>
+            <select id="ordenar" name="ordenar" 
+                    style="padding: 8px; font-size: 16px; border-radius: 5px; border: none; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);"
+                    onchange="location = this.value;">
+                <option value="{% url 'turmas' %}" {% if not unidade_selecionada %}selected{% endif %}>Todas as unidades</option>
+                {% for unidade in unidades %}
+                    <option value="{% url 'turmas' %}?unidade={{ unidade.id }}" {% if unidade.id|stringformat:'s' == unidade_selecionada %}selected{% endif %}>
+                        {{ unidade.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
         <div class="table-container">
             <table>
                 <thead>

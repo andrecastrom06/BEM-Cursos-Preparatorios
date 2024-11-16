@@ -56,8 +56,13 @@ class TurmaView(LoginRequiredMixin, View):
             unidades = Unidade.objects.all()
             return render(request, self.template_name_add, {'unidades': unidades})
         else:
-            turmas = TurmaMediator.listar_turmas()
-            return render(request, self.template_name_list, {'turmas': turmas})
+            unidade_id = request.GET.get('unidade')
+            unidades = Unidade.objects.all()  
+            if unidade_id: 
+                turmas = Turma.objects.filter(unidade_id=unidade_id)
+            else:
+                turmas = Turma.objects.all()
+            return render(request, self.template_name_list, {'turmas': turmas, 'unidades': unidades, 'unidade_selecionada': unidade_id})
 
     def post(self, request, turma_id=None):
         if 'method' in request.POST and request.POST['method'] == 'DELETE':
