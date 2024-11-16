@@ -214,18 +214,20 @@
                 <thead>
                     <tr>
                         <th>Nome</th>
+                        <th>Sobrenome</th>
+                        <th>Turma</th>
                         <th>Matemática</th>
                         <th>Português</th>
-                        <th>Média</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for aluno in alunos %}
                     <tr>
-                        <td>{{ aluno.nome }}</td>
+                        <td>{{ aluno.nome}}</td>
+                        <td>{{ aluno.sobrenome }}</td>
+                        <td>{{ aluno.turma.nome }}</td>
                         <td><input type="number" name="matematica_{{ aluno.id }}" min="0" max="20" required></td>
                         <td><input type="number" name="portugues_{{ aluno.id }}" min="0" max="20" required></td>
-                        <td>-</td>
                     </tr>
                     {% empty %}
                     <tr>

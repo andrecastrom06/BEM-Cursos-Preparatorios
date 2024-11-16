@@ -90,7 +90,7 @@ class SimuladoMediator:
 class NotaMediator:
     @staticmethod
     def obter_alunos():
-        return Aluno.objects.all()
+        return Aluno.objects.all().order_by('nome','sobrenome')
 
     @staticmethod
     def salvar_notas(simulado_id, request):
