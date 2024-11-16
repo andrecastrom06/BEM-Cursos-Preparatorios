@@ -238,11 +238,16 @@
                 <button type="submit" class="btn btn-success">Salvar</button>
             </center>
         </form>
-        <div>
-            <a href="{% url 'ranking' simulado.id %}" class="btn btn-info">Ranking Geral</a>
-            <a href="{% url 'ranking_turma' simulado.id %}" class="btn btn-info">Ranking da Turma</a>
-            <a href="{% url 'ranking_matematica' simulado.id %}" class="btn btn-info">Ranking de Matemática</a>
-            <a href="{% url 'ranking_portugues' simulado.id %}" class="btn btn-info">Ranking de Português</a>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <label for="ordenar" style="font-size: 16px; color: white;">Ordenar por:</label>
+            <select id="ordenar" name="ordenar" 
+                    style="padding: 8px; font-size: 16px; border-radius: 5px; border: none; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);"
+                    onchange="location = this.value;">
+                <option value="{% url 'ranking' simulado.id %}">Ranking Geral</option>
+                <option value="{% url 'ranking_turma' simulado.id %}">Ranking Por Turma</option>
+                <option value="{% url 'ranking_matematica' simulado.id %}">Nota de Matemática</option>
+                <option value="{% url 'ranking_portugues' simulado.id %}">Nota de Português</option>
+            </select>
         </div>
     </div>
 </body>
