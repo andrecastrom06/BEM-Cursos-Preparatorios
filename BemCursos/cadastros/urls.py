@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import TurmaView, LoginView, AlunoView,SimuladoView,NotaView,RankingView,RankingMatematicaView,RankingPortuguesView
-from .views import ResponsavelView, RankingTurmaView,RankingPorTurmaResponsavelView, RankingGeralResponsavelView,home
+from .views import ResponsavelView, RankingTurmaView,RankingPorTurmaResponsavelView, RankingGeralResponsavelView, home
 
 urlpatterns = [
 

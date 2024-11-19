@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from .models import Unidade, Aluno, Simulado, Turma
+from .models import Aluno
 from django.contrib import messages
 from .mediators import TurmaMediator, AlunoMediator, SimuladoMediator, NotaMediator, RankingMediator, RankingResponsavelMediator
 from datetime import datetime
