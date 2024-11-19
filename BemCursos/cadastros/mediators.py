@@ -7,6 +7,10 @@ from django.db.models.functions import Cast
 
 class TurmaMediator:
     @staticmethod
+    def obter_turmas():
+        return Turma.objects.all()
+    
+    @staticmethod
     def listar_turmas():
         return Turma.objects.all().order_by("nome")
 

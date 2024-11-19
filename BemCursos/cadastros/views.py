@@ -150,7 +150,7 @@ class NotaView(View):
     def get(self, request, simulado_id):
         simulado = get_object_or_404(Simulado, id=simulado_id)
         alunos = NotaMediator.obter_alunos()
-        turmas = Turma.objects.all()
+        turmas = TurmaMediator.obter_turmas()
         return render(request, self.template_name, {
             'simulado': simulado,
             'alunos': alunos,
@@ -207,7 +207,7 @@ class RankingTurmaView(View):
 
     def get(self, request, simulado_id, turma_id=None):
         simulado = get_object_or_404(Simulado, id=simulado_id)
-        turmas = Turma.objects.all()
+        turmas = TurmaMediator.listar_turmas()
         turma_id = turma_id or request.GET.get('turma_id')
         if turma_id:
             rankings = RankingMediator.calcular_rankingTurma(simulado, turma_id)
@@ -232,14 +232,14 @@ class ResponsavelView(LoginRequiredMixin, View):
     def get(self, request):
         aluno = aluno = get_object_or_404(Aluno, user=request.user)
         simulados = SimuladoMediator.listar_simulados()
-        turmas = Turma.objects.all()
+        turmas = TurmaMediator.obter_turmas()
         return render(request, self.template_name, {'aluno': aluno, 'simulados': simulados, 'turmas': turmas})
 
     def post(self, request):
         aluno_login = request.POST.get('aluno_login')
         aluno = get_object_or_404(Aluno, user__username=aluno_login)
         simulados = SimuladoMediator.listar_simulados()
-        turmas = Turma.objects.all() 
+        turmas = TurmaMediator.obter_turmas()
         return render(request, self.template_name, {'aluno': aluno, 'simulados': simulados, 'turmas': turmas})
     
 
