@@ -53,26 +53,24 @@ class TurmaView(LoginRequiredMixin, View):
 
     def get(self, request, turma_id=None):
         if request.path.endswith('adicionar/'):
-            unidades = Unidade.objects.all()
+            unidades = TurmaMediator.listar_unidades()  
             return render(request, self.template_name_add, {'unidades': unidades})
         else:
             unidade_id = request.GET.get('unidade')
-            unidades = Unidade.objects.all()  
-            if unidade_id: 
-                turmas = Turma.objects.filter(unidade_id=unidade_id)
-            else:
-                turmas = Turma.objects.all()
+            unidades = TurmaMediator.listar_unidades()  
+            turmas = TurmaMediator.listar_turmas_por_unidade(unidade_id) if unidade_id else TurmaMediator.listar_turmas()
             return render(request, self.template_name_list, {'turmas': turmas, 'unidades': unidades, 'unidade_selecionada': unidade_id})
 
     def post(self, request, turma_id=None):
         if 'method' in request.POST and request.POST['method'] == 'DELETE':
             if turma_id is not None:
-                return self.excluir_turma(turma_id)
+                resultado = TurmaMediator.excluir_turma(turma_id)  
+                return JsonResponse(resultado)
             return JsonResponse({'error': 'ID da turma não fornecido'}, status=400)
 
         nome = request.POST.get('nome')
         unidade_id = request.POST.get('unidade')
-        TurmaMediator.adicionar_turma(nome, unidade_id)
+        TurmaMediator.adicionar_turma(nome, unidade_id)  
         return redirect('turmas')
 
     def excluir_turma(self, turma_id):

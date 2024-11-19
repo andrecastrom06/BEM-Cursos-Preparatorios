@@ -8,7 +8,11 @@ from django.db.models.functions import Cast
 class TurmaMediator:
     @staticmethod
     def listar_turmas():
-        return Turma.objects.all()
+        return Turma.objects.all().order_by("nome")
+
+    @staticmethod
+    def listar_turmas_por_unidade(unidade_id):
+        return Turma.objects.filter(unidade_id=unidade_id).order_by("nome")
 
     @staticmethod
     def obter_turma(turma_id):
@@ -17,22 +21,25 @@ class TurmaMediator:
     @staticmethod
     def adicionar_turma(nome, unidade_id):
         unidade = get_object_or_404(Unidade, id=unidade_id)
-        Turma.objects.create(nome=nome, unidade=unidade)
+        nome_formatado = nome.strip().capitalize()
+        Turma.objects.create(nome=nome_formatado, unidade=unidade)
 
     @staticmethod
     def excluir_turma(turma_id):
         turma = get_object_or_404(Turma, id=turma_id)
-        
         alunos = Aluno.objects.filter(turma=turma)
         for aluno in alunos:
-            login = aluno.gerar_login()  
+            login = aluno.gerar_login()
             usuario = User.objects.filter(username=login).first()
             if usuario:
-                usuario.delete()  
-            aluno.delete()  
-
+                usuario.delete()
+            aluno.delete()
         turma.delete()
         return {'status': 'Turma, alunos e usuários removidos com sucesso!'}
+
+    @staticmethod
+    def listar_unidades():
+        return Unidade.objects.all()
 
 
 class AlunoMediator:
