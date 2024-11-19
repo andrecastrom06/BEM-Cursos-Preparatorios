@@ -50,6 +50,10 @@ class AlunoMediator:
     @staticmethod
     def listar_alunos(turma_id):
         return Aluno.objects.filter(turma__id=turma_id)
+    
+    @staticmethod
+    def obter_aluno(user):
+        return get_object_or_404(Aluno, user=user)
 
     @staticmethod
     def adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id, is_ver_geral):
@@ -84,6 +88,11 @@ class AlunoMediator:
 
 
 class SimuladoMediator:
+
+    @staticmethod
+    def obter_simulado(simulado_id):
+        return get_object_or_404(Simulado, id=simulado_id)
+    
     @staticmethod
     def listar_simulados():
         return Simulado.objects.all()

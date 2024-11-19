@@ -1,5 +1,5 @@
 from django.views import View
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
@@ -148,7 +148,7 @@ class NotaView(View):
     template_name = 'notas_simulado.html'
 
     def get(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
         alunos = NotaMediator.obter_alunos()
         turmas = TurmaMediator.obter_turmas()
         return render(request, self.template_name, {
@@ -158,7 +158,7 @@ class NotaView(View):
         })
 
     def post(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
         NotaMediator.salvar_notas(simulado_id, request)
 
         messages.success(request, "Notas salvas com sucesso!")
@@ -169,7 +169,7 @@ class RankingView(View):
     template_name = 'ranking.html'
 
     def get(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
         rankings = RankingMediator.calcular_rankings(simulado)
 
         return render(request, self.template_name, {
@@ -181,7 +181,7 @@ class RankingMatematicaView(View):
     template_name = 'ranking_matematica.html'
 
     def get(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
         rankings = RankingMediator.calcular_ranking_matematica(simulado)
 
         return render(request, self.template_name, {
@@ -193,7 +193,7 @@ class RankingPortuguesView(View):
     template_name = 'ranking_portugues.html'
 
     def get(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
         rankings = RankingMediator.calcular_ranking_portugues(simulado)
 
         return render(request, self.template_name, {
@@ -206,12 +206,12 @@ class RankingTurmaView(View):
     template_name = 'rankingTurma.html'
 
     def get(self, request, simulado_id, turma_id=None):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
         turmas = TurmaMediator.listar_turmas()
         turma_id = turma_id or request.GET.get('turma_id')
         if turma_id:
             rankings = RankingMediator.calcular_rankingTurma(simulado, turma_id)
-            turma = get_object_or_404(Turma, id=turma_id)
+            turma = TurmaMediator.obter_turma(turma_id)
         else:
             rankings = []
             turma = None
@@ -230,14 +230,13 @@ class RankingTurmaView(View):
 class ResponsavelView(LoginRequiredMixin, View):
     template_name = 'responsavel.html'
     def get(self, request):
-        aluno = aluno = get_object_or_404(Aluno, user=request.user)
+        aluno = AlunoMediator.obter_aluno(request.user)
         simulados = SimuladoMediator.listar_simulados()
         turmas = TurmaMediator.obter_turmas()
         return render(request, self.template_name, {'aluno': aluno, 'simulados': simulados, 'turmas': turmas})
 
     def post(self, request):
-        aluno_login = request.POST.get('aluno_login')
-        aluno = get_object_or_404(Aluno, user__username=aluno_login)
+        aluno = AlunoMediator.obter_aluno(request.user)
         simulados = SimuladoMediator.listar_simulados()
         turmas = TurmaMediator.obter_turmas()
         return render(request, self.template_name, {'aluno': aluno, 'simulados': simulados, 'turmas': turmas})
@@ -247,8 +246,8 @@ class ResponsavelView(LoginRequiredMixin, View):
 class RankingPorTurmaResponsavelView(LoginRequiredMixin, View):
     template_name = 'ranking_turma_responsavel.html'
     def get(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
-        aluno = get_object_or_404(Aluno, user=request.user)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
+        aluno = AlunoMediator.obter_aluno(request.user)
         turma = aluno.turma
         rankings_turma = RankingResponsavelMediator.calcular_rankings_turma(simulado, turma.id)
         ranking_aluno = RankingResponsavelMediator.calcular_ranking_aluno_turma(simulado, aluno.id, turma.id)
@@ -264,8 +263,8 @@ class RankingGeralResponsavelView(LoginRequiredMixin, View):
     template_name = 'ranking_geral_responsavel.html'
 
     def get(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
-        aluno = get_object_or_404(Aluno, user=request.user)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
+        aluno = AlunoMediator.obter_aluno(request.user)
         
         aluno_ranking = RankingResponsavelMediator.calcular_ranking_aluno(simulado, aluno.id)
 
