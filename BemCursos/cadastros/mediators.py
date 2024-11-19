@@ -58,7 +58,17 @@ class AlunoMediator:
     @staticmethod
     def adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id, is_ver_geral):
         turma = get_object_or_404(Turma, id=turma_id)
-        
+
+        # Normalizar nome e sobrenome (primeira letra maiúscula)
+        nome = nome.strip().title()
+        sobrenome = sobrenome.strip().title()
+
+        # Verificação de duplicatas
+        if Aluno.objects.filter(nome=nome, sobrenome=sobrenome).exists():
+            raise ValueError(f"Já existe um aluno cadastrado com o nome {nome} {sobrenome}.")
+        if Aluno.objects.filter(cpf=cpf).exists():
+            raise ValueError("Já existe um aluno cadastrado com este CPF.")
+
         aluno = Aluno(
             nome=nome,
             sobrenome=sobrenome,
@@ -68,7 +78,7 @@ class AlunoMediator:
             is_ver_geral=is_ver_geral
         )
         aluno.calcular_idade_em_dias()
-        
+
         login = aluno.gerar_login()
         senha = aluno.gerar_senha()
 
@@ -77,14 +87,16 @@ class AlunoMediator:
             password=senha
         )
         aluno.user = usuario
-        aluno.save()  
+        aluno.save()
 
     @staticmethod
     def remover_aluno(aluno_id):
         aluno = get_object_or_404(Aluno, id=aluno_id)
-        aluno.delete()  
+        aluno.delete()
         aluno.user.delete()
         return {'status': 'Aluno e usuário removidos com sucesso!'}
+
+
 
 
 class SimuladoMediator:

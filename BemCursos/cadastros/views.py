@@ -100,22 +100,44 @@ class AlunoView(LoginRequiredMixin, View):
             resultado = AlunoMediator.remover_aluno(aluno_id)
             messages.success(request, resultado['status'])
             return redirect('alunos', turma_id=turma_id)
-  
+
         nome = request.POST.get('nome')
         sobrenome = request.POST.get('sobrenome')
         cpf = request.POST.get('cpf')
         data_nascimento_str = request.POST.get('data_nascimento')
-        data_nascimento = datetime.strptime(data_nascimento_str, "%Y-%m-%d").date()
-        is_ver_geral = bool(request.POST.get('is_ver_geral'))
 
-        aluno_temp = Aluno(nome=nome, sobrenome=sobrenome, cpf=cpf, data_nascimento=data_nascimento, turma_id=turma_id, is_ver_geral=is_ver_geral)
-        if not aluno_temp.validar_cpf():
-            messages.error(request, "CPF inválido. Verifique o número e tente novamente.")
+        try:
+            # Converter a data de nascimento
+            data_nascimento = datetime.strptime(data_nascimento_str, "%Y-%m-%d").date()
+
+            # Verificar se o CPF é válido
+            aluno_temp = Aluno(
+                nome=nome,
+                sobrenome=sobrenome,
+                cpf=cpf,
+                data_nascimento=data_nascimento,
+                turma_id=turma_id
+            )
+            if not aluno_temp.validar_cpf():
+                raise ValueError("CPF inválido. Verifique o número e tente novamente.")
+
+            # Adicionar aluno
+            is_ver_geral = bool(request.POST.get('is_ver_geral'))
+            AlunoMediator.adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id, is_ver_geral)
+            messages.success(request, "Aluno e usuário criados com sucesso!")
+            return redirect('alunos', turma_id=turma_id)
+
+        except ValueError as e:
+            # Captura erros específicos e exibe mensagens amigáveis
+            messages.error(request, str(e))
             return render(request, self.template_name_add, {'turma_id': turma_id})
 
-        AlunoMediator.adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id, is_ver_geral)
-        messages.success(request, "Aluno e usuário criados com sucesso!")
-        return redirect('alunos', turma_id=turma_id)
+        except Exception as e:
+            # Tratamento genérico para qualquer outro erro
+            messages.error(request, "Ocorreu um erro inesperado")
+            return render(request, self.template_name_add, {'turma_id': turma_id})
+
+    
     
 class SimuladoView(View):
     template_name_list = 'simulados.html'
