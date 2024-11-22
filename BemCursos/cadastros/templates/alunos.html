@@ -480,14 +480,14 @@
         document.addEventListener('DOMContentLoaded', function () {
             var removerButtons = document.querySelectorAll('.btn-remover');
             var alunoIdToRemove = null;
-
+            var confirmarRemocaoBtn = document.getElementById('confirmarRemocaoBtn');
             removerButtons.forEach(function (button) {
                 button.addEventListener('click', function () {
                     alunoIdToRemove = this.getAttribute('data-id');
                 });
             });
 
-            var confirmarRemocaoBtn = document.getElementById('confirmarRemocaoBtn');
+
             confirmarRemocaoBtn.addEventListener('click', function () {
                 if (alunoIdToRemove) {
                     const form = document.createElement('form');

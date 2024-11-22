@@ -4,13 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <title>Ranking da Turma - Responsável</title>
+    <title>Lista de Turmas</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* Estilos Gerais */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
+
+        :root {
+        --primary-bg: rgb(52, 82, 160); /* Cor de fundo da área direita */    
+        --secondary-bg: white; /* Cor de fundo da área esquerda */
+        --card-bg: rgb(115, 187, 106); /* Cor de fundo da card-login */
+        --card-bg-hover: rgb(88, 146, 81);
+        --text-color: white; /* Cor do texto nos rótulos e nos botões */
+        --button-hover-bg: rgb(42, 121, 190); /* Cor de fundo ao passar o mouse no botão */
+        --error-bg: red; /* Cor de fundo do erro */
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            background-color: rgb(65, 88, 208);
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f2f5f9;
             color: #333;
             margin: 0;
             padding: 0;
@@ -18,30 +29,15 @@
             height: 100vh;
         }
 
-        .page-content {
-            display: flex;
-            width: 100%;
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        /* Sidebar */
         .sidebar {
             width: 250px;
-            background-color: white;
+            background-color: var(--primary-bg);
             padding: 20px;
-            color: black;
+            color: white;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            height: 100%;
-            overflow-y: auto;
+            height: 100vh;
         }
 
         .sidebar .profile {
@@ -49,140 +45,406 @@
             margin-bottom: 30px;
         }
 
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+        }
+
         .sidebar .profile h3 {
             margin: 10px 0 5px;
-            color: black;
+            color: #f1faee;
+            font-weight: bold;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
         }
 
         .sidebar .profile p {
-            color: #555;
+            color: #a8dadc;
+            font-size: 0.9em;
         }
 
         .sidebar nav a {
+            display: block;
             text-decoration: none;
             color: white;
-            padding: 15px;
-            border-radius: 5px;
-            background-color: rgb(65, 88, 208);
+            padding: 10px 15px;
+            border-radius: 10px;
+            background-color: transparent;
             margin-bottom: 10px;
             text-align: center;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: block;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar nav a:first-child {
+            background-color: white;
+            color: var(--primary-bg);
         }
 
         .sidebar nav a:hover {
-            background-color: rgb(54, 74, 175);
+            background-color: #1d3557;
+            color: #a8dadc;
         }
 
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        /* Conteúdo Principal */
-        .container {
-            flex: 1;
-            padding: 20px;
-            background-color: rgb(11, 173, 38);
-            border-radius: 10px;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            text-align: center;
-            color: white;
-            margin-left: 270px; /* Espaço para a sidebar fixa */
-            max-width: 900px;
-        }
-
-        h1, h2 {
-            color: #fff;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            margin-bottom: 20px;
-        }
-
-        /* Estilos do Container de Dados do Aluno */
-        .aluno-container {
+        .sidebar a[href="{% url 'login' %}"] {
+            margin-top: 480px;
             background-color: white;
-            color: #333;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            max-width: 500px;
+            color: var(--primary-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            max-width: 40%;
+            font-weight: bold;
+            text-align: center;
             margin-left: auto;
             margin-right: auto;
-            text-align: left;
-        }
-
-        .aluno-container h2 {
-            text-align: center;
-            color: rgb(65, 88, 208);
-            margin-bottom: 15px;
-        }
-
-        .aluno-container p {
-            margin: 8px 0;
-            color: #333;
-            font-weight: bold;
-        }
-
-        /* Botões */
-        button, .ranking-geral-botao {
-            background-color: #007BFF;
-            color: white;
             text-decoration: none;
-            padding: 8px 12px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar a[href="{% url 'login' %}"]:hover {
+            background-color: #f1faee;
+            color: var(--primary-bg);
+        }
+
+.container {
+    flex: 1;
+    margin: 0;
+    padding-top: 40px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: first baseline;
+    height: 100vh;
+}
+
+.table-container {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 20px;
+        width: 90%; 
+        max-width: 900px;
+        background-color: #ffffff;
+        border-radius: 20px; 
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        align-items: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 15px;
+        overflow: hidden; 
+    }
+
+    th, td {
+        text-align: left;
+        font-weight: 750;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+    }
+
+    td.los-botoes{
+        text-align: right;
+        padding-right: 10px;
+    }
+    th.los-botoes{
+        text-align: right;
+    }
+
+    th {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        background-color: var(--card-bg);
+        color: #f1faee;
+        font-weight: bold;
+    }
+
+        .gerenciamento-botao, .gerenciamento-botao2 {
+            padding: 10px 12px;
             border-radius: 5px;
+            color: #f1faee;
+            text-align: center;
             font-size: 14px;
             cursor: pointer;
             border: none;
             transition: background-color 0.3s ease;
-            margin-top: 10px;
-            display: inline-block;
+            text-decoration: none;
         }
 
-        button:hover, .ranking-geral-botao:hover {
-            background-color: #0056b3;
+        .gerenciamento-botao {
+            background-color: var(--primary-bg);
+            border-radius: 12px;
         }
+
+        .gerenciamento-botao:hover {
+            background-color: rgb(33, 52, 101);
+        }
+
+        .gerenciamento-botao2 {
+            background-color: #e63946;
+            border-radius: 12px;
+        }
+
+        .gerenciamento-botao2:hover {
+            background-color: #c02424;
+        }
+
+        .add-turma {
+            text-decoration: none;
+            display: block;
+            margin: 20px auto 0 auto; 
+            background-color: var(--primary-bg); 
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .add-turma:hover {
+            background-color: rgb(33, 52, 101);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                display: flex;
+                justify-content: space-between;
+                flex-direction: row;
+            }
+
+            .sidebar nav {
+                flex-direction: row;
+                justify-content: space-around;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .sidebar {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        /* Modal base styles */
+    .modal {
+        display: none; /* Oculto por padrão */
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Fundo mais escuro */
+    }
+
+    .modal-content {
+        background-color: #f1faee; /* Fundo semelhante à tabela */
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd; /* Borda semelhante à tabela */
+        width: 80%;
+        max-width: 400px;
+        border-radius: 20px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+        text-align: center;
+        color: #333; /* Cor do texto padrão */
+    }
+
+    /* Modal header and close button */
+    .modal-content h3 {
+        color: #333; /* Texto branco */
+        font-weight: bold;
+        padding: 5px;
+        border-radius: 5px;
+        margin-top: 0;
+    }
+
+    .modal-content .close {
+        color: #333;
+        float: right;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* Modal buttons */
+    .modal-buttons {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .btn-confirm, .btn-cancel {
+        padding: 15px 20px;
+        border-radius: 15px;
+        font-weight: bold;
+        color: #f1faee;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-confirm {
+        background-color: #d62828; /* Cor de confirmação consistente */
+    }
+
+    .btn-confirm:hover {
+        background-color: #d62828;
+    }
+
+    .btn-cancel {
+        background-color: var(--primary-bg); /* Cor de cancelamento */
+    }
+
+    .btn-cancel:hover {
+        background-color: var(--primary-bg);
+    }        
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="profile">
-            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="100" height="100" style="margin-top: 20px; margin-left: 10px;">
-            <h3>Nome e Último Nome</h3>
-            <p>Função</p>
+            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="80" height="80">
+            <h3>Bem-Cursos-Preparatorios</h3>
+            <p>Funcionário</p>
         </div>
         <nav>
-            <ul>
-                {% for simulado in simulados %}
-                    <li>
-                        <strong>{{ simulado.nome }}</strong> - Data: {{ simulado.data|date:"d/m/Y" }}
-                        <a href="{% url 'ranking_turma_responsavel' simulado.id %}">Ranking Turma</a>
-                        {% if request.user.aluno.is_ver_geral %}
-                        <a href="{% url 'ranking_geral_responsavel' simulado.id %}" class="ranking-geral-botao">Ranking Geral</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>    
+            <a href="{% url 'responsavel' %}">Perfil</a>
+            <a href="{% url 'simulados' %}">Simulados</a>
         </nav>
+        <a href="{% url 'login' %}">Sair</a>
     </div>
 
-    <div class="page-content">
-        <div class="container">
-            {% if aluno %}
-                <div class="aluno-container">
-                    <h2>Dados do Aluno</h2>
-                    <p><strong>Nome:</strong> {{ aluno.nome }}</p>
-                    <p><strong>Último Nome:</strong> {{ aluno.sobrenome }}</p>
-                    <p><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento|date:"d/m/Y" }}</p>
-                    <p><strong>Turma:</strong> {{ aluno.turma }}</p>
-                    <p><strong>CPF:</strong> {{ aluno.cpf }}</p>
-                    <p><strong>Pode ver ranking geral:</strong> {% if aluno.is_ver_geral %}Sim{% else %}Não{% endif %}</p>
-                </div>
-            {% endif %}
+    <div class="container">    
+        <img src="{% static 'img/logo.png' %}" alt="A3" style="height: 12%; width: 6%; position: absolute; top: 10px; right: 10px;">
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dados Pessoais</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for turma in turmas %}
+                    <tr id="turma-{{ turma.id }}">
+                        <h2>Dados do Aluno</h2>
+                        <p><strong>Nome:</strong> {{ aluno.nome }}</p>
+                        <p><strong>Último Nome:</strong> {{ aluno.sobrenome }}</p>
+                        <p><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento|date:"d/m/Y" }}</p>
+                        <p><strong>Turma:</strong> {{ aluno.turma }}</p>
+                        <p><strong>CPF:</strong> {{ aluno.cpf }}</p>
+                        <p><strong>Pode ver ranking geral:</strong> {% if aluno.is_ver_geral %}Sim{% else %}Não{% endif %}</p>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{% url 'adicionar_turma' %}" class="add-turma">Adicionar Turma</a>
         </div>
     </div>
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Confirmação</h3>
+            <p>Tem certeza que deseja remover esta turma?</p>
+            <p>Obs: Ao deletar a turma, os alunos/usuarios dessa turma serão removidos também</p>
+            <div class="modal-buttons">
+                <button id="confirm-yes" class="btn-confirm">SIM</button>
+                <button id="confirm-no" class="btn-cancel">NÃO</button>
+            </div>
+        </div>
+    </div>
+
+  
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Sucesso</h3>
+            <p id="success-text"></p>
+            <button id="success-ok" class="btn-confirm">Ok</button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            function abrirModalConfirmacao(turmaId, callback) {
+                $('#confirm-modal').fadeIn();
+                $('#confirm-yes').off('click').on('click', function() {
+                    $('#confirm-modal').fadeOut();
+                    callback(true);
+                });
+                $('#confirm-no').off('click').on('click', function() {
+                    $('#confirm-modal').fadeOut();
+                    callback(false);
+                });
+            }
+
+            function abrirModalSucesso(mensagem, reloadAfter) {
+                $('#success-text').text(mensagem);
+                $('#success-modal').fadeIn();
+
+                $('#success-ok').off('click').on('click', function() {
+                    $('#success-modal').fadeOut();
+                    if (reloadAfter) {
+                        location.reload();
+                    }
+                });
+            }
+
+            $('.close').on('click', function() {
+                $(this).closest('.modal').fadeOut();
+            });
+
+            $('.remover-turma').on('click', function() {
+                var turmaId = $(this).data('id');
+                abrirModalConfirmacao(turmaId, function(confirmed) {
+                    if (confirmed) {
+                        $.ajax({
+                            url: '{% url "remover_turma" turma_id=0 %}'.replace('0', turmaId),
+                            type: 'POST',
+                            data: {
+                                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                'method': 'DELETE',
+                                'turma_id': turmaId
+                            },
+                            success: function(response) {
+                                abrirModalSucesso('Turma removida com sucesso!', true);
+                                $('#turma-' + turmaId).remove();
+                            },
+                            error: function(xhr) {
+                                abrirModalSucesso('Erro ao remover a turma: ' + xhr.responseText, false);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
