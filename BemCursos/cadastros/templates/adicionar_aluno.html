@@ -7,9 +7,21 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <title>Adicionar Aluno</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
+
+        :root {
+            --primary-bg: rgb(52, 82, 160);
+            --secondary-bg: white;
+            --card-bg: rgb(115, 187, 106);
+            --card-bg-hover: rgb(88, 146, 81);
+            --text-color: white;
+            --button-hover-bg: rgb(42, 121, 190);
+            --error-bg: red;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: rgb(65, 88, 208);
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f2f5f9;
             color: #333;
             margin: 0;
             padding: 0;
@@ -19,12 +31,13 @@
 
         .sidebar {
             width: 250px;
-            background-color: white;
+            background-color: var(--primary-bg);
             padding: 20px;
-            color: black;
+            color: white;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            height: 100vh;
         }
 
         .sidebar .profile {
@@ -32,161 +45,207 @@
             margin-bottom: 30px;
         }
 
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+        }
+
         .sidebar .profile h3 {
             margin: 10px 0 5px;
-            color: black;
+            color: #f1faee;
+            font-weight: bold;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
         }
 
         .sidebar .profile p {
-            color: #555;
+            color: #a8dadc;
+            font-size: 0.9em;
         }
 
         .sidebar nav a {
+            display: block;
             text-decoration: none;
             color: white;
-            padding: 15px;
-            border-radius: 5px;
-            background-color: rgb(65, 88, 208);
+            padding: 10px 15px;
+            border-radius: 10px;
+            background-color: transparent;
             margin-bottom: 10px;
             text-align: center;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s ease; 
-            display: block;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar nav a:first-child {
+            background-color: white;
+            color: var(--primary-bg);
         }
 
         .sidebar nav a:hover {
-            background-color: rgb(54, 74, 175);
+            background-color: #1d3557;
+            color: #a8dadc;
+        }
+
+        .sidebar a[href="{% url 'login' %}"] {
+            margin-top: auto;
+            background-color: white;
+            color: var(--primary-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            max-width: 40%;
+            font-weight: bold;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar a[href="{% url 'login' %}"]:hover {
+            background-color: #f1faee;
+            color: var(--primary-bg);
         }
 
         .container {
             flex: 1;
+            margin: 0;
             padding: 20px;
-            background-color: rgb(65, 88, 208);
-            color: white;
+            background-color: #ffffff;
             display: flex;
             justify-content: center;
-            align-items: center;
-            flex-direction: column;
+            align-items: flex-start;
+            height: 100vh;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
         }
 
         h2 {
             text-align: center;
-            color: #fff;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
         }
 
-        form {
-            background-color: rgb(11, 173, 38);
-            padding: 20px;
-            border-radius: 15px;
-            max-width: 450px;
-            width: 100%;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            color: white;
-        }
-
-        form label, form input {
+        label {
             display: block;
-            width: 100%;
             margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        form input[type="text"],
-        form input[type="date"] {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            color: black;
-            width: calc(100% - 22px); /* ajuste para manter o campo dentro do container */
-        }
-
-        button[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: rgb(11, 147, 34);
-            color: white;
-            border: none;
-            cursor: pointer;
             font-size: 16px;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+        }
+
+        button {
+            background-color: var(--primary-bg);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
             transition: background-color 0.3s ease;
         }
 
-        button[type="submit"]:hover {
-            background-color: rgb(9, 115, 28);
+        button:hover {
+            background-color: rgb(33, 52, 101);
         }
 
         .btn-voltar {
-        margin-top: 10px;
-        text-align: center;
-        width: 40%; /* Reduzido para 40% da largura do container */
-        padding: 8px;
-        border-radius: 5px;
-        background-color: rgb(65, 88, 208); /* Cor azul, igual à sidebar */
-        color: white;
-        text-decoration: none;
-        font-size: 14px;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-        transition: background-color 0.3s ease;
-        cursor: pointer;
-    }
+            display: block;
+            margin: 20px auto 0;
+            width: 200px;
+            text-align: center;
+            padding: 10px 20px;
+            border-radius: 12px;
+            background-color: var(--primary-bg);
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
 
-    .btn-voltar:hover {
-        background-color: #007BFF;  /* Azul mais escuro no hover */
-    }
+        .btn-voltar:hover {
+            background-color: rgb(33, 52, 101);
+        }
+
+        ul.messages {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        ul.messages li {
+            background-color: var(--error-bg);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="profile">
-            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="100" height="100" style="margin-top: 20px; margin-left: 10px;">
+            <img src="/static/img/imgfunc.jpg" alt="funcionario">
             <h3>Nome e Sobrenome</h3>
             <p>Função</p>
         </div>
         <nav>
-            <a href="{% url 'turmas' %}" class="btn btn-primary">Turmas</a>
-            <a href="{% url 'simulados' %}" class="btn btn-primary">Simulados</a>
+            <a href="{% url 'turmas' %}">Turmas</a>
+            <a href="{% url 'simulados' %}">Simulados</a>
         </nav>
+        <a href="{% url 'login' %}">Sair</a>
     </div>
 
     <div class="container">
-        <h2>Adicionar Aluno</h2>
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        
-        <form method="post">
-            {% csrf_token %}
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" required>
+        <div class="form-container">
+            <h2>Adicionar Aluno</h2>
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
 
-            <label for="sobrenome">Último Nome:</label>
-            <input type="text" id="sobrenome" name="sobrenome" required>
+                <label for="sobrenome">Último Nome:</label>
+                <input type="text" id="sobrenome" name="sobrenome" required>
 
-            <label for="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf" required>
+                <label for="cpf">CPF:</label>
+                <input type="text" id="cpf" name="cpf" required>
 
-            <label for="data_nascimento">Data de Nascimento:</label>
-            <input type="date" id="data_nascimento" name="data_nascimento" required>
+                <label for="data_nascimento">Data de Nascimento:</label>
+                <input type="date" id="data_nascimento" name="data_nascimento" required>
 
-            <label for="is_ver_geral">Pode ver ranking geral:</label>
-            <input type="checkbox" id="is_ver_geral" name="is_ver_geral">
+                <label for="is_ver_geral">
+                    <input type="checkbox" id="is_ver_geral" name="is_ver_geral">
+                    Pode ver ranking geral
+                </label>
 
-            <input type="hidden" name="turma_id" value="{{ turma_id }}">
+                <input type="hidden" name="turma_id" value="{{ turma_id }}">
 
-            <button type="submit">Salvar</button>
-        </form>
-
-        <a href="{% url 'alunos' turma_id=turma_id %}" class="btn-voltar">Voltar</a>
+                <button type="submit">Salvar</button>
+            </form>
+            <a href="{% url 'alunos' turma_id=turma_id %}" class="btn-voltar">Voltar</a>
+        </div>
     </div>
 </body>
 </html>
