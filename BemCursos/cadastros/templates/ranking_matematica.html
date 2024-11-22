@@ -7,28 +7,19 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <title>Ranking de Matemática - {{ simulado.nome }}</title>
     <style>
+         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
 
-        .voltar-botao {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            transition: background-color 0.3s ease;
+        :root {
+            --primary-bg: rgb(52, 82, 160); /* Cor de fundo da área direita */    
+            --secondary-bg: white; /* Cor de fundo da área esquerda */
+            --card-bg: rgb(115, 187, 106); /* Cor de fundo da tabela */
+            --text-color: white; /* Cor do texto nos rótulos e botões */
+            --button-hover-bg: rgb(42, 121, 190); /* Cor de fundo ao passar o mouse no botão */
         }
-
-        .voltar-botao:hover {
-            background-color: #0056b3;
-        }
-
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: rgb(65, 88, 208);
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f2f5f9;
             color: #333;
             margin: 0;
             padding: 0;
@@ -36,16 +27,15 @@
             height: 100vh;
         }
 
-
         .sidebar {
             width: 250px;
-            background-color: white;
+            background-color: var(--primary-bg);
             padding: 20px;
-            color: black;
+            color: var(--text-color);
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            height: 100vh;
         }
 
         .sidebar .profile {
@@ -53,115 +43,139 @@
             margin-bottom: 30px;
         }
 
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+        }
+
         .sidebar .profile h3 {
             margin: 10px 0 5px;
-            color: black;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
+            color: #f1faee;
+            font-weight: bold;
+            font-size: 18px; /* Ajustado para uniformidade */
         }
 
         .sidebar .profile p {
-            color: #555;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
+            color: #a8dadc;
+            font-size: 0.9em;
+        }
+
+        .sidebar .profile .name-container {
+            display: flex;
+            flex-direction: column; /* Alinha o nome e sobrenome verticalmente */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sidebar .profile .name-container .first-name,
+        .sidebar .profile .name-container .last-name {
+            margin: 0;
+            font-size: 16px; /* Ajuste de tamanho para que ambos fiquem visíveis */
+            color: #f1faee;
+            font-weight: bold;
         }
 
         .sidebar nav a {
+            display: block;
             text-decoration: none;
             color: white;
-            padding: 15px;
-            border-radius: 5px;
-            background-color: rgb(65, 88, 208);
+            padding: 10px 15px;
+            border-radius: 10px;
+            background-color: transparent;
             margin-bottom: 10px;
             text-align: center;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: block;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar nav a:first-child {
+            background-color: white;
+            color: var(--primary-bg);
         }
 
         .sidebar nav a:hover {
-            background-color: rgb(54, 74, 175);
+            background-color: var(--sidebar-hover-bg);
+            color: #a8dadc;
         }
 
-    
         .container {
             flex: 1;
+            margin: 0;
             padding: 20px;
-            background-color: rgb(65, 88, 208);
-            color: white;
+            background-color: var(--secondary-bg);
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: flex-start;
         }
 
         .content {
             width: 100%;
             max-width: 900px;
             padding: 20px;
-            background-color: rgb(11, 173, 38);
-            border-radius: 10px;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
             text-align: center;
-            color: white;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
         }
 
         h1 {
-            color: #fff;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            color: #f1faee;
+            font-weight: bold;
             margin-bottom: 20px;
         }
-
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
             background-color: white;
-            border-radius: 8px;
+            border-radius: 15px;
             overflow: hidden;
-            color: #333;
         }
 
-        table th, table td {
-            padding: 15px;
+        th, td {
             text-align: center;
             font-weight: bold;
-            border-bottom: 1px solid #ddd;
+            padding: 15px;
         }
 
-        table thead {
-            background-color: rgb(65, 88, 208);
-            color: white;
+        th {
+            background-color: var(--primary-bg);
+            color: var(--text-color);
         }
 
-        table tbody tr:nth-child(even) {
+        tr:nth-child(even) {
             background-color: #f9f9f9;
         }
 
-        table tbody tr:nth-child(odd) {
+        tr:nth-child(odd) {
             background-color: #e6e6e6;
         }
 
-        @media screen and (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
 
+        @media screen and (max-width: 768px) {
             .sidebar {
                 width: 100%;
+                height: auto;
                 display: flex;
+                flex-direction: row;
                 justify-content: space-between;
             }
 
             .container {
                 padding: 10px;
-            }
-
-            table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
             }
         }
 
@@ -171,15 +185,13 @@
                 align-items: center;
             }
 
-            .container {
-                padding: 15px;
-            }
-
             table th, table td {
                 font-size: 14px;
             }
         }
+
     </style>
+    
 </head>
 <body>
 
