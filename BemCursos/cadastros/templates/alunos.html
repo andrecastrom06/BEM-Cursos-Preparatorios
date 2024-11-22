@@ -8,9 +8,21 @@
     <title>Lista de Alunos</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
+
+        :root {
+        --primary-bg: rgb(52, 82, 160); /* Cor de fundo da área direita */    
+        --secondary-bg: white; /* Cor de fundo da área esquerda */
+        --card-bg: rgb(115, 187, 106); /* Cor de fundo da card-login */
+        --card-bg-hover: rgb(88, 146, 81);
+        --text-color: white; /* Cor do texto nos rótulos e nos botões */
+        --button-hover-bg: rgb(42, 121, 190); /* Cor de fundo ao passar o mouse no botão */
+        --error-bg: red; /* Cor de fundo do erro */
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            background-color: rgb(65, 88, 208);
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f2f5f9;
             color: #333;
             margin: 0;
             padding: 0;
@@ -20,12 +32,13 @@
 
         .sidebar {
             width: 250px;
-            background-color: white;
+            background-color: var(--primary-bg);
             padding: 20px;
-            color: black;
+            color: white;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            height: 100vh;
         }
 
         .sidebar .profile {
@@ -33,117 +46,152 @@
             margin-bottom: 30px;
         }
 
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+        }
+
         .sidebar .profile h3 {
             margin: 10px 0 5px;
-            color: black;
+            color: #f1faee;
+            font-weight: bold;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
         }
 
         .sidebar .profile p {
-            color: #555;
+            color: #a8dadc;
+            font-size: 0.9em;
         }
 
         .sidebar nav a {
+            display: block;
             text-decoration: none;
             color: white;
-            padding: 15px;
-            border-radius: 5px;
-            background-color: rgb(65, 88, 208);
+            padding: 10px 15px;
+            border-radius: 10px;
+            background-color: transparent;
             margin-bottom: 10px;
             text-align: center;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s ease; 
-            display: block;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar nav a:first-child {
+            background-color: white;
+            color: var(--primary-bg);
         }
 
         .sidebar nav a:hover {
-            background-color: rgb(54, 74, 175);
+            background-color: #1d3557;
+            color: #a8dadc;
         }
 
-        .container {
-            flex: 1;
-            padding: 20px;
-            background-color: rgb(65, 88, 208);
-            color: white;
-        }
-
-        h2 {
+        .sidebar a[href="{% url 'login' %}"] {
+            margin-top: 480px;
+            background-color: white;
+            color: var(--primary-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            max-width: 40%;
+            font-weight: bold;
             text-align: center;
-            color: #fff;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
-        }
-        .button-container {
-            display: flex;
-            justify-content: center; 
-            margin-top: 20px; 
-        }
-
-        .table-container {
-            margin: 0 auto;
-            padding: 20px;
-            max-width: 800px;
-            background-color: rgb(11, 173, 38);
-            border-radius: 15px;
-            color: white;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #ffffff;
-            color: black; 
-        }
-
-        tr:nth-child(even) {
-            background-color: rgb(11, 173, 38);
-        }
-
-        a, button {
-            background-color: #007BFF; 
-            color: white;
+            margin-left: auto;
+            margin-right: auto;
             text-decoration: none;
-            padding: 8px 12px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar a[href="{% url 'login' %}"]:hover {
+            background-color: #f1faee;
+            color: var(--primary-bg);
+        }
+
+.container {
+    flex: 1;
+    margin: 0;
+    padding-top: 40px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: first baseline;
+    height: 100vh;
+}
+
+.table-container {
+    margin-top: 90px;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 20px;
+        width: 90%; 
+        max-width: 900px;
+        background-color: #ffffff;
+        border-radius: 20px; 
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        align-items: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 15px;
+        overflow: hidden; 
+    }
+
+    th, td {
+        text-align: left;
+        font-weight: 750;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+    }
+
+    td.los-botoes{
+        text-align: right;
+        padding-right: 10px;
+    }
+    th.los-botoes{
+        text-align: right;
+    }
+
+    th {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        background-color: var(--card-bg);
+        color: #f1faee;
+        font-weight: bold;
+    }
+
+        .gerenciamento-botao, .gerenciamento-botao2 {
+            padding: 10px 12px;
             border-radius: 5px;
+            color: #f1faee;
+            text-align: center;
             font-size: 14px;
             cursor: pointer;
             border: none;
-        }
-
-        a:hover, button:hover {
-            background-color: #0056b3;
-        }
-
-        .add-aluno {
-            display: block;
-            text-align: center;
-            background-color: rgb(11, 173, 38);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
+            transition: background-color 0.3s ease;
             text-decoration: none;
-            width: 250px;
-            margin: 30px auto;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            transition: background-color 0.5s ease; 
         }
 
-        .add-aluno:hover {
-            background-color: rgb(11, 147, 34);
+        .gerenciamento-botao {
+            background-color: var(--primary-bg);
+            border-radius: 12px;
         }
 
+        .gerenciamento-botao:hover {
+            background-color: rgb(33, 52, 101);
+        }
+
+        .gerenciamento-botao2 {
+            background-color: #e63946;
+            border-radius: 12px;
+        }
+
+        .gerenciamento-botao2:hover {
+            background-color: #c02424;
+        }
         .modal {
             display: none;
             position: fixed;
@@ -153,19 +201,199 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
         .modal-content {
             background-color: #fefefe;
             margin: auto;
             padding: 20px;
-            border: 1px solid #888;
+            border: 1px solid #ddd;
             width: 80%;
             max-width: 400px;
             border-radius: 8px;
             text-align: center;
+            color: #333;
         }
+        .table-container {
+            overflow-x: auto;
+        }
+
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                display: flex;
+                justify-content: space-between;
+                flex-direction: row;
+            }
+
+            .sidebar nav {
+                flex-direction: row;
+                justify-content: space-around;
+            }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-title {
+            top: 70px;
+            left: 300px;
+            position: absolute;
+            background-color: var(--primary-bg);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .header-title h2 {
+            margin: 0;
+            margin-left: 10px;
+            color: var(--primary-bg);
+        }
+
+        .back-button {
+            background-color: var(--primary-bg);
+            color: #f1faee;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .add-aluno {
+            margin-top: 50px;
+            margin-right: 100px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary-bg);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .add-aluno:hover {
+            background-color: rgb(33, 52, 101);
+        }
+
+        @media screen and (max-width: 480px) {
+            .sidebar {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        /* Modal base styles */
+    .modal {
+        display: none; /* Oculto por padrão */
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Fundo mais escuro */
+    }
+
+    .modal-content {
+        background-color: #f1faee; /* Fundo semelhante à tabela */
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd; /* Borda semelhante à tabela */
+        width: 80%;
+        max-width: 400px;
+        border-radius: 20px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+        text-align: center;
+        color: #333; /* Cor do texto padrão */
+    }
+
+    /* Modal header and close button */
+    .modal-content h3 {
+        color: #333; /* Texto branco */
+        font-weight: bold;
+        padding: 5px;
+        border-radius: 5px;
+        margin-top: 0;
+    }
+
+    .modal-content .close {
+        color: #333;
+        float: right;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* Modal buttons */
+    .modal-buttons {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .btn-confirm, .btn-cancel {
+        padding: 15px 20px;
+        border-radius: 15px;
+        font-weight: bold;
+        color: #f1faee;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-confirm {
+        background-color: #d62828; /* Cor de confirmação consistente */
+    }
+
+    .btn-confirm:hover {
+        background-color: #d62828;
+    }
+
+    .btn-cancel {
+        background-color: var(--primary-bg); /* Cor de cancelamento */
+    }
+
+    .btn-cancel:hover {
+        background-color: var(--primary-bg);
+    }        
+    .status-indicator {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+/* Verde para "Sim" */
+.status-yes {
+    margin-left: 70px;
+    background-color: #28a745; /* Cor verde */
+}
+
+/* Vermelho para "Não" */
+.status-no {
+    margin-left: 70px;
+    background-color: #dc3545; /* Cor vermelha */
+}
     </style>
 </head>
 <body>
@@ -190,58 +418,58 @@
             </ul>
         {% endif %}
 
-        <h2>Lista de Alunos</h2>
+        <div class="header">
+            <div class="header-title">
+                <button onclick="{{ turma.nome }}window.history.back()" class="btn btn-secondary back-button">← <h2>{{ turma.nome }}</h2></button>
+            </div>
+            <a href="{% url 'adicionar_aluno' turma_id=turma_id %}" class="add-aluno">Adicionar Aluno</a>
+        </div>
 
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Nome</th>
-                        <th>Último Nome</th>
+                        <th>Nome Completo</th>
                         <th>CPF</th>
                         <th>Data de Nascimento</th>
-                        <th>Pode ver Ranking Geral</th>
+                        <th>Acesso ao Ranking</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for aluno in alunos %}
                     <tr>
-                        <td>{{ aluno.nome }}</td>
-                        <td>{{ aluno.sobrenome }}</td>
+                        <td>{{ aluno.nome }} {{ aluno.sobrenome }}</td>                  
                         <td>{{ aluno.cpf }}</td>
                         <td>{{ aluno.data_nascimento }}</td>
-                        {% if aluno.is_ver_geral%}
-                            <td>Sim</td>
-                        {%else%}
-                            <td>Não</td>
-                        {%endif%}
-
+                        {% if aluno.is_ver_geral %}
+                        <td class="ranking-status">
+                            <span class="status-indicator status-yes">✔</span>
+                        </td>
+                        {% else %}
+                        <td class="ranking-status">
+                            <span class="status-indicator status-no">✖</span>
+                        </td>
+                        {% endif %}
                         <td>
-                            <button class="btn-remover btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmarRemocaoModal" data-id="{{ aluno.id }}">Remover</button>
+                            <button class="remover-turma gerenciamento-botao2" data-bs-toggle="modal" data-bs-target="#confirmarRemocaoModal" data-id="{{ aluno.id }}"> 🗑 </button>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-
-        <a href="{% url 'adicionar_aluno' turma_id=turma_id %}" class="add-aluno">Adicionar Aluno</a>
-        <div class="button-container">
-            <button onclick="window.history.back()" class="btn btn-secondary">Voltar</button>
-        </div>
-
     </div>
+
     <div class="modal fade" id="confirmarRemocaoModal" tabindex="-1" aria-labelledby="confirmarRemocaoModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">
-                    Tem certeza de que deseja remover este aluno?
-                    <br><br>
+                    <p>Tem certeza que deseja remover este aluno?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button id="confirmarRemocaoBtn" class="btn btn-danger">Remover</button>
+                    <button id="confirmarRemocaoBtn" class="btn-confirm">SIM</button>
+                    <button type="button" class="btn-cancel" data-bs-dismiss="modal">NÃO</button>
                 </div>
             </div>
         </div>
@@ -251,8 +479,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var removerButtons = document.querySelectorAll('.btn-remover');
-            var confirmarRemocaoBtn = document.getElementById('confirmarRemocaoBtn');
-            var alunoIdToRemove = null; 
+            var alunoIdToRemove = null;
 
             removerButtons.forEach(function (button) {
                 button.addEventListener('click', function () {
@@ -260,14 +487,13 @@
                 });
             });
 
+            var confirmarRemocaoBtn = document.getElementById('confirmarRemocaoBtn');
             confirmarRemocaoBtn.addEventListener('click', function () {
                 if (alunoIdToRemove) {
-         
                     const form = document.createElement('form');
                     form.method = 'POST';
-                    form.action = `{% url 'alunos' turma_id=turma_id %}`; 
+                    form.action = `{% url 'alunos' turma_id=turma_id %}`;
 
- 
                     const csrfToken = document.createElement('input');
                     csrfToken.type = 'hidden';
                     csrfToken.name = 'csrfmiddlewaretoken';
@@ -280,8 +506,8 @@
                     alunoInput.value = alunoIdToRemove;
                     form.appendChild(alunoInput);
 
-                    document.body.appendChild(form); 
-                    form.submit(); 
+                    document.body.appendChild(form);
+                    form.submit();
                 }
             });
         });
