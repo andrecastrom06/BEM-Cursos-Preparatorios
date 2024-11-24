@@ -60,7 +60,7 @@ class AlunoMediator:
         turma = get_object_or_404(Turma, id=turma_id)
 
         # Normalizar nome e sobrenome (primeira letra maiúscula)
-        nome = nome.strip().title()
+        nome = nome.strip().capitalize()
         sobrenome = sobrenome.strip().title()
 
         # Verificação de duplicatas
