@@ -21,7 +21,7 @@
         
         body {
             font-family: 'Noto Sans', sans-serif;
-            background-color: #f2f5f9;
+            background-color: #f2f5f9;  
             color: #333;
             margin: 0;
             padding: 0;
@@ -110,7 +110,7 @@
 .container {
     flex: 1;
     margin: 0;
-    padding-top: 40px;
+    padding-top: 100px;
     background-color: #ffffff;
     display: flex;
     justify-content: center;
@@ -124,7 +124,7 @@
         padding-bottom: 20px;
         width: 90%; 
         max-width: 900px;
-        background-color: #ffffff;
+        background-color: rgb(115, 187, 106);
         border-radius: 20px; 
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
         align-items: center;
@@ -191,10 +191,12 @@
             background-color: #c02424;
         }
 
-        .add-turma {
+                .add-turma {
             text-decoration: none;
-            display: block;
-            margin: 20px auto 0 auto; 
+            display: inline-block; /* Para se comportar como um botão compacto */
+            position: absolute; /* Para posicionamento no canto superior direito */
+            top: 20px; /* Distância do topo */
+            right: 340px; /* Distância da lateral direita */
             background-color: var(--primary-bg); 
             color: white;
             padding: 10px 20px;
@@ -202,9 +204,14 @@
             border-radius: 12px;
             cursor: pointer;
             text-align: center;
+            font-weight: bold;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
+
         .add-turma:hover {
             background-color: rgb(33, 52, 101);
+            box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.2);
         }
         .modal {
             display: none;
@@ -325,6 +332,23 @@
     .btn-cancel:hover {
         background-color: var(--primary-bg);
     }        
+        .escolhas {
+        text-decoration: none;
+        display: inline-block; /* Para se comportar como um botão compacto */
+        position: absolute; /* Para posicionamento no canto superior direito */
+        top: 20px; /* Distância do topo */
+        right: 865px; /* Distância da lateral direita */
+        background-color: var(--primary-bg); 
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        text-align: center;
+        font-weight: bold;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -340,36 +364,30 @@
         </nav>
         <a href="{% url 'login' %}">Sair</a>
     </div>
+    <a href="{% url 'adicionar_turma' %}" class="add-turma">Adicionar Turma</a>
+    <div class="escolhas"style="text-align: center; margin-bottom: 20px;">
+        <label for="ordenar" style="font-size: 16px; color: white;">Filtrar por unidade:</label>
+        <select id="ordenar" name="ordenar" 
+                style="padding: 8px; font-size: 16px; border-radius: 5px; border: none; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);"
+                onchange="location = this.value;">
+            <option value="{% url 'turmas' %}" {% if not unidade_selecionada %}selected{% endif %}>Todas as unidades</option>
+            {% for unidade in unidades %}
+                <option value="{% url 'turmas' %}?unidade={{ unidade.id }}" {% if unidade.id|stringformat:'s' == unidade_selecionada %}selected{% endif %}>
+                    {{ unidade.nome }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
 
     <div class="container">    
         <img src="{% static 'img/logo.png' %}" alt="A3" style="height: 12%; width: 6%; position: absolute; top: 10px; right: 10px;">
-        <div style="text-align: center; margin-bottom: 20px;">
-            <label for="ordenar" style="font-size: 16px; color: white;">Filtrar por unidade:</label>
-            <select id="ordenar" name="ordenar" 
-                    style="padding: 8px; font-size: 16px; border-radius: 5px; border: none; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);"
-                    onchange="location = this.value;">
-                <option value="{% url 'turmas' %}" {% if not unidade_selecionada %}selected{% endif %}>Todas as unidades</option>
-                {% for unidade in unidades %}
-                    <option value="{% url 'turmas' %}?unidade={{ unidade.id }}" {% if unidade.id|stringformat:'s' == unidade_selecionada %}selected{% endif %}>
-                        {{ unidade.nome }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
         <div class="table-container">
             <table>
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Unidade</th>
-                        <th class="los-botoes"></th>
-                    </tr>
-                </thead>
                 <tbody>
                     {% for turma in turmas %}
                     <tr id="turma-{{ turma.id }}">
-                        <td>{{ turma.nome }}</td>
-                        <td>{{ turma.unidade }}</td>
+                        <td>Turma: {{ turma.nome }}</td>
+                        <td>Unidade: {{ turma.unidade }}</td>
                         <td class="los-botoes">
                             <a href="{% url 'alunos' turma_id=turma.id %}" class="gerenciamento-botao">Alunos</a>
                             <button class="remover-turma gerenciamento-botao2" data-id="{{ turma.id }}"> 🗑 </button>
@@ -378,7 +396,6 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <a href="{% url 'adicionar_turma' %}" class="add-turma">Adicionar Turma</a>
         </div>
     </div>
     <div id="confirm-modal" class="modal">
