@@ -20,7 +20,6 @@
             align-items: center;
         }
 
-        /* Conteúdo Principal */
         .container {
             padding: 20px;
             background-color: rgb(11, 173, 38);
@@ -38,7 +37,6 @@
             margin-bottom: 20px;
         }
 
-        /* Tabela */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -69,7 +67,6 @@
             background-color: #e6e6e6;
         }
 
-        /* Botão Voltar e Ranking Geral */
         .voltar-botao, .ranking-geral-botao {
             background-color: #007BFF;
             color: white;
@@ -87,53 +84,30 @@
         .voltar-botao:hover, .ranking-geral-botao:hover {
             background-color: #0056b3;
         }
-
-        /* Responsivo */
-        @media screen and (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-
-            .container {
-                padding: 10px;
-            }
-
-            table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            table th, table td {
-                font-size: 14px;
-            }
-        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Ranking - {{ simulado.nome }} (Tipo: {{ simulado.get_tipo_display }})</h1>
-            <h2>Turma: {{ turma.nome }}</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Posição</th>
-                        <th>Nome do Aluno</th>
-                        <th>Data de Nascimento</th>
-                        <th>Matemática</th>
-                        <th>Português</th>
-                        {% if simulado.tipo == "EA" %}
-                            <th>Nota Final (0 a 40)</th>
-                        {% else %}
-                            <th>Média Final</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if ranking_aluno %}
+<div class="container">
+    <h1>Ranking - {{ simulado.nome }} (Tipo: {{ simulado.get_tipo_display }})</h1>
+    <h2>Turma: {{ turma.nome }}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Posição</th>
+                <th>Nome do Aluno</th>
+                <th>Data de Nascimento</th>
+                <th>Matemática</th>
+                <th>Português</th>
+                {% if simulado.tipo == "EA" %}
+                    <th>Nota Final (0 a 40)</th>
+                {% else %}
+                    <th>Média Final</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% if ranking_aluno %}
                 <tr>
                     <td>{{ ranking_aluno.posicao }}</td>
                     <td>{{ ranking_aluno.aluno__nome }} {{ ranking_aluno.aluno__sobrenome }}</td>
@@ -161,9 +135,24 @@
                     </td>
                 </tr>
             {% endif %}
-                </tbody>
-            </table>
-        <button onclick="window.history.back()" class="voltar-botao">Voltar</button>
-    </div>
+        </tbody>
+    </table>
+
+    {% if aluno.is_ver_geral %}
+        <div style="text-align: center; margin-top: 20px;">
+            <label for="ordenar" style="font-size: 16px; color: white;">Ordenar por:</label>
+            <select id="ordenar" name="ordenar"
+                    style="padding: 8px; font-size: 16px; border-radius: 5px; border: none; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);"
+                    onchange="location = this.value;">
+                <option value="">Selecione um filtro de ranking</option>
+                <option value="{% url 'ranking_geral_responsavel' simulado.id %}">Ranking Geral</option>
+                <option value="{% url 'ranking_turma_responsavel' simulado.id %}">Ranking Por Turma</option>
+            </select>
+        </div>
+    {% endif %}
+
+    <button onclick="window.history.back()" class="voltar-botao">Voltar</button>
+</div>
+
 </body>
 </html>

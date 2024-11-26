@@ -331,8 +331,8 @@
     <div class="sidebar">
         <div class="profile">
             <img src="/static/img/imgfunc.jpg" alt="funcionario" width="80" height="80">
-            <h3>Bem-Cursos-Preparatorios</h3>
-            <p>Funcionário</p>
+            <h3>{{aluno.nome|capfirst}} {{aluno.sobrenome|capfirst}}</h3>
+            <p>{{aluno.turma}}</p>
         </div>
         <nav>
             <a href="{% url 'responsavel' %}">Perfil</a>

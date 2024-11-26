@@ -230,7 +230,7 @@
                     {% for simulado in simulados %}
                     <tr>
                         <td>
-                            <a href="{% url 'ranking_geral_responsavel' simulado.id %}">{{ simulado.nome }}</a>
+                            <a href="{% url 'ranking_turma_responsavel' simulado.id %}">{{ simulado.nome }}</a>
                         </td>
                         <td>{{ simulado.get_tipo_display }}</td>
                         <td>{{ simulado.data }}</td>

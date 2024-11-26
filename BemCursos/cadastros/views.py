@@ -275,6 +275,7 @@ class RankingPorTurmaResponsavelView(LoginRequiredMixin, View):
         ranking_aluno = RankingResponsavelMediator.calcular_ranking_aluno_turma(simulado, aluno.id, turma.id)
 
         return render(request, self.template_name, {
+            'aluno': aluno,
             'simulado': simulado,
             'rankings': rankings_turma,
             'ranking_aluno': ranking_aluno,
@@ -287,10 +288,10 @@ class RankingGeralResponsavelView(LoginRequiredMixin, View):
     def get(self, request, simulado_id):
         simulado = SimuladoMediator.obter_simulado(simulado_id)
         aluno = AlunoMediator.obter_aluno(request.user)
-        
         aluno_ranking = RankingResponsavelMediator.calcular_ranking_aluno(simulado, aluno.id)
 
         return render(request, self.template_name, {
+            'aluno': aluno,
             'simulado': simulado,
             'aluno_ranking': aluno_ranking,
         })
@@ -302,7 +303,7 @@ class SimuladosResponsavelView(LoginRequiredMixin, View):
         simulados = SimuladoMediator.listar_simulados()
         aluno = AlunoMediator.obter_aluno(request.user)
         turma = aluno.turma
-        
+
         return render(request, self.template_name, {
             'simulados': simulados,
             'aluno': aluno,
