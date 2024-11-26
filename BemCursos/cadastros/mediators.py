@@ -54,7 +54,7 @@ class AlunoMediator:
     @staticmethod
     def obter_aluno(user):
         return get_object_or_404(Aluno, user=user)
-
+    
     @staticmethod
     def adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id, is_ver_geral):
         turma = get_object_or_404(Turma, id=turma_id)

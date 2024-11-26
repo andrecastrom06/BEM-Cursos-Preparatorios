@@ -1,0 +1,280 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Lista de Turmas e Simulados</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
+
+        :root {
+        --primary-bg: rgb(52, 82, 160); /* Cor de fundo da área direita */    
+        --secondary-bg: white; /* Cor de fundo da área esquerda */
+        --card-bg: rgb(115, 187, 106); /* Cor de fundo da card-login */
+        --card-bg-hover: rgb(88, 146, 81);
+        --text-color: white; /* Cor do texto nos rótulos e nos botões */
+        --button-hover-bg: rgb(42, 121, 190); /* Cor de fundo ao passar o mouse no botão */
+        --error-bg: red; /* Cor de fundo do erro */
+        }
+
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f2f5f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-bg);
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+        }
+
+        .sidebar .profile h3 {
+            margin: 10px 0 5px;
+            color: #f1faee;
+            font-weight: bold;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar .profile p {
+            color: #a8dadc;
+            font-size: 0.9em;
+        }
+
+        .sidebar nav a {
+            display: block;
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            background-color: transparent;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .sidebar nav a:nth-child(2) {
+            background-color: white;
+            color: var(--primary-bg);
+        }
+
+        .sidebar nav a:hover {
+            background-color: #1d3557;
+            color: #a8dadc;
+        }
+
+        .sidebar a[href="{% url 'login' %}"] {
+            margin-top: 480px;
+            background-color: white;
+            color: var(--primary-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            max-width: 40%;
+            font-weight: bold;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar a[href="{% url 'login' %}"]:hover {
+            background-color: #f1faee;
+            color: var(--primary-bg);
+        }
+
+        .container {
+            flex: 1;
+            margin: 0;
+            padding-top: 40px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: first baseline;
+            height: 100vh;
+        }
+
+        .table-container {
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 20px;
+            width: 90%; 
+            max-width: 900px;
+            background-color: #ffffff;
+            border-radius: 20px; 
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            align-items: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 15px;
+            overflow: hidden; 
+        }
+
+        th, td {
+            text-align: left;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        th {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            background-color: var(--card-bg);
+            color: #f1faee;
+            font-weight: bold;
+        }
+
+        a, button {
+            background-color: var(--primary-bg);
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+
+        a:hover, button:hover {
+            background-color: rgb(33, 52, 101);
+        }
+
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                display: flex;
+                justify-content: space-between;
+                flex-direction: row;
+            }
+
+            .sidebar nav {
+                flex-direction: row;
+                justify-content: space-around;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .sidebar {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="profile">
+            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="80" height="80">
+            <h3>{{aluno.nome|capfirst}} {{aluno.sobrenome|capfirst}}</h3>
+            <p>{{aluno.turma}}</p>
+        </div>
+        <nav>
+            <a href="{% url 'responsavel' %}">Perfil</a>
+            <a href="{% url 'simulados_responsavel' %}">Simulados</a>
+        </nav>
+        <a href="{% url 'login' %}">Sair</a>
+    </div>
+
+    <div class="container">
+        <img src="{% static 'img/logo.png' %}" alt="A3" style="height: 10%; width: 5.5%; position: absolute; top: 10px; right: 10px;">
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Tipo</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for simulado in simulados %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'notas_simulado' simulado.id %}">{{ simulado.nome }}</a>
+                        </td>
+                        <td>{{ simulado.get_tipo_display }}</td>
+                        <td>{{ simulado.data }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">Nenhum simulado cadastrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    <script>
+        $(document).ready(function() {
+            function abrirModalConfirmacao(simuladoId, callback) {
+                $('#confirm-modal').fadeIn();
+                $('#confirm-yes').off('click').on('click', function() {
+                    $('#confirm-modal').fadeOut();
+                    callback(true);
+                });
+                $('#confirm-no').off('click').on('click', function() {
+                    $('#confirm-modal').fadeOut();
+                    callback(false);
+                });
+            }
+    
+            function abrirModalSucesso(mensagem, reloadAfter) {
+                $('#success-text').text(mensagem);
+                $('#success-modal').fadeIn();
+    
+                $('#success-ok').off('click').on('click', function() {
+                    $('#success-modal').fadeOut();
+                    if (reloadAfter) {
+                        location.reload();
+                    }
+                });
+            }
+    
+            $('.close').on('click', function() {
+                $(this).closest('.modal').fadeOut();
+            });
+           
+            });
+        
+    </script>    
+</body>
+</html>

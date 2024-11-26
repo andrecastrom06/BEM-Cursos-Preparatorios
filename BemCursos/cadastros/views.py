@@ -295,7 +295,20 @@ class RankingGeralResponsavelView(LoginRequiredMixin, View):
             'aluno_ranking': aluno_ranking,
         })
     
+class SimuladosResponsavelView(LoginRequiredMixin, View):
+    template_name = 'simulados_responsavel.html'
 
+    def get(self, request):
+        simulados = SimuladoMediator.listar_simulados()
+        aluno = AlunoMediator.obter_aluno(request.user)
+        turma = aluno.turma
+        
+        return render(request, self.template_name, {
+            'simulados': simulados,
+            'aluno': aluno,
+            'turma': turma,
+        })
+    
 @requires_csrf_token
 def csrf_failure(request, reason=""):
     messages.error(request, "Sessão expirada. Faça login novamente.")
