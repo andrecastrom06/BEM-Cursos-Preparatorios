@@ -7,8 +7,16 @@ from django.db.models.functions import Cast
 
 class TurmaMediator:
     @staticmethod
-    def listar_turmas():
+    def obter_turmas():
         return Turma.objects.all()
+    
+    @staticmethod
+    def listar_turmas():
+        return Turma.objects.all().order_by("nome")
+
+    @staticmethod
+    def listar_turmas_por_unidade(unidade_id):
+        return Turma.objects.filter(unidade_id=unidade_id).order_by("nome")
 
     @staticmethod
     def obter_turma(turma_id):
@@ -17,33 +25,50 @@ class TurmaMediator:
     @staticmethod
     def adicionar_turma(nome, unidade_id):
         unidade = get_object_or_404(Unidade, id=unidade_id)
-        Turma.objects.create(nome=nome, unidade=unidade)
+        nome_formatado = nome.strip().capitalize()
+        Turma.objects.create(nome=nome_formatado, unidade=unidade)
 
     @staticmethod
     def excluir_turma(turma_id):
         turma = get_object_or_404(Turma, id=turma_id)
-        
         alunos = Aluno.objects.filter(turma=turma)
         for aluno in alunos:
-            login = aluno.gerar_login()  
+            login = aluno.gerar_login()
             usuario = User.objects.filter(username=login).first()
             if usuario:
-                usuario.delete()  
-            aluno.delete()  
-
+                usuario.delete()
+            aluno.delete()
         turma.delete()
         return {'status': 'Turma, alunos e usuários removidos com sucesso!'}
+
+    @staticmethod
+    def listar_unidades():
+        return Unidade.objects.all()
 
 
 class AlunoMediator:
     @staticmethod
     def listar_alunos(turma_id):
         return Aluno.objects.filter(turma__id=turma_id)
-
+    
+    @staticmethod
+    def obter_aluno(user):
+        return get_object_or_404(Aluno, user=user)
+    
     @staticmethod
     def adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id, is_ver_geral):
         turma = get_object_or_404(Turma, id=turma_id)
-        
+
+        # Normalizar nome e sobrenome (primeira letra maiúscula)
+        nome = nome.strip().capitalize()
+        sobrenome = sobrenome.strip().title()
+
+        # Verificação de duplicatas
+        if Aluno.objects.filter(nome=nome, sobrenome=sobrenome).exists():
+            raise ValueError(f"Já existe um aluno cadastrado com o nome {nome} {sobrenome}.")
+        if Aluno.objects.filter(cpf=cpf).exists():
+            raise ValueError("Já existe um aluno cadastrado com este CPF.")
+
         aluno = Aluno(
             nome=nome,
             sobrenome=sobrenome,
@@ -53,7 +78,7 @@ class AlunoMediator:
             is_ver_geral=is_ver_geral
         )
         aluno.calcular_idade_em_dias()
-        
+
         login = aluno.gerar_login()
         senha = aluno.gerar_senha()
 
@@ -62,17 +87,24 @@ class AlunoMediator:
             password=senha
         )
         aluno.user = usuario
-        aluno.save()  
+        aluno.save()
 
     @staticmethod
     def remover_aluno(aluno_id):
         aluno = get_object_or_404(Aluno, id=aluno_id)
-        aluno.delete()  
+        aluno.delete()
         aluno.user.delete()
         return {'status': 'Aluno e usuário removidos com sucesso!'}
 
 
+
+
 class SimuladoMediator:
+
+    @staticmethod
+    def obter_simulado(simulado_id):
+        return get_object_or_404(Simulado, id=simulado_id)
+    
     @staticmethod
     def listar_simulados():
         return Simulado.objects.all()
@@ -90,7 +122,7 @@ class SimuladoMediator:
 class NotaMediator:
     @staticmethod
     def obter_alunos():
-        return Aluno.objects.all()
+        return Aluno.objects.all().order_by('nome','sobrenome')
 
     @staticmethod
     def salvar_notas(simulado_id, request):

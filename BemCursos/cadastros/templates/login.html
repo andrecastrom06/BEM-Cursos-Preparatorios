@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -10,212 +10,227 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
 
-:root {
-    --primary-bg: rgb(52, 82, 160); /* Cor de fundo da área direita */
-    --secondary-bg: #f5f5f5; /* Cor de fundo da área esquerda */
-    --card-bg: rgb(115, 187, 106); /* Cor de fundo da card-login */
-    --text-color: white; /* Cor do texto nos rótulos e nos botões */
-    --button-hover-bg: #e0e0e0; /* Cor de fundo ao passar o mouse no botão */
-    --error-bg: red; /* Cor de fundo do erro */
-}
+    :root {
+        --primary-bg: rgb(52, 82, 160); /* Cor de fundo da área direita */    
+        --secondary-bg: white; /* Cor de fundo da área esquerda */
+        --card-bg: rgb(115, 187, 106); /* Cor de fundo da card-login */
+        --text-color: white; /* Cor do texto nos rótulos e nos botões */
+        --button-hover-bg: rgb(42, 121, 190); /* Cor de fundo ao passar o mouse no botão */
+        --error-bg: red; /* Cor de fundo do erro */
+    }
 
-body {
-    margin: 0;
-    font-family: 'Noto Sans', sans-serif;
-}
+    body {
+        margin: 0;
+        font-family: 'Noto Sans', sans-serif;
+    }
 
-body * {
-    box-sizing: border-box;
-}
+    body * {
+        box-sizing: border-box;
+    }
 
-.main-login {
-    width: 100vw;
-    height: 100vh;
-    background-color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.left-login {
-    width: 50vw;
-    height: 100vh;
-    background-color: var(--secondary-bg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-.left-login > h1 {
-    color: #333;
-}
-
-.right-login {
-    width: 50vw;
-    height: 100vh;
-    background-color: var(--primary-bg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-.card-login {
-    width: 60%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 30px 35px;
-    background: var(--card-bg);
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-}
-
-.form-group {
-    width: 100%;
-    color: var(--text-color);
-    font-weight: 800;
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.form-group > input,
-.form-group > select {
-    width: 100%;
-    border: none;
-    border-radius: 10px;
-    padding: 15px;
-    background: white;
-    color: black;
-    font-size: 12pt;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    outline: none;
-    box-sizing: border-box;
-    appearance: none;
-}
-
-.form-group > select {
-    cursor: pointer;
-}
-
-.form-group > label {
-    color: var(--text-color);
-    margin-bottom: 5px;
-}
-
-.btn-login {
-    width: 100%;
-    padding: 15px;
-    margin-top: 20px;
-    border: none;
-    border-radius: 8px;
-    outline: none;
-    text-transform: uppercase;
-    font-weight: 550;
-    letter-spacing: 3px;
-    color: black;
-    background: white;
-    cursor: pointer;
-    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.15);
-    transition: background 0.3s ease;
-}
-
-.btn-login:hover {
-    background: var(--button-hover-bg);
-}
-
-.left-login img {
-    width: 35vw;
-}
-
-@media only screen and (max-width: 950px) {
     .main-login {
-        flex-direction: column;
+        width: 100vw;
+        height: 100vh;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .left-login {
-        width: 100vw;
-        height: 50vh;
-    }
-
-    .right-login {
-        width: 100vw;
-        height: 50vh;
-    }
-
-    .left-login img {
         width: 50vw;
-    }
-
-    .card-login {
-        width: 80%;
-    }
-}
-
-@media only screen and (max-width: 600px) {
-    .main-login {
+        height: 100vh;
+        background-color: var(--secondary-bg);
+        display: flex;
+        justify-content: center;
+        align-items: center;
         flex-direction: column;
     }
 
-    .left-login {
-        width: 100vw;
-        height: 50vh;
+    .left-login > h1 {
+        color: #333;
     }
 
-    .left-login img {
-        width: 75vw;
+    .right-login {
+        width: 50vw;
+        height: 100vh;
+        background-color: var(--primary-bg);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     }
 
     .card-login {
-        width: 90%;
+        width: 60%;
+        margin-bottom: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 30px 35px;
+        background: var(--card-bg);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     }
-    .right-login {
-        width: 100vw;
-        height: 75vh;
+
+    .form-group {
+        width: 100%;
+        color: var(--text-color);
+        font-weight: 800;
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
     }
-}
 
-.container-erro {
-    position: fixed;
-    right: 0;
-    top: 0;
-    width: 60vw;
-    height: 33vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 0;
-    opacity: 1;
-    transition: opacity 1s ease-out;
-}
+    .form-group > input,
+    .form-group > select {
+        width: 100%;
+        border: none;
+        border-radius: 30px;
+        padding: 15px;
+        background: white;
+        color: black;
+        font-size: 12pt;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        outline: none;
+        box-sizing: border-box;
+        appearance: none;
+    }
 
-.inner-container-erro {
-    width: 32vw;
-    height: 7vh;
-    background-color: var(--error-bg);
-    border-radius: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
-    position: relative;
-    padding: 1vw;
-}
-h1{
-    color: white;
-    font-size: 2.25rem;
-    font-weight: 800;
-}
+    .form-group > select {
+        cursor: pointer;
+    }
+
+    .form-group > label {
+        color: var(--text-color);
+        margin-bottom: 5px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); /* Sombra */
+    }
+
+    .btn-login {
+        width: 60%;
+        padding: 15px;
+        margin-top: 20px;
+        border: none;
+        border-radius: 25px;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 550;
+        letter-spacing: 2px;
+        color: white;
+        background: var(--primary-bg);
+        cursor: pointer;
+        box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.15);
+        transition: background 0.3s ease;
+    }
+
+    .btn-login:hover {
+        background: var(--button-hover-bg);
+    }
+
+    .left-login img {
+        width: 35vw;
+    }
+
+    @media only screen and (max-width: 950px) {
+        .main-login {
+            flex-direction: column;
+        }
+
+        .left-login {
+            width: 100vw;
+            height: 50vh;
+        }
+
+        .right-login {
+            width: 100vw;
+            height: 80vh;
+        }
+
+        .left-login img {
+            width: 50vw;
+        }
+
+        .card-login {
+            width: 80%;
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        .main-login {
+            flex-direction: column;
+        }
+
+        .left-login {
+            width: 100vw;
+            height: 50vh;
+        }
+
+        .left-login img {
+            width: 75vw;
+        }
+
+        .card-login {
+            width: 90%;
+        }
+        .right-login {
+            width: 100vw;
+            height: 80vh;
+        }
+    }
+
+    .container-erro {
+        position: fixed;
+        right: 0;
+        top: -675px;
+        width: 60vw;
+        height: 33vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 0;
+        opacity: 1;
+        transition: opacity 1s ease-out;
+    }
+
+    .inner-container-erro {
+        width: 30vw;
+        height: 7vh;
+        background-color: var(--error-bg);
+        border-radius: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+        position: relative;
+        padding: 1vw;
+        margin-right: -16%;
+        margin-top: 113%;
+    }
+
+    h1 {
+        color: white;
+        font-size: 2.25rem;
+        font-weight: 800;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra */
+    }
+
+    /* Sombra nos textos de mensagem de erro */
+    .container-erro .error p {
+        color: white;
+        font-weight: 600;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Sombra */
+    }
+
 </style>
 <body>
     <div class="main-login">
         <div class="left-login">
-            <img src="{% static 'img/BEMcursos.png' %}" alt="BEM">
+            <img src="{% static 'img/A3.jpg' %}" alt="A3" style="height: 60%; width: 60%; margin-top: 7%;">
         </div>
         <div class="right-login">
             <h1>Login</h1>
@@ -237,7 +252,9 @@ h1{
                         <label for="password">Senha:</label>
                         <input type="password" id="password" name="password" placeholder="Senha" required>
                     </div>
-                    <button type="submit" class="btn-login">Acessar</button>
+                    <div style="text-align: center;"> 
+                        <button type="submit" class="btn-login" style="box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);">Acessar</button>
+                    </div> 
                 </form>
             </div>
         </div>

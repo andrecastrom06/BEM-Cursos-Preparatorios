@@ -4,13 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <title>Lista de Turmas</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
+
+        :root {
+        --primary-bg: rgb(52, 82, 160); /* Cor de fundo da área direita */    
+        --secondary-bg: white; /* Cor de fundo da área esquerda */
+        --card-bg: rgb(115, 187, 106); /* Cor de fundo da card-login */
+        --card-bg-hover: rgb(88, 146, 81);
+        --text-color: white; /* Cor do texto nos rótulos e nos botões */
+        --button-hover-bg: rgb(42, 121, 190); /* Cor de fundo ao passar o mouse no botão */
+        --error-bg: red; /* Cor de fundo do erro */
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            background-color: rgb(65, 88, 208);
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f2f5f9;
             color: #333;
             margin: 0;
             padding: 0;
@@ -20,12 +31,13 @@
 
         .sidebar {
             width: 250px;
-            background-color: white;
+            background-color: var(--primary-bg);
             padding: 20px;
-            color: black;
+            color: white;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            height: 100vh;
         }
 
         .sidebar .profile {
@@ -33,137 +45,167 @@
             margin-bottom: 30px;
         }
 
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+        }
+
         .sidebar .profile h3 {
             margin: 10px 0 5px;
-            color: black;
+            color: #f1faee;
+            font-weight: bold;
             text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
         }
 
         .sidebar .profile p {
-            color: #555;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
-        }
-
-        .sidebar nav {
-            display: flex;
-            flex-direction: column;
+            color: #a8dadc;
+            font-size: 0.9em;
         }
 
         .sidebar nav a {
+            display: block;
             text-decoration: none;
             color: white;
-            padding: 15px;
-            border-radius: 5px;
-            background-color: rgb(65, 88, 208);
+            padding: 10px 15px;
+            border-radius: 10px;
+            background-color: transparent;
             margin-bottom: 10px;
             text-align: center;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
-            text-decoration: none;
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s ease; 
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar nav a:first-child {
+            background-color: white;
+            color: var(--primary-bg);
         }
 
         .sidebar nav a:hover {
-            background-color: rgb(54, 74, 175);
+            background-color: #1d3557;
+            color: #a8dadc;
         }
 
-        .container {
-            flex: 1;
-            padding: 20px;
-            background-color: rgb(65, 88, 208);
-            color: white;
-        }
-
-        h2 {
+        .sidebar a[href="{% url 'login' %}"] {
+            margin-top: 480px;
+            background-color: white;
+            color: var(--primary-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            max-width: 40%;
+            font-weight: bold;
             text-align: center;
-            color: #fff;
-            margin-top: 20px;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
-        }
-
-        .table-container {
-            margin: 0 auto;
-            padding: 20px;
-            max-width: 800px;
-            background-color: rgb(11, 173, 38);
-            border-radius: 15px;
-            color: rgb(255, 255, 255);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #ffffff;
-            color: black; 
-            font-weight: bold; 
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
-        }
-
-        tr:nth-child(even) {
-            background-color: rgb(11, 173, 38);
-        }
-
-        a, button {
-            background-color: #007BFF; 
-            color: white;
+            margin-left: auto;
+            margin-right: auto;
             text-decoration: none;
-            padding: 8px 12px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar a[href="{% url 'login' %}"]:hover {
+            background-color: #f1faee;
+            color: var(--primary-bg);
+        }
+
+.container {
+    flex: 1;
+    margin: 0;
+    padding-top: 40px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: first baseline;
+    height: 100vh;
+}
+
+.table-container {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 20px;
+        width: 90%; 
+        max-width: 900px;
+        background-color: #ffffff;
+        border-radius: 20px; 
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        align-items: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 15px;
+        overflow: hidden; 
+    }
+
+    th, td {
+        text-align: left;
+        font-weight: 750;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+    }
+
+    td.los-botoes{
+        text-align: right;
+        padding-right: 10px;
+    }
+    th.los-botoes{
+        text-align: right;
+    }
+
+    th {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        background-color: var(--card-bg);
+        color: #f1faee;
+        font-weight: bold;
+    }
+
+        .gerenciamento-botao, .gerenciamento-botao2 {
+            padding: 10px 12px;
             border-radius: 5px;
+            color: #f1faee;
+            text-align: center;
             font-size: 14px;
             cursor: pointer;
             border: none;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
         }
 
-        a:hover, button:hover {
-            background-color: #0056b3;
+        .gerenciamento-botao {
+            background-color: var(--primary-bg);
+            border-radius: 12px;
         }
 
-        a {
-            margin-right: 10px;
+        .gerenciamento-botao:hover {
+            background-color: rgb(33, 52, 101);
         }
 
-        .remover-turma {
-            background-color: #D9534F;
+        .gerenciamento-botao2 {
+            background-color: #e63946;
+            border-radius: 12px;
         }
 
-        .remover-turma:hover {
-            background-color: #C9302C;
+        .gerenciamento-botao2:hover {
+            background-color: #c02424;
         }
 
         .add-turma {
-            display: block;
-            text-align: center;
-            background-color: rgb(11, 173, 38);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
             text-decoration: none;
-            width: 250px;
-            margin: 50px auto;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
-            transition: background-color 0.5s ease; 
+            display: block;
+            margin: 20px auto 0 auto; 
+            background-color: var(--primary-bg); 
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
         }
-
         .add-turma:hover {
-            background-color: rgb(11, 147, 34);
+            background-color: rgb(33, 52, 101);
         }
-
-      
         .modal {
             display: none;
             position: fixed;
@@ -187,100 +229,7 @@
             text-align: center;
         }
 
-        .modal-buttons {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-
-        button.btn-confirm, button.btn-cancel {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button.btn-confirm {
-            background-color: #007BFF;
-            color: white;
-        }
-
-        button.btn-cancel {
-            background-color: #D9534F;
-            color: white;
-        }
-
-        button.btn-confirm:hover {
-            background-color: #0056b3;
-        }
-
-        button.btn-cancel:hover {
-            background-color: #C9302C;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .menu-botoes{
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
-            background-color: #007BFF; 
-            color: white;
-            text-decoration: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s ease; 
-        }
-
-        .menu-botoes:hover{
-            background-color: #0a70dd; 
-        }
-
-        .close:hover, .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .gerenciamento-botao {
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-            border: 2px solid white;
-            padding: 8px 12px;
-            border-radius: 5px;
-            color: white;
-            background-color: #007bff;
-            transition: background-color 0.3s ease; 
-        }
-
-        .gerenciamento-botao:hover {
-            background-color: rgba(20, 106, 198, 0.8); 
-        }
-
-        .gerenciamento-botao2 {
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-            border: 2px solid white;
-            padding: 8px 12px;
-            border-radius: 5px;
-            color: white;
-            background-color: #C9302C; 
-            transition: background-color 0.5s ease; 
-        }
-
-        .gerenciamento-botao2:hover {
-            background-color: #892523;
-        }
-    
         @media screen and (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-
             .sidebar {
                 width: 100%;
                 height: auto;
@@ -293,20 +242,6 @@
                 flex-direction: row;
                 justify-content: space-around;
             }
-
-            .container {
-                padding: 10px;
-            }
-
-            .table-container {
-                padding: 10px;
-            }
-
-            table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
         }
 
         @media screen and (max-width: 480px) {
@@ -314,52 +249,120 @@
                 flex-direction: column;
                 align-items: center;
             }
-
-            .sidebar nav {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .container {
-                padding: 15px;
-            }
-
-            .table-container {
-                padding: 15px;
-            }
-
-            table {
-                display: block;
-                overflow-x: auto;
-            }
         }
+        /* Modal base styles */
+    .modal {
+        display: none; /* Oculto por padrão */
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Fundo mais escuro */
+    }
+
+    .modal-content {
+        background-color: #f1faee; /* Fundo semelhante à tabela */
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd; /* Borda semelhante à tabela */
+        width: 80%;
+        max-width: 400px;
+        border-radius: 20px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+        text-align: center;
+        color: #333; /* Cor do texto padrão */
+    }
+
+    /* Modal header and close button */
+    .modal-content h3 {
+        color: #333; /* Texto branco */
+        font-weight: bold;
+        padding: 5px;
+        border-radius: 5px;
+        margin-top: 0;
+    }
+
+    .modal-content .close {
+        color: #333;
+        float: right;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* Modal buttons */
+    .modal-buttons {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .btn-confirm, .btn-cancel {
+        padding: 15px 20px;
+        border-radius: 15px;
+        font-weight: bold;
+        color: #f1faee;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-confirm {
+        background-color: #d62828; /* Cor de confirmação consistente */
+    }
+
+    .btn-confirm:hover {
+        background-color: #d62828;
+    }
+
+    .btn-cancel {
+        background-color: var(--primary-bg); /* Cor de cancelamento */
+    }
+
+    .btn-cancel:hover {
+        background-color: var(--primary-bg);
+    }        
     </style>
 </head>
 <body>
-
     <div class="sidebar">
         <div class="profile">
-            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="100" height="100" style="margin-top: 20px; margin-left: 10px;">
-            <h3>BEM-Cursos-Preparatorios</h3>
+            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="80" height="80">
+            <h3>Bem-Cursos-Preparatorios</h3>
             <p>Funcionário</p>
         </div>
         <nav>
-            <a href="{% url 'turmas' %}" class="btn btn-primary">Turmas</a>
-            <a href="{% url 'simulados' %}" class="btn btn-primary">Simulados</a>
-            <a href="{% url 'login' %}" class="btn btn-primary">Sair</a>
+            <a href="{% url 'turmas' %}">Turmas</a>
+            <a href="{% url 'simulados' %}">Simulados</a>
         </nav>
+        <a href="{% url 'login' %}">Sair</a>
     </div>
 
-    <div class="container">
-        <h2>Lista de Turmas</h2>
-
+    <div class="container">    
+        <img src="{% static 'img/logo.png' %}" alt="A3" style="height: 12%; width: 6%; position: absolute; top: 10px; right: 10px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <label for="ordenar" style="font-size: 16px; color: white;">Filtrar por unidade:</label>
+            <select id="ordenar" name="ordenar" 
+                    style="padding: 8px; font-size: 16px; border-radius: 5px; border: none; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);"
+                    onchange="location = this.value;">
+                <option value="{% url 'turmas' %}" {% if not unidade_selecionada %}selected{% endif %}>Todas as unidades</option>
+                {% for unidade in unidades %}
+                    <option value="{% url 'turmas' %}?unidade={{ unidade.id }}" {% if unidade.id|stringformat:'s' == unidade_selecionada %}selected{% endif %}>
+                        {{ unidade.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
                         <th>Nome</th>
                         <th>Unidade</th>
-                        <th>Ações</th>
+                        <th class="los-botoes"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -367,27 +370,26 @@
                     <tr id="turma-{{ turma.id }}">
                         <td>{{ turma.nome }}</td>
                         <td>{{ turma.unidade }}</td>
-                        <td>
-                            <a href="{% url 'alunos' turma_id=turma.id %}" class="gerenciar-alunos gerenciamento-botao">Gerenciar Alunos</a>
-                            <button class="remover-turma gerenciamento-botao2" data-id="{{ turma.id }}">Remover</button>
+                        <td class="los-botoes">
+                            <a href="{% url 'alunos' turma_id=turma.id %}" class="gerenciamento-botao">Alunos</a>
+                            <button class="remover-turma gerenciamento-botao2" data-id="{{ turma.id }}"> 🗑 </button>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            <a href="{% url 'adicionar_turma' %}" class="add-turma">Adicionar Turma</a>
         </div>
-
-        <a href="{% url 'adicionar_turma' %}" class="add-turma" style="text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);">Adicionar Turma</a>
     </div>
-
     <div id="confirm-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h3>Confirmação</h3>
             <p>Tem certeza que deseja remover esta turma?</p>
+            <p>Obs: Ao deletar a turma, os alunos/usuarios dessa turma serão removidos também</p>
             <div class="modal-buttons">
-                <button id="confirm-yes" class="btn-confirm">Sim</button>
-                <button id="confirm-no" class="btn-cancel">Não</button>
+                <button id="confirm-yes" class="btn-confirm">SIM</button>
+                <button id="confirm-no" class="btn-cancel">NÃO</button>
             </div>
         </div>
     </div>

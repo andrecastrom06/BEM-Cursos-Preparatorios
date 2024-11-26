@@ -7,10 +7,19 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <title>Notas do Simulado</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
+
+        :root {
+            --primary-bg: rgb(52, 82, 160); /* Fundo principal */
+            --secondary-bg: white; /* Fundo secundário */
+            --card-bg: rgb(115, 187, 106); /* Fundo das tabelas */
+            --text-color: white; /* Texto principal */
+            --button-hover-bg: rgb(42, 121, 190); /* Cor do botão ao passar mouse */
+        }
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: rgb(65, 88, 208);
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f2f5f9;
             color: #333;
             margin: 0;
             padding: 0;
@@ -18,16 +27,15 @@
             height: 100vh;
         }
 
-
         .sidebar {
             width: 250px;
-            background-color: white;
+            background-color: var(--primary-bg);
             padding: 20px;
-            color: black;
+            color: var(--text-color);
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            height: 100vh;
         }
 
         .sidebar .profile {
@@ -35,100 +43,102 @@
             margin-bottom: 30px;
         }
 
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+        }
+
         .sidebar .profile h3 {
             margin: 10px 0 5px;
-            color: black;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+            font-weight: bold;
         }
 
         .sidebar .profile p {
-            color: #555;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            color: #a8dadc;
+            font-size: 0.9em;
         }
 
         .sidebar nav a {
+            display: block;
             text-decoration: none;
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            background-color: rgb(65, 88, 208);
+            color: var(--text-color);
+            padding: 10px 15px;
+            border-radius: 10px;
             margin-bottom: 10px;
             text-align: center;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: block;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar nav a:first-child {
+            background-color: var(--secondary-bg);
+            color: var(--primary-bg);
         }
 
         .sidebar nav a:hover {
-            background-color: rgb(54, 74, 175);
+            background-color: rgb(33, 52, 101);
+            color: #a8dadc;
         }
-
 
         .container {
             flex: 1;
-            padding: 20px;
-            background-color: rgb(65, 88, 208);
-            color: white;
+            padding: 40px 20px;
+            background-color: var(--secondary-bg);
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
         }
 
         h2 {
-            color: white;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            color: var(--primary-bg);
             margin-bottom: 20px;
+            font-weight: bold;
         }
-
 
         table {
             width: 100%;
             max-width: 800px;
             border-collapse: collapse;
-            margin: 20px 0;
-            background-color: white;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
+            background-color: var(--card-bg);
+            border-radius: 15px;
             overflow: hidden;
-            text-align: left;
+            margin: 20px 0;
         }
 
-        table th, table td {
+        th, td {
             padding: 15px;
             text-align: center;
-            color: #333;
-            font-weight: bold;
-            border-bottom: 1px solid #ddd;
+            color: black;
         }
 
-        table thead {
-            background-color: rgb(11, 173, 38);
-            color: white;
+        th {
+            background-color: rgb(115, 187, 106);
         }
 
-        table tbody tr:nth-child(even) {
+        tbody tr:nth-child(even) {
             background-color: #f9f9f9;
         }
 
-        table tbody tr:nth-child(odd) {
+        tbody tr:nth-child(odd) {
             background-color: #e6e6e6;
         }
 
         input[type="number"] {
             width: 60px;
             padding: 5px;
-            border: 1px solid #ddd;
+            border: 1px solid #000000;
             border-radius: 5px;
             text-align: center;
             font-size: 16px;
         }
 
         button, .btn {
-            background-color: #007BFF;
-            color: white;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
             padding: 12px 20px;
             border: none;
             border-radius: 5px;
@@ -136,27 +146,22 @@
             font-size: 16px;
             transition: background-color 0.3s ease;
             text-align: center;
-            text-decoration: none;
             margin-top: 10px;
             display: inline-block;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         button:hover, .btn:hover {
-            background-color: #0056b3;
+            background-color: var(--button-hover-bg);
         }
 
-        .btn-info {
-            background-color: rgb(11, 173, 38);
-            font-size: large;
-            color: black;
+        select {
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+            border: 1px solid #ddd;
         }
 
-        .btn-info:hover {
-            background-color: rgb(11, 173, 38);
-        }
-
-        /* Responsividade */
         @media screen and (max-width: 768px) {
             body {
                 flex-direction: column;
@@ -165,23 +170,10 @@
             .sidebar {
                 width: 100%;
                 height: auto;
-                flex-direction: row;
-                justify-content: space-between;
             }
 
             .container {
                 padding: 10px;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .sidebar {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .container {
-                padding: 15px;
             }
         }
     </style>
@@ -190,7 +182,7 @@
     <div class="sidebar">
         <div class="profile">
             <img src="/static/img/imgfunc.jpg" alt="funcionario" width="100" height="100" style="margin-top: 20px; margin-left: 10px;">
-            <h3>Nome e Último Nome</h3>
+            <h3>Bem-Cursos-Preparatorios</h3>
             <p>Função</p>
         </div>
         <nav>
@@ -214,18 +206,20 @@
                 <thead>
                     <tr>
                         <th>Nome</th>
+                        <th>Sobrenome</th>
+                        <th>Turma</th>
                         <th>Matemática</th>
                         <th>Português</th>
-                        <th>Média</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for aluno in alunos %}
                     <tr>
-                        <td>{{ aluno.nome }}</td>
+                        <td>{{ aluno.nome}}</td>
+                        <td>{{ aluno.sobrenome }}</td>
+                        <td>{{ aluno.turma.nome }}</td>
                         <td><input type="number" name="matematica_{{ aluno.id }}" min="0" max="20" required></td>
                         <td><input type="number" name="portugues_{{ aluno.id }}" min="0" max="20" required></td>
-                        <td>-</td>
                     </tr>
                     {% empty %}
                     <tr>
@@ -238,11 +232,16 @@
                 <button type="submit" class="btn btn-success">Salvar</button>
             </center>
         </form>
-        <div>
-            <a href="{% url 'ranking' simulado.id %}" class="btn btn-info">Ranking Geral</a>
-            <a href="{% url 'ranking_turma' simulado.id %}" class="btn btn-info">Ranking da Turma</a>
-            <a href="{% url 'ranking_matematica' simulado.id %}" class="btn btn-info">Ranking de Matemática</a>
-            <a href="{% url 'ranking_portugues' simulado.id %}" class="btn btn-info">Ranking de Português</a>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <label for="ordenar" style="font-size: 16px; color: rgb(0, 0, 0);">Ordenar por:</label>
+            <select id="ordenar" name="ordenar" 
+                    style="padding: 8px; font-size: 16px; border-radius: 5px; border: none; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);"
+                    onchange="location = this.value;">
+                <option value="{% url 'ranking' simulado.id %}">Ranking Geral</option>
+                <option value="{% url 'ranking_turma' simulado.id %}">Ranking Por Turma</option>
+                <option value="{% url 'ranking_matematica' simulado.id %}">Nota de Matemática</option>
+                <option value="{% url 'ranking_portugues' simulado.id %}">Nota de Português</option>
+            </select>
         </div>
     </div>
 </body>

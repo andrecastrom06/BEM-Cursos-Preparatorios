@@ -144,14 +144,6 @@
             padding-left: 20px;
         }
 
-        td.los-botoes{
-            text-align: right;
-            padding-right: 10px;
-        }
-        th.los-botoes{
-            text-align: right;
-        }
-
         th {
             padding-top: 15px;
             padding-bottom: 15px;
@@ -173,48 +165,6 @@
 
         a:hover, button:hover {
             background-color: rgb(33, 52, 101);
-        }
-
-        .add-turma {
-            text-decoration: none;
-            display: block;
-            margin: 20px auto 0 auto; 
-            background-color: var(--primary-bg); 
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .add-turma:hover {
-            background-color: rgb(33, 52, 101);
-        }
-
-        .gerenciamento-botao, .gerenciamento-botao2 {
-            padding: 10px 12px;
-            border-radius: 5px;
-            color: #f1faee;
-            text-align: center;
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-        }
-
-        .gerenciamento-botao:hover {
-            background-color: rgba(20, 106, 198, 0.8);
-        }
-
-        .gerenciamento-botao2 {
-            background-color: #e63946;
-            border-radius: 12px;
-        }
-
-        .gerenciamento-botao2:hover {
-            background-color: #c02424;
         }
 
         @media screen and (max-width: 768px) {
@@ -239,80 +189,7 @@
             }
         }
 
-        .modal {
-        display: none; /* Oculto por padrão */
-        position: fixed;
-        z-index: 1;
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Fundo mais escuro */
-    }
 
-    .modal-content {
-        background-color: #f1faee; /* Fundo semelhante à tabela */
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #ddd; /* Borda semelhante à tabela */
-        width: 80%;
-        max-width: 400px;
-        border-radius: 20px;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Sombra para destaque */
-        text-align: center;
-        color: #333; /* Cor do texto padrão */
-    }
-
-    /* Modal header and close button */
-    .modal-content h3 {
-        color: #333; /* Texto branco */
-        font-weight: bold;
-        padding: 5px;
-        border-radius: 5px;
-        margin-top: 0;
-    }
-
-    .modal-content .close {
-        color: #333;
-        float: right;
-        font-size: 24px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    /* Modal buttons */
-    .modal-buttons {
-        margin-top: 30px;
-        display: flex;
-        justify-content: space-around;
-    }
-
-    .btn-confirm, .btn-cancel {
-        padding: 15px 20px;
-        border-radius: 15px;
-        font-weight: bold;
-        color: #f1faee;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-confirm {
-        background-color: var(--card-bg); /* Cor de confirmação consistente */
-    }
-
-    .btn-confirm:hover {
-        background-color: var(--card-bg-hover);
-    }
-
-    .btn-cancel {
-        background-color: #e63946; /* Cor de cancelamento */
-    }
-
-    .btn-cancel:hover {
-        background-color: #d62828;
-    }
     </style>
 </head>
 <body>
@@ -320,12 +197,12 @@
     <div class="sidebar">
         <div class="profile">
             <img src="/static/img/imgfunc.jpg" alt="funcionario" width="80" height="80">
-            <h3>Bem-Cursos-Preparatorios</h3>
-            <p>Funcionário</p>
+            <h3>{{aluno.nome|capfirst}} {{aluno.sobrenome|capfirst}}</h3>
+            <p>{{aluno.turma}}</p>
         </div>
         <nav>
-            <a href="{% url 'turmas' %}">Turmas</a>
-            <a href="{% url 'simulados' %}">Simulados</a>
+            <a href="{% url 'responsavel' %}">Perfil</a>
+            <a href="{% url 'simulados_responsavel' %}">Simulados</a>
         </nav>
         <a href="{% url 'login' %}">Sair</a>
     </div>
@@ -347,20 +224,16 @@
                         <th>Nome</th>
                         <th>Tipo</th>
                         <th>Data</th>
-                        <th class="los-botoes"></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for simulado in simulados %}
                     <tr>
                         <td>
-                            <a href="{% url 'notas_simulado' simulado.id %}">{{ simulado.nome }}</a>
+                            <a href="{% url 'ranking_turma_responsavel' simulado.id %}">{{ simulado.nome }}</a>
                         </td>
                         <td>{{ simulado.get_tipo_display }}</td>
                         <td>{{ simulado.data }}</td>
-                        <td class="los-botoes">
-                            <button class="remover-simulado gerenciamento-botao2" data-id="{{ simulado.id }}"> 🗑 </button>
-                        </td>
                     </tr>
                     {% empty %}
                     <tr>
@@ -369,28 +242,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <a href="{% url 'adicionar_turma' %}" class="add-turma">Adicionar Simulado</a>
         </div>
-    </div>
-    <div id="confirm-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Confirmação</h3>
-            <p>Tem certeza que deseja remover esse simulado?</p>
-            <div class="modal-buttons">
-                <button id="confirm-yes" class="btn-confirm">SIM</button>
-                <button id="confirm-no" class="btn-cancel">NÃO</button>
-            </div>
-        </div>
-    </div>
-    <div id="success-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Sucesso</h3>
-            <p id="success-text"></p>
-            <button id="success-ok" class="btn-confirm">Ok</button>
-        </div>
-    </div>
     <script>
         $(document).ready(function() {
             function abrirModalConfirmacao(simuladoId, callback) {
@@ -420,32 +272,9 @@
             $('.close').on('click', function() {
                 $(this).closest('.modal').fadeOut();
             });
-    
-            $('.remover-simulado').on('click', function(event) {
-                event.preventDefault();
-                var simuladoId = $(this).data('id');
-                abrirModalConfirmacao(simuladoId, function(confirmed) {
-                    if (confirmed) {
-                        $.ajax({
-                            url: '{% url "excluir_simulado" 0 %}'.replace('0', simuladoId),
-                            type: 'POST',
-                            data: {
-                                'csrfmiddlewaretoken': '{{ csrf_token }}',
-                                'method': 'DELETE',
-                                'simulado_id': simuladoId
-                            },
-                            success: function(response) {
-                                abrirModalSucesso('Simulado removido com sucesso!', true);
-                                $('#simulado-' + simuladoId).remove();
-                            },
-                            error: function(xhr) {
-                                abrirModalSucesso('Erro ao remover o simulado: ' + xhr.responseText, false);
-                            }
-                        });
-                    }
-                });
+           
             });
-        });
+        
     </script>    
 </body>
 </html>

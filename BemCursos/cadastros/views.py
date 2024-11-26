@@ -1,13 +1,14 @@
 from django.views import View
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from .models import Unidade, Aluno, Simulado, Turma
+from .models import Aluno
 from django.contrib import messages
 from .mediators import TurmaMediator, AlunoMediator, SimuladoMediator, NotaMediator, RankingMediator, RankingResponsavelMediator
 from datetime import datetime
 from django.urls import reverse
+from django.views.decorators.csrf import requires_csrf_token
 
 def home(request):
     return redirect('login')
@@ -52,21 +53,24 @@ class TurmaView(LoginRequiredMixin, View):
 
     def get(self, request, turma_id=None):
         if request.path.endswith('adicionar/'):
-            unidades = Unidade.objects.all()
+            unidades = TurmaMediator.listar_unidades()  
             return render(request, self.template_name_add, {'unidades': unidades})
         else:
-            turmas = TurmaMediator.listar_turmas()
-            return render(request, self.template_name_list, {'turmas': turmas})
+            unidade_id = request.GET.get('unidade')
+            unidades = TurmaMediator.listar_unidades()  
+            turmas = TurmaMediator.listar_turmas_por_unidade(unidade_id) if unidade_id else TurmaMediator.listar_turmas()
+            return render(request, self.template_name_list, {'turmas': turmas, 'unidades': unidades, 'unidade_selecionada': unidade_id})
 
     def post(self, request, turma_id=None):
         if 'method' in request.POST and request.POST['method'] == 'DELETE':
             if turma_id is not None:
-                return self.excluir_turma(turma_id)
+                resultado = TurmaMediator.excluir_turma(turma_id)  
+                return JsonResponse(resultado)
             return JsonResponse({'error': 'ID da turma não fornecido'}, status=400)
 
         nome = request.POST.get('nome')
         unidade_id = request.POST.get('unidade')
-        TurmaMediator.adicionar_turma(nome, unidade_id)
+        TurmaMediator.adicionar_turma(nome, unidade_id)  
         return redirect('turmas')
 
     def excluir_turma(self, turma_id):
@@ -96,22 +100,44 @@ class AlunoView(LoginRequiredMixin, View):
             resultado = AlunoMediator.remover_aluno(aluno_id)
             messages.success(request, resultado['status'])
             return redirect('alunos', turma_id=turma_id)
-  
+
         nome = request.POST.get('nome')
         sobrenome = request.POST.get('sobrenome')
         cpf = request.POST.get('cpf')
         data_nascimento_str = request.POST.get('data_nascimento')
-        data_nascimento = datetime.strptime(data_nascimento_str, "%Y-%m-%d").date()
-        is_ver_geral = bool(request.POST.get('is_ver_geral'))
 
-        aluno_temp = Aluno(nome=nome, sobrenome=sobrenome, cpf=cpf, data_nascimento=data_nascimento, turma_id=turma_id, is_ver_geral=is_ver_geral)
-        if not aluno_temp.validar_cpf():
-            messages.error(request, "CPF inválido. Verifique o número e tente novamente.")
+        try:
+            # Converter a data de nascimento
+            data_nascimento = datetime.strptime(data_nascimento_str, "%Y-%m-%d").date()
+
+            # Verificar se o CPF é válido
+            aluno_temp = Aluno(
+                nome=nome,
+                sobrenome=sobrenome,
+                cpf=cpf,
+                data_nascimento=data_nascimento,
+                turma_id=turma_id
+            )
+            if not aluno_temp.validar_cpf():
+                raise ValueError("CPF inválido. Verifique o número e tente novamente.")
+
+            # Adicionar aluno
+            is_ver_geral = bool(request.POST.get('is_ver_geral'))
+            AlunoMediator.adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id, is_ver_geral)
+            messages.success(request, "Aluno e usuário criados com sucesso!")
+            return redirect('alunos', turma_id=turma_id)
+
+        except ValueError as e:
+            # Captura erros específicos e exibe mensagens amigáveis
+            messages.error(request, str(e))
             return render(request, self.template_name_add, {'turma_id': turma_id})
 
-        AlunoMediator.adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id, is_ver_geral)
-        messages.success(request, "Aluno e usuário criados com sucesso!")
-        return redirect('alunos', turma_id=turma_id)
+        except Exception as e:
+            # Tratamento genérico para qualquer outro erro
+            messages.error(request, "Ocorreu um erro inesperado")
+            return render(request, self.template_name_add, {'turma_id': turma_id})
+
+    
     
 class SimuladoView(View):
     template_name_list = 'simulados.html'
@@ -144,9 +170,9 @@ class NotaView(View):
     template_name = 'notas_simulado.html'
 
     def get(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
         alunos = NotaMediator.obter_alunos()
-        turmas = Turma.objects.all()
+        turmas = TurmaMediator.obter_turmas()
         return render(request, self.template_name, {
             'simulado': simulado,
             'alunos': alunos,
@@ -154,7 +180,7 @@ class NotaView(View):
         })
 
     def post(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
         NotaMediator.salvar_notas(simulado_id, request)
 
         messages.success(request, "Notas salvas com sucesso!")
@@ -165,7 +191,7 @@ class RankingView(View):
     template_name = 'ranking.html'
 
     def get(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
         rankings = RankingMediator.calcular_rankings(simulado)
 
         return render(request, self.template_name, {
@@ -177,7 +203,7 @@ class RankingMatematicaView(View):
     template_name = 'ranking_matematica.html'
 
     def get(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
         rankings = RankingMediator.calcular_ranking_matematica(simulado)
 
         return render(request, self.template_name, {
@@ -189,7 +215,7 @@ class RankingPortuguesView(View):
     template_name = 'ranking_portugues.html'
 
     def get(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
         rankings = RankingMediator.calcular_ranking_portugues(simulado)
 
         return render(request, self.template_name, {
@@ -202,12 +228,12 @@ class RankingTurmaView(View):
     template_name = 'rankingTurma.html'
 
     def get(self, request, simulado_id, turma_id=None):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
-        turmas = Turma.objects.all()
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
+        turmas = TurmaMediator.listar_turmas()
         turma_id = turma_id or request.GET.get('turma_id')
         if turma_id:
             rankings = RankingMediator.calcular_rankingTurma(simulado, turma_id)
-            turma = get_object_or_404(Turma, id=turma_id)
+            turma = TurmaMediator.obter_turma(turma_id)
         else:
             rankings = []
             turma = None
@@ -226,16 +252,15 @@ class RankingTurmaView(View):
 class ResponsavelView(LoginRequiredMixin, View):
     template_name = 'responsavel.html'
     def get(self, request):
-        aluno = aluno = get_object_or_404(Aluno, user=request.user)
+        aluno = AlunoMediator.obter_aluno(request.user)
         simulados = SimuladoMediator.listar_simulados()
-        turmas = Turma.objects.all()
+        turmas = TurmaMediator.obter_turmas()
         return render(request, self.template_name, {'aluno': aluno, 'simulados': simulados, 'turmas': turmas})
 
     def post(self, request):
-        aluno_login = request.POST.get('aluno_login')
-        aluno = get_object_or_404(Aluno, user__username=aluno_login)
+        aluno = AlunoMediator.obter_aluno(request.user)
         simulados = SimuladoMediator.listar_simulados()
-        turmas = Turma.objects.all() 
+        turmas = TurmaMediator.obter_turmas()
         return render(request, self.template_name, {'aluno': aluno, 'simulados': simulados, 'turmas': turmas})
     
 
@@ -243,13 +268,14 @@ class ResponsavelView(LoginRequiredMixin, View):
 class RankingPorTurmaResponsavelView(LoginRequiredMixin, View):
     template_name = 'ranking_turma_responsavel.html'
     def get(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
-        aluno = get_object_or_404(Aluno, user=request.user)
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
+        aluno = AlunoMediator.obter_aluno(request.user)
         turma = aluno.turma
         rankings_turma = RankingResponsavelMediator.calcular_rankings_turma(simulado, turma.id)
         ranking_aluno = RankingResponsavelMediator.calcular_ranking_aluno_turma(simulado, aluno.id, turma.id)
 
         return render(request, self.template_name, {
+            'aluno': aluno,
             'simulado': simulado,
             'rankings': rankings_turma,
             'ranking_aluno': ranking_aluno,
@@ -260,12 +286,31 @@ class RankingGeralResponsavelView(LoginRequiredMixin, View):
     template_name = 'ranking_geral_responsavel.html'
 
     def get(self, request, simulado_id):
-        simulado = get_object_or_404(Simulado, id=simulado_id)
-        aluno = get_object_or_404(Aluno, user=request.user)
-        
+        simulado = SimuladoMediator.obter_simulado(simulado_id)
+        aluno = AlunoMediator.obter_aluno(request.user)
         aluno_ranking = RankingResponsavelMediator.calcular_ranking_aluno(simulado, aluno.id)
 
         return render(request, self.template_name, {
+            'aluno': aluno,
             'simulado': simulado,
             'aluno_ranking': aluno_ranking,
         })
+    
+class SimuladosResponsavelView(LoginRequiredMixin, View):
+    template_name = 'simulados_responsavel.html'
+
+    def get(self, request):
+        simulados = SimuladoMediator.listar_simulados()
+        aluno = AlunoMediator.obter_aluno(request.user)
+        turma = aluno.turma
+
+        return render(request, self.template_name, {
+            'simulados': simulados,
+            'aluno': aluno,
+            'turma': turma,
+        })
+    
+@requires_csrf_token
+def csrf_failure(request, reason=""):
+    messages.error(request, "Sessão expirada. Faça login novamente.")
+    return redirect('login')
