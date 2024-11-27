@@ -318,19 +318,19 @@
     }
 
     .btn-confirm {
-        background-color: #d62828; /* Cor de confirmação consistente */
+        background-color: var(--error-bg); /* Cor de confirmação consistente */
     }
 
     .btn-confirm:hover {
-        background-color: #d62828;
+        background-color: var(--error-bg);
     }
 
     .btn-cancel {
-        background-color: var(--primary-bg); /* Cor de cancelamento */
+        background-color: grey; /* Cor de cancelamento */
     }
 
     .btn-cancel:hover {
-        background-color: var(--primary-bg);
+        background-color: grey;
     }        
         .escolhas {
         text-decoration: none;
@@ -398,15 +398,17 @@
             </table>
         </div>
     </div>
+    
     <div id="confirm-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h3>Confirmação</h3>
-            <p>Tem certeza que deseja remover esta turma?</p>
-            <p>Obs: Ao deletar a turma, os alunos/usuarios dessa turma serão removidos também</p>
+            <p>Tem certeza que deseja excluir?</p>
+            <p><strong>{{ turma.nome }}</strong></p>
+            <p>(Esta ação não poderá ser desfeita)</p>
             <div class="modal-buttons">
-                <button id="confirm-yes" class="btn-confirm">SIM</button>
-                <button id="confirm-no" class="btn-cancel">NÃO</button>
+                <button id="confirm-no" class="btn-cancel">CANCELAR</button>
+                <button id="confirm-yes" class="btn-confirm">EXCLUIR</button>
             </div>
         </div>
     </div>
