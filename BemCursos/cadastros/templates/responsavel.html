@@ -26,6 +26,7 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: row;
             height: 100vh;
         }
 
@@ -107,127 +108,78 @@
             color: var(--primary-bg);
         }
 
-.container {
-    flex: 1;
-    margin: 0;
-    padding-top: 40px;
-    background-color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: first baseline;
-    height: 100vh;
-}
+        
+        .container {
+            padding-top: 40px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%; /* Faz com que a container ocupe o restante da tela */
+            height: 100vh;  /* Ocupa toda a altura da tela */
+            overflow: auto; /* Permite rolagem se o conteúdo exceder a altura */
+            width: calc(100% - 250px); /* Garante que a largura da container se ajuste ao restante da tela */
+            }
 
-.table-container {
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 20px;
-        width: 90%; 
-        max-width: 900px;
-        background-color: #ffffff;
-        border-radius: 20px; 
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-        align-items: center;
-    }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        border-radius: 15px;
-        overflow: hidden; 
-    }
-
-    th, td {
-        text-align: left;
-        font-weight: 750;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        padding-left: 20px;
-    }
-
-    td.los-botoes{
-        text-align: right;
-        padding-right: 10px;
-    }
-    th.los-botoes{
-        text-align: right;
-    }
-
-    th {
-        padding-top: 15px;
-        padding-bottom: 15px;
-        background-color: var(--card-bg);
-        color: #f1faee;
-        font-weight: bold;
-    }
-
-        .gerenciamento-botao, .gerenciamento-botao2 {
-            padding: 10px 12px;
-            border-radius: 5px;
-            color: #f1faee;
-            text-align: center;
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
+        .table-container {
+            display: flex;
+            flex-direction: column;
+            width: 90%;
+            max-width: 900px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px; /* Adiciona espaço entre as tabelas */
         }
 
-        .gerenciamento-botao {
-            background-color: var(--primary-bg);
-            border-radius: 12px;
-        }
-
-        .gerenciamento-botao:hover {
-            background-color: rgb(33, 52, 101);
-        }
-
-        .gerenciamento-botao2 {
-            background-color: #e63946;
-            border-radius: 12px;
-        }
-
-        .gerenciamento-botao2:hover {
-            background-color: #c02424;
-        }
-
-        .add-turma {
-            text-decoration: none;
-            display: block;
-            margin: 20px auto 0 auto; 
-            background-color: var(--primary-bg); 
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            text-align: center;
-        }
-        .add-turma:hover {
-            background-color: rgb(33, 52, 101);
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            padding-top: 100px;
-            left: 0;
-            top: 0;
+        table {
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
+            border-collapse: collapse;
+            border-radius: 15px;
+            overflow: hidden;
         }
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 400px;
-            border-radius: 8px;
-            text-align: center;
+        th, td {
+            text-align: left;
+            font-weight: 750;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 20px;
         }
+
+        td.los-botoes {
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        th.los-botoes {
+            text-align: right;
+        }
+
+        th {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            background-color: var(--card-bg);
+            color: #f1faee;
+            font-weight: bold;
+        }
+    /* Responsividade */
+    @media screen and (max-width: 768px) {
+        .container {
+            padding-top: 20px; /* Ajusta o espaçamento superior em telas menores */
+        }
+
+        .table-container {
+            width: 100%; /* Deixa as tabelas ocuparem toda a largura em telas pequenas */
+        }
+
+        table th, table td {
+            padding-left: 15px;
+            padding-right: 15px; /* Ajusta o preenchimento das células em telas pequenas */
+        }
+    }  
 
         @media screen and (max-width: 768px) {
             .sidebar {
@@ -250,81 +202,7 @@
                 align-items: center;
             }
         }
-        /* Modal base styles */
-    .modal {
-        display: none; /* Oculto por padrão */
-        position: fixed;
-        z-index: 1;
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Fundo mais escuro */
-    }
-
-    .modal-content {
-        background-color: #f1faee; /* Fundo semelhante à tabela */
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #ddd; /* Borda semelhante à tabela */
-        width: 80%;
-        max-width: 400px;
-        border-radius: 20px;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Sombra para destaque */
-        text-align: center;
-        color: #333; /* Cor do texto padrão */
-    }
-
-    /* Modal header and close button */
-    .modal-content h3 {
-        color: #333; /* Texto branco */
-        font-weight: bold;
-        padding: 5px;
-        border-radius: 5px;
-        margin-top: 0;
-    }
-
-    .modal-content .close {
-        color: #333;
-        float: right;
-        font-size: 24px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    /* Modal buttons */
-    .modal-buttons {
-        margin-top: 30px;
-        display: flex;
-        justify-content: space-around;
-    }
-
-    .btn-confirm, .btn-cancel {
-        padding: 15px 20px;
-        border-radius: 15px;
-        font-weight: bold;
-        color: #f1faee;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-confirm {
-        background-color: #d62828; /* Cor de confirmação consistente */
-    }
-
-    .btn-confirm:hover {
-        background-color: #d62828;
-    }
-
-    .btn-cancel {
-        background-color: var(--primary-bg); /* Cor de cancelamento */
-    }
-
-    .btn-cancel:hover {
-        background-color: var(--primary-bg);
-    }        
+        
     </style>
 </head>
 <body>
@@ -343,7 +221,6 @@
 
     <div class="container">    
         <img src="{% static 'img/logo.png' %}" alt="A3" style="height: 12%; width: 6%; position: absolute; top: 10px; right: 10px;">
-        
         <div class="table-container">
             <table>
                 <thead>
@@ -352,99 +229,35 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td colspan="2">
+                            <p><strong>Nome:</strong> {{ aluno.nome }} {{ aluno.sobrenome}}</p>
+                            <p><strong>CPF:</strong> {{ aluno.cpf }}</p>
+                            <p><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento|date:"d/m/Y" }}</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dados Acadêmicos</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {% for turma in turmas %}
                     <tr id="turma-{{ turma.id }}">
-                        <h2>Dados do Aluno</h2>
-                        <p><strong>Nome:</strong> {{ aluno.nome }}</p>
-                        <p><strong>Último Nome:</strong> {{ aluno.sobrenome }}</p>
-                        <p><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento|date:"d/m/Y" }}</p>
-                        <p><strong>Turma:</strong> {{ aluno.turma }}</p>
-                        <p><strong>CPF:</strong> {{ aluno.cpf }}</p>
-                        <p><strong>Pode ver ranking geral:</strong> {% if aluno.is_ver_geral %}Sim{% else %}Não{% endif %}</p>
+                        <td>
+                            <p><strong>Turma: {{ aluno.turma }}</strong></p>
+                            <p><strong>Unidade: {{aluno.turma.unidade}}</strong></p>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            <a href="{% url 'adicionar_turma' %}" class="add-turma">Adicionar Turma</a>
         </div>
     </div>
-    <div id="confirm-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Confirmação</h3>
-            <p>Tem certeza que deseja remover esta turma?</p>
-            <p>Obs: Ao deletar a turma, os alunos/usuarios dessa turma serão removidos também</p>
-            <div class="modal-buttons">
-                <button id="confirm-yes" class="btn-confirm">SIM</button>
-                <button id="confirm-no" class="btn-cancel">NÃO</button>
-            </div>
-        </div>
-    </div>
-
-  
-    <div id="success-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Sucesso</h3>
-            <p id="success-text"></p>
-            <button id="success-ok" class="btn-confirm">Ok</button>
-        </div>
-    </div>
-
-    <script>
-        $(document).ready(function() {
-            function abrirModalConfirmacao(turmaId, callback) {
-                $('#confirm-modal').fadeIn();
-                $('#confirm-yes').off('click').on('click', function() {
-                    $('#confirm-modal').fadeOut();
-                    callback(true);
-                });
-                $('#confirm-no').off('click').on('click', function() {
-                    $('#confirm-modal').fadeOut();
-                    callback(false);
-                });
-            }
-
-            function abrirModalSucesso(mensagem, reloadAfter) {
-                $('#success-text').text(mensagem);
-                $('#success-modal').fadeIn();
-
-                $('#success-ok').off('click').on('click', function() {
-                    $('#success-modal').fadeOut();
-                    if (reloadAfter) {
-                        location.reload();
-                    }
-                });
-            }
-
-            $('.close').on('click', function() {
-                $(this).closest('.modal').fadeOut();
-            });
-
-            $('.remover-turma').on('click', function() {
-                var turmaId = $(this).data('id');
-                abrirModalConfirmacao(turmaId, function(confirmed) {
-                    if (confirmed) {
-                        $.ajax({
-                            url: '{% url "remover_turma" turma_id=0 %}'.replace('0', turmaId),
-                            type: 'POST',
-                            data: {
-                                'csrfmiddlewaretoken': '{{ csrf_token }}',
-                                'method': 'DELETE',
-                                'turma_id': turmaId
-                            },
-                            success: function(response) {
-                                abrirModalSucesso('Turma removida com sucesso!', true);
-                                $('#turma-' + turmaId).remove();
-                            },
-                            error: function(xhr) {
-                                abrirModalSucesso('Erro ao remover a turma: ' + xhr.responseText, false);
-                            }
-                        });
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>

@@ -14,6 +14,7 @@ class TurmaMediator:
     def listar_turmas():
         return Turma.objects.all().order_by("nome")
 
+    
     @staticmethod
     def listar_turmas_por_unidade(unidade_id):
         return Turma.objects.filter(unidade_id=unidade_id).order_by("nome")
