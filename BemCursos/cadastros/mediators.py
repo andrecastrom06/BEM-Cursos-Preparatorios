@@ -4,7 +4,7 @@ from django.db import transaction, IntegrityError
 from django.db.models import Avg, F, FloatField, IntegerField,Q
 from django.db.models.functions import Cast
 from django.core.exceptions import ValidationError
-
+from datetime import date
 class TurmaMediator:
     @staticmethod
     def obter_turmas():
@@ -50,17 +50,25 @@ class TurmaMediator:
 class AlunoMediator:
     @staticmethod
     def listar_alunos(turma_id):
-        return Aluno.objects.filter(turma__id=turma_id)
+         return Aluno.objects.filter(turma__id=turma_id).order_by('nome', 'sobrenome')
     
     @staticmethod
     def obter_aluno(user):
         return get_object_or_404(Aluno, user=user)
     
     @staticmethod
+    
+
+    @staticmethod
     def adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id, is_ver_geral):
         turma = get_object_or_404(Turma, id=turma_id)
         nome = nome.strip().capitalize()
         sobrenome = sobrenome.strip().title()
+
+        # Verificar se a data de nascimento é válida
+        if data_nascimento > date.today():
+            raise ValueError("A data de nascimento não pode ser posterior à data atual.")
+
         if Aluno.objects.filter(nome=nome, sobrenome=sobrenome).exists():
             raise ValueError(f"Já existe um aluno cadastrado com o nome {nome} {sobrenome}.")
         if Aluno.objects.filter(cpf=cpf).exists():
@@ -74,12 +82,12 @@ class AlunoMediator:
             turma=turma,
             is_ver_geral=is_ver_geral
         )
-        
+
         if not aluno.validar_cpf():
             raise ValidationError("CPF inválido.")
 
         aluno.calcular_idade_em_dias()
-        
+
         login = aluno.gerar_login()
         senha = aluno.gerar_senha()
 
@@ -87,7 +95,7 @@ class AlunoMediator:
             raise ValueError(f"O nome de usuário '{login}' já existe.")
 
         try:
-            #Inicia uma transação para garantir que ambas as ações ocorram ou falhem juntas
+            # Inicia uma transação para garantir que ambas as ações ocorram ou falhem juntas
             with transaction.atomic():
                 usuario = User.objects.create_user(username=login, password=senha)
                 aluno.user = usuario
