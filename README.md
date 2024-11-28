@@ -37,6 +37,8 @@
 
    - Slide SR1 : https://www.canva.com/design/DAGTwnGu6qo/KAxqvsUj_u1QfcIMs2Pyog/edit
 
+   - Docs com as explicações dos pilares da OO: https://docs.google.com/document/d/1bugPYzqV9ZIALtmhGJEJoX2kTZVdta4437N2YVfbvMs/edit?tab=t.0#heading=h.ss5680bmbgzy
+
 </details>
 
 <details>
