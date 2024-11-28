@@ -42,14 +42,9 @@
         }
 
         .sidebar .profile {
+            padding: 10px;
             text-align: center;
             margin-bottom: 30px;
-        }
-
-        .sidebar .profile img {
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
         }
 
         .sidebar .profile h3 {
@@ -88,7 +83,7 @@
         }
 
         .sidebar a[href="{% url 'login' %}"] {
-            margin-top: 480px;
+            margin-top: 400px;
             background-color: white;
             color: var(--primary-bg);
             padding: 10px 20px;
@@ -110,7 +105,7 @@
         .container {
             flex: 1;
             margin: 0;
-            padding-top: 40px;
+            padding-top: 150px;
             background-color: #ffffff;
             display: flex;
             justify-content: center;
@@ -196,7 +191,6 @@
 
     <div class="sidebar">
         <div class="profile">
-            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="80" height="80">
             <h3>{{aluno.nome|capfirst}} {{aluno.sobrenome|capfirst}}</h3>
             <p>{{aluno.turma}}</p>
         </div>
