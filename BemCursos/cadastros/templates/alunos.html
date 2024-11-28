@@ -394,6 +394,41 @@
     margin-left: 70px;
     background-color: #dc3545; /* Cor vermelha */
 }
+
+
+.messages {
+    position: fixed; /* Fixa a mensagem em relação à tela */
+    bottom: 20px; /* Ajusta a distância do final da tela */
+    left: 50%; /* Centraliza horizontalmente */
+    right: 60%
+    transform: translateX(-50%); /* Corrige o deslocamento para alinhar o centro */
+    z-index: 1000; /* Garante que fique acima de outros elementos */
+    padding: 15px 20px; /* Espaçamento interno */
+    background-color: #d4edda; /* Cor de fundo para mensagens de sucesso */
+    color: #155724; /* Cor do texto */
+    border: 1px solid #c3e6cb; /* Bordas */
+    border-radius: 5px; /* Bordas arredondadas */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+    font-size: 16px; /* Tamanho da fonte */
+    text-align: center; /* Centraliza o texto */
+    max-width: 80%; /* Limita a largura em telas menores */
+    word-wrap: break-word; /* Garante que textos longos sejam quebrados */
+  }
+  
+  .messages li {
+    list-style: none; /* Remove os marcadores da lista */
+  }
+  
+  .success {
+    background-color: #28a745; /* Fundo verde para sucesso */
+    color: #fff; /* Texto branco */
+  }
+  
+
+
+
+
+
     </style>
 </head>
 <body>
