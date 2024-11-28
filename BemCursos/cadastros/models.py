@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.exceptions import ValidationError
-
+import unicodedata
 
 class Unidade(models.Model):
     nome = models.CharField(max_length=100, unique=True)
@@ -15,6 +15,11 @@ class Turma(models.Model):
 
     def __str__(self):
         return f'{self.nome} - {self.unidade.nome}'
+    
+#def usada no login para remover possiveis acentos gráficos nos nomes
+def remover_acentos(texto):
+    return ''.join(char for char in unicodedata.normalize('NFD', texto)if unicodedata.category(char) != 'Mn')
+
 
 class Aluno(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
@@ -50,7 +55,8 @@ class Aluno(models.Model):
         return cpf[-2:] == f"{digito1}{digito2}"
 
     def gerar_login(self):
-        return f"{self.nome}{self.sobrenome}{self.turma.nome}".lower().strip().replace(' ', '')
+        texto =  f"{self.nome}{self.sobrenome}{self.turma.nome}".lower().strip().replace(' ', '')
+        return remover_acentos(texto)
 
     def gerar_senha(self):
         return self.cpf
