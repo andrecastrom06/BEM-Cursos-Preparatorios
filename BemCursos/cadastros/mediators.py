@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404
 from .models import Turma, Unidade, Aluno, Simulado,Nota, User
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.db.models import Avg, F, FloatField, IntegerField,Q
 from django.db.models.functions import Cast
-
+from django.core.exceptions import ValidationError
 
 class TurmaMediator:
     @staticmethod
@@ -59,12 +59,8 @@ class AlunoMediator:
     @staticmethod
     def adicionar_aluno(nome, sobrenome, cpf, data_nascimento, turma_id, is_ver_geral):
         turma = get_object_or_404(Turma, id=turma_id)
-
-        # Normalizar nome e sobrenome (primeira letra maiúscula)
         nome = nome.strip().capitalize()
         sobrenome = sobrenome.strip().title()
-
-        # Verificação de duplicatas
         if Aluno.objects.filter(nome=nome, sobrenome=sobrenome).exists():
             raise ValueError(f"Já existe um aluno cadastrado com o nome {nome} {sobrenome}.")
         if Aluno.objects.filter(cpf=cpf).exists():
@@ -78,17 +74,27 @@ class AlunoMediator:
             turma=turma,
             is_ver_geral=is_ver_geral
         )
-        aluno.calcular_idade_em_dias()
+        
+        if not aluno.validar_cpf():
+            raise ValidationError("CPF inválido.")
 
+        aluno.calcular_idade_em_dias()
+        
         login = aluno.gerar_login()
         senha = aluno.gerar_senha()
 
-        usuario = User.objects.create_user(
-            username=login,
-            password=senha
-        )
-        aluno.user = usuario
-        aluno.save()
+        if User.objects.filter(username=login).exists():
+            raise ValueError(f"O nome de usuário '{login}' já existe.")
+
+        try:
+            #Inicia uma transação para garantir que ambas as ações ocorram ou falhem juntas
+            with transaction.atomic():
+                usuario = User.objects.create_user(username=login, password=senha)
+                aluno.user = usuario
+                aluno.save()
+
+        except (IntegrityError, ValueError, ValidationError) as e:
+            raise ValidationError(f"Erro ao criar aluno e/ou usuário: {str(e)}")
 
     @staticmethod
     def remover_aluno(aluno_id):
