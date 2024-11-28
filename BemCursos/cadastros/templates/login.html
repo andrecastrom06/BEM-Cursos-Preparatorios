@@ -184,16 +184,17 @@
 
     .container-erro {
         position: fixed;
-        right: 0;
-        top: -675px;
+        top: 10%; /* Evita valores negativos */
+        left: 75%;
+        transform: translateX(-50%); /* Centraliza horizontalmente */
         width: 60vw;
-        height: 33vh;
+        height: auto; /* Adapte conforme necessário */
         display: flex;
         justify-content: center;
         align-items: center;
         border-radius: 0;
         opacity: 1;
-        transition: opacity 1s ease-out;
+        transition: opacity 1s ease-out, top 1s ease-out; /* Transições suaves */
     }
 
     .inner-container-erro {
@@ -208,9 +209,9 @@
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
         position: relative;
         padding: 1vw;
-        margin-right: -16%;
-        margin-top: 113%;
+        /* Removido margin-top e margin-right */
     }
+    
 
     h1 {
         color: white;

@@ -8,67 +8,150 @@
     <title>Ranking - {{ simulado.nome }} do Tipo: {{ simulado.get_tipo_display }}</title>
     <style>
         /* Estilos Gerais */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
+
+        :root {
+            --primary-bg: rgb(52, 82, 160);
+            --secondary-bg: white;
+            --card-bg: rgb(115, 187, 106);
+            --card-bg-hover: rgb(88, 146, 81);
+            --text-color: white;
+            --button-hover-bg: rgb(42, 121, 190);
+            --error-bg: red;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: rgb(65, 88, 208);
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f2f5f9;
             color: #333;
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: row;
             height: 100vh;
-            justify-content: center;
-            align-items: center;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-bg);
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar .profile h3 {
+            margin: 10px 0 5px;
+            color: #f1faee;
+            font-weight: bold;
+            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar .profile p {
+            color: #a8dadc;
+            font-size: 0.9em;
+        }
+
+        .sidebar nav a {
+            display: block;
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            background-color: transparent;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar nav a:first-child {
+            background-color: white;
+            color: var(--primary-bg);
+        }
+
+        .sidebar nav a:hover {
+            background-color: #1d3557;
+            color: #a8dadc;
+        }
+
+        .sidebar a[href="{% url 'login' %}"] {
+            margin-top: 420px;
+            background-color: white;
+            color: var(--primary-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            max-width: 40%;
+            font-weight: bold;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar a[href="{% url 'login' %}"]:hover {
+            background-color: #f1faee;
+            color: var(--primary-bg);
         }
 
         .container {
-            padding: 20px;
-            background-color: rgb(11, 173, 38);
-            border-radius: 10px;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            text-align: center;
-            color: white;
-            width: 100%;
-            max-width: 900px;
-        }
-
-        h1, h2 {
-            color: #fff;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            margin-bottom: 20px;
+            padding-top: 40px;
+            padding: 50px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            width: calc(100% - 250px);
+            height: 100vh;
+            overflow: auto;
         }
 
         table {
-            width: 100%;
+            width: 60%;
             border-collapse: collapse;
-            margin-top: 20px;
-            background-color: white;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
             color: #333;
+            background-color: white;
         }
 
-        table th, table td {
-            padding: 15px;
+        td {
             text-align: center;
+            padding: 15px;
             font-weight: bold;
-            border-bottom: 1px solid #ddd;
+            border-right: 2px solid #8c8c8c;
+            border-left: 2px solid #8c8c8c;
+            border-bottom: 2px solid #8c8c8c;
         }
 
-        table thead {
-            background-color: rgb(65, 88, 208);
-            color: white;
+        th {
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            background-color: var(--card-bg);
+            color: #fff;
         }
 
-        table tbody tr:nth-child(even) {
+        tr:nth-child(even) {
             background-color: #f9f9f9;
         }
 
-        table tbody tr:nth-child(odd) {
+        tr:nth-child(odd) {
             background-color: #e6e6e6;
         }
 
-        .voltar-botao, .ranking-geral-botao {
-            background-color: #007BFF;
+        .voltar-botao {
+            background-color: rgb(52, 82, 160);
             color: white;
             padding: 10px 20px;
             border-radius: 5px;
@@ -81,78 +164,102 @@
             margin-top: 20px;
         }
 
-        .voltar-botao:hover, .ranking-geral-botao:hover {
+        .voltar-botao:hover {
             background-color: #0056b3;
+        }
+
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                flex-direction: column;
+                width: 100%;
+                padding: 10px;
+                align-items: center;
+                justify-content: space-around;
+                text-align: center;
+                height: 60vh;
+                box-shadow: none;
+            }
+
+            .sidebar nav {
+                display: flex;
+                justify-content: space-around;
+                width: 100%;
+            }
+
+            .sidebar nav a {
+                font-size: 14px;
+                padding: 8px;
+                margin: 0;
+            }
+            .sidebar a[href="{% url 'login' %}"] {
+                margin-top: 0;
+            }
+
+            .logo{
+                display: none;
+            }
+
+            .container {
+                padding: 20px;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+            .table-container {
+                width: 80%;
+            }
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>Ranking - {{ simulado.nome }} (Tipo: {{ simulado.get_tipo_display }})</h1>
-    <h2>Turma: {{ turma.nome }}</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Posição</th>
-                <th>Nome do Aluno</th>
-                <th>Data de Nascimento</th>
-                <th>Matemática</th>
-                <th>Português</th>
-                {% if simulado.tipo == "EA" %}
-                    <th>Nota Final (0 a 40)</th>
-                {% else %}
-                    <th>Média Final</th>
-                {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-            {% if ranking_aluno %}
-                <tr>
-                    <td>{{ ranking_aluno.posicao }}</td>
-                    <td>{{ ranking_aluno.aluno__nome }} {{ ranking_aluno.aluno__sobrenome }}</td>
-                    <td>{{ ranking_aluno.aluno__data_nascimento|date:"d/m/Y" }}</td>
-                    <td>
-                        {% if simulado.tipo == 'CM' %}
-                            {{ ranking_aluno.media_matematica|floatformat:2 }}
-                        {% else %}
-                            {{ ranking_aluno.media_matematica }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if simulado.tipo == 'CM' %}
-                            {{ ranking_aluno.media_portugues|floatformat:2 }}
-                        {% else %}
-                            {{ ranking_aluno.media_portugues }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if simulado.tipo == 'CM' %}
-                            {{ ranking_aluno.media_final|floatformat:2 }}
-                        {% else %}
-                            {{ ranking_aluno.media_final }}
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endif %}
-        </tbody>
-    </table>
-
-    {% if aluno.is_ver_geral %}
-        <div style="text-align: center; margin-top: 20px;">
-            <label for="ordenar" style="font-size: 16px; color: white;">Ordenar por:</label>
-            <select id="ordenar" name="ordenar"
-                    style="padding: 8px; font-size: 16px; border-radius: 5px; border: none; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);"
-                    onchange="location = this.value;">
-                <option value="">Selecione um filtro de ranking</option>
-                <option value="{% url 'ranking_geral_responsavel' simulado.id %}">Ranking Geral</option>
-                <option value="{% url 'ranking_turma_responsavel' simulado.id %}">Ranking Por Turma</option>
-            </select>
+    <div class="sidebar">
+        <div class="profile">
+            <h3>{{ aluno.nome|capfirst }} {{ aluno.sobrenome|capfirst }}</h3>
+            <p>{{ aluno.turma }}</p>
         </div>
-    {% endif %}
+        <nav>
+            <a href="{% url 'responsavel' %}">Perfil</a>
+            <a href="{% url 'simulados_responsavel' %}">Simulados</a>
+        </nav>
+        <a href="{% url 'login' %}">Sair</a>
+    </div>
 
-    <button onclick="window.history.back()" class="voltar-botao">Voltar</button>
-</div>
-
+    <div class="container">
+        <img src="{% static 'img/logo.png' %}" alt="A3" style="height: 12%; width: 6%; position: absolute; top: 10px; right: 10px;">
+        <h1>Ranking - {{ simulado.nome }} (Tipo: {{ simulado.get_tipo_display }})</h1>
+        <h2>Turma: {{ turma.nome }}</h2>
+        <br>
+        <table>
+            <thead>
+                <tr>
+                    <th>Posição</th>
+                    <th>Matemática</th>
+                    <th>Português</th>
+                    {% if simulado.tipo == "EA" %}
+                        <th>Nota Final (0 a 40)</th>
+                    {% else %}
+                        <th>Média Final</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% if ranking_aluno %}
+                    <tr>
+                        <td>{{ ranking_aluno.posicao }}°</td>
+                        <td>{{ ranking_aluno.media_matematica|floatformat:2 }}</td>
+                        <td>{{ ranking_aluno.media_portugues|floatformat:2 }}</td>
+                        <td>{{ ranking_aluno.media_final|floatformat:2 }}</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        <br>
+        <button onclick="window.history.back()" class="voltar-botao">Voltar</button>
+    </div>
 </body>
 </html>

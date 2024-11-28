@@ -22,7 +22,7 @@
         body {
             font-family: 'Noto Sans', sans-serif;
             background-color: #f2f5f9;  
-            color: #333;
+            color: #ffffff;
             margin: 0;
             padding: 0;
             display: flex;
@@ -37,18 +37,12 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            height: 95vh;
+            height: 110vh;
         }
 
         .sidebar .profile {
             text-align: center;
             margin-bottom: 30px;
-        }
-
-        .sidebar .profile img {
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
         }
 
         .sidebar .profile h3 {
@@ -88,7 +82,7 @@
         }
 
         .sidebar a[href="{% url 'login' %}"] {
-            margin-top: 320px;
+            margin-top: 420px;
             background-color: white;
             color: var(--primary-bg);
             padding: 10px 20px;
@@ -108,14 +102,12 @@
         }
 
 .container {
-    flex: 1;
-    margin: 0;
-    padding-top: 100px;
-    background-color: #ffffff;
     display: flex;
-    justify-content: center;
-    align-items: first baseline;
-    height: 100vh;
+    flex-direction: column;  /* Alinha os elementos verticalmente */
+    gap: 20px;  /* Espaço entre cada container de turma */
+    align-items: center;
+    margin-top: 90px;
+    margin-left: 100px;
 }
 
 .table-container {
@@ -128,6 +120,7 @@
         border-radius: 20px; 
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
         align-items: center;
+        margin-bottom: 20px;
     }
 
     table {
@@ -192,7 +185,7 @@
             background-color: #c02424;
         }
 
-                .add-turma {
+        .add-turma {
             text-decoration: none;
             display: inline-block; /* Para se comportar como um botão compacto */
             position: absolute; /* Para posicionamento no canto superior direito */
@@ -333,7 +326,7 @@
     .btn-cancel:hover {
         background-color: grey;
     }        
-        .escolhas {
+    .escolhas {
         text-decoration: none;
         display: inline-block; /* Para se comportar como um botão compacto */
         position: absolute; /* Para posicionamento no canto superior direito */
@@ -349,13 +342,39 @@
         font-weight: bold;
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
         transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
+    }
+
+    /* Estilização para cada container de turma */
+    .turma-container {
+        background-color: var(--card-bg);
+        border-radius: 20px;
+        padding-left: 10px;
+        padding-right: 10px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        width: 750px; /* Largura máxima do container */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .turma-header {
+        display: flex;
+        justify-content: space-between;  /* Espalha o conteúdo para os dois extremos */
+        width: 100%;
+        align-items: center;  /* Alinha verticalmente no centro */
+    }
+
+    /* Estilização para os botões dentro de cada turma */
+    .turma-buttons {
+        display: flex;
+        gap: 10px; /* Espaçamento entre os botões */
+        margin-top: 10px;
+    }
+
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="profile">
-            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="80" height="80">
             <h3>Bem-Cursos-Preparatorios</h3>
             <p>Funcionário</p>
         </div>
@@ -380,25 +399,26 @@
         </select>
     </div>
 
-    <div class="container">    
+    <div class="container">
         <img src="{% static 'img/logo.png' %}" alt="A3" style="height: 12%; width: 6%; position: absolute; top: 10px; right: 10px;">
-        <div class="table-container">
-            <table>
-                <tbody>
-                    {% for turma in turmas %}
-                    <tr id="turma-{{ turma.id }}">
-                        <td>Turma: {{ turma.nome }}</td>
-                        <td>Unidade: {{ turma.unidade }}</td>
-                        <td class="los-botoes">
-                            <a href="{% url 'alunos' turma_id=turma.id %}" class="gerenciamento-botao">Alunos</a>
-                            <button class="remover-turma gerenciamento-botao2" data-id="{{ turma.id }}"> 🗑 </button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    
+        {% for turma in turmas %}
+        <div class="turma-container">
+            <!-- Cabeçalho da turma (nome e unidade) -->
+            <div class="turma-header">
+                <h2>Turma: {{ turma.nome }}</h2>
+                <p>Unidade: {{ turma.unidade }}</p>
+                <div class="turma-buttons">
+                    <a href="{% url 'alunos' turma_id=turma.id %}" class="gerenciamento-botao">Alunos</a>
+                    <button class="remover-turma gerenciamento-botao2" data-id="{{ turma.id }}">🗑</button>
+                </div>
+            </div>
         </div>
+        {% endfor %}
     </div>
+    
+    
+</div>
     
     <div id="confirm-modal" class="modal">
         <div class="modal-content">

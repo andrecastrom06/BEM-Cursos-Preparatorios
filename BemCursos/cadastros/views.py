@@ -10,6 +10,7 @@ from datetime import datetime
 from django.urls import reverse
 from django.views.decorators.csrf import requires_csrf_token
 
+
 def home(request):
     return redirect('login')
 

@@ -46,12 +46,6 @@
             margin-bottom: 30px;
         }
 
-        .sidebar .profile img {
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-        }
-
         .sidebar .profile h3 {
             margin: 10px 0 5px;
             color: #f1faee;
@@ -89,7 +83,7 @@
         }
 
         .sidebar a[href="{% url 'login' %}"] {
-            margin-top: 480px;
+            margin-top: 420px;
             background-color: white;
             color: var(--primary-bg);
             padding: 10px 20px;
@@ -124,7 +118,7 @@
         .table-container {
             display: flex;
             flex-direction: column;
-            width: 90%;
+            width: 80%;
             max-width: 900px;
             background-color: #ffffff;
             border-radius: 20px;
@@ -215,7 +209,6 @@
 <body>
     <div class="sidebar">
         <div class="profile">
-            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="80" height="80">
             <h3>{{aluno.nome|capfirst}} {{aluno.sobrenome|capfirst}}</h3>
             <p>{{aluno.turma}}</p>
         </div>
