@@ -42,9 +42,14 @@
         }
 
         .sidebar .profile {
-            padding: 10px;
             text-align: center;
             margin-bottom: 30px;
+        }
+
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
         }
 
         .sidebar .profile h3 {
@@ -84,7 +89,7 @@
         }
 
         .sidebar a[href="{% url 'login' %}"] {
-            margin-top: 400px;
+            margin-top: 480px;
             background-color: white;
             color: var(--primary-bg);
             padding: 10px 20px;
@@ -103,20 +108,18 @@
             color: var(--primary-bg);
         }
 
-        
         .container {
-            padding-top: 150px;
+            padding-top: 40px;
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            width: 100%; /* Faz com que a container ocupe o restante da tela */
-            height: 100vh;  /* Ocupa toda a altura da tela */
-            overflow: auto; /* Permite rolagem se o conteúdo exceder a altura */
-            width: calc(100% - 250px); /* Garante que a largura da container se ajuste ao restante da tela */
-            }
-
+            width: 100%; 
+            height: 100vh;  
+            overflow: auto; 
+            width: calc(100% - 250px); 
+        }
 
         .table-container {
             display: flex;
@@ -160,23 +163,25 @@
             color: #f1faee;
             font-weight: bold;
         }
-    /* Responsividade */
-    @media screen and (max-width: 768px) {
-        .container {
-            padding-top: 20px; /* Ajusta o espaçamento superior em telas menores */
-        }
 
-        .table-container {
-            width: 100%; /* Deixa as tabelas ocuparem toda a largura em telas pequenas */
-        }
-
-        table th, table td {
-            padding-left: 15px;
-            padding-right: 15px; /* Ajusta o preenchimento das células em telas pequenas */
-        }
-    }  
-
+        /* Responsividade */
         @media screen and (max-width: 768px) {
+            .body {
+                flex-direction: column;
+            }
+            .container {
+                padding-top: 20px; /* Ajusta o espaçamento superior em telas menores */
+            }
+
+            .table-container {
+                width: 100%; /* Deixa as tabelas ocuparem toda a largura em telas pequenas */
+            }
+
+            table th, table td {
+                padding-left: 15px;
+                padding-right: 15px; /* Ajusta o preenchimento das células em telas pequenas */
+            }
+
             .sidebar {
                 width: 100%;
                 height: auto;
@@ -189,20 +194,45 @@
                 flex-direction: row;
                 justify-content: space-around;
             }
+
+            .sidebar a {
+                font-size: 14px;
+                margin-top: 0;
+            }
+
+            .sidebar img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .sidebar nav {
+                display: none; /* Oculta a navegação para simplificar a visualização em telas pequenas */
+            }
+
+            .logo {
+                display: none;
+            }
         }
 
         @media screen and (max-width: 480px) {
+            .body {
+                flex-direction: column;
+            }
             .sidebar {
                 flex-direction: column;
                 align-items: center;
             }
+            .logo {
+                display: none;
+            }
         }
-        
+
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="profile">
+            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="80" height="80">
             <h3>{{aluno.nome|capfirst}} {{aluno.sobrenome|capfirst}}</h3>
             <p>{{aluno.turma}}</p>
         </div>
@@ -214,7 +244,7 @@
     </div>
 
     <div class="container">    
-        <img src="{% static 'img/logo.png' %}" alt="A3" style="height: 12%; width: 6%; position: absolute; top: 10px; right: 10px;">
+        <img src="{% static 'img/logo.png' %}" alt="A3" class="logo" style="height: 12%; width: 6%; position: absolute; top: 10px; right: 10px;">
         <div class="table-container">
             <table>
                 <thead>
@@ -241,12 +271,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr id="turma-{{ turma.id }}">
+                    {% for turma in turmas %}
+                    <tr>
                         <td>
-                            <p><strong>Turma: {{ aluno.turma.nome }}</strong></p>
-                            <p><strong>Unidade: {{aluno.turma.unidade}}</strong></p>
+                            <p><strong>Turma: </strong> {{ aluno.turma.nome }}</p>
+                            <p><strong>Unidade: </strong> {{ aluno.turma.unidade }}</p>
                         </td>
                     </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
