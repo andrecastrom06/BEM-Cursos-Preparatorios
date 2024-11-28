@@ -47,12 +47,6 @@
             margin-bottom: 30px;
         }
 
-        .sidebar .profile img {
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-        }
-
         .sidebar .profile h3 {
             margin: 10px 0 5px;
             color: #f1faee;
@@ -111,6 +105,7 @@
 
         .container {
             padding-top: 40px;
+            padding: 50px;
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -122,22 +117,27 @@
         }
 
         table {
-            width: 100%;
+            width: 60%;
             border-collapse: collapse;
-            border-radius: 15px;
+            border-radius: 10px;
             overflow: hidden;
             color: #333;
             background-color: white;
         }
 
-        th, td {
+        td {
             text-align: center;
             padding: 15px;
             font-weight: bold;
-            border-bottom: 1px solid #ddd;
+            border-right: 2px solid #8c8c8c;
+            border-left: 2px solid #8c8c8c;
+            border-bottom: 2px solid #8c8c8c;
         }
 
         th {
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
             background-color: var(--card-bg);
             color: #fff;
         }
@@ -151,7 +151,7 @@
         }
 
         .voltar-botao {
-            background-color: #007BFF;
+            background-color: rgb(52, 82, 160);
             color: white;
             padding: 10px 20px;
             border-radius: 5px;
@@ -232,12 +232,11 @@
     <div class="container">
         <h1>Ranking - {{ simulado.nome }} (Tipo: {{ simulado.get_tipo_display }})</h1>
         <h2>Turma: {{ turma.nome }}</h2>
+        <br>
         <table>
             <thead>
                 <tr>
                     <th>Posição</th>
-                    <th>Nome do Aluno</th>
-                    <th>Data de Nascimento</th>
                     <th>Matemática</th>
                     <th>Português</th>
                     {% if simulado.tipo == "EA" %}
@@ -250,9 +249,7 @@
             <tbody>
                 {% if ranking_aluno %}
                     <tr>
-                        <td>{{ ranking_aluno.posicao }}</td>
-                        <td>{{ ranking_aluno.aluno__nome }} {{ ranking_aluno.aluno__sobrenome }}</td>
-                        <td>{{ ranking_aluno.aluno__data_nascimento|date:"d/m/Y" }}</td>
+                        <td>{{ ranking_aluno.posicao }}°</td>
                         <td>{{ ranking_aluno.media_matematica|floatformat:2 }}</td>
                         <td>{{ ranking_aluno.media_portugues|floatformat:2 }}</td>
                         <td>{{ ranking_aluno.media_final|floatformat:2 }}</td>
@@ -260,6 +257,7 @@
                 {% endif %}
             </tbody>
         </table>
+        <br>
         <button onclick="window.history.back()" class="voltar-botao">Voltar</button>
     </div>
 </body>

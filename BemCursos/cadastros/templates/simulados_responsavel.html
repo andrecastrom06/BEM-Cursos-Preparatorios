@@ -59,12 +59,6 @@
             font-size: 0.9em;
         }
 
-        .sidebar .profile img {
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-        }
-
         table .td-name a {
             display: inline-block; /* Permite controle sobre tamanho e comportamento */
             background-color: var(--primary-bg); /* Mantém a cor primária */
@@ -246,7 +240,6 @@
 
     <div class="sidebar">
         <div class="profile">
-            <img src="/static/img/imgfunc.jpg" alt="funcionario" width="80" height="80">
             <h3>{{aluno.nome|capfirst}} {{aluno.sobrenome|capfirst}}</h3>
             <p>{{aluno.turma}}</p>
         </div>
