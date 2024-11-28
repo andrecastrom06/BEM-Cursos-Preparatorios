@@ -424,6 +424,19 @@
     color: #fff; /* Texto branco */
   }
   
+  .turma-header {
+    text-align: center;
+    background-color: white;
+    padding: 10px 0;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.turma-header h1 {
+    font-size: 2em;
+    color: #333;
+    margin: 0;
+}
 
 
 
@@ -432,18 +445,25 @@
     </style>
 </head>
 <body>
+   
     <div class="sidebar">
         <div class="profile">
             <h3>Bem-Cursos-Preparatorios</h3>
             <p>Função</p>
         </div>
         <nav>
+
             <a href="{% url 'turmas' %}" class="btn btn-primary">Turmas</a>
             <a href="{% url 'simulados' %}" class="btn btn-primary">Simulados</a>
         </nav>
     </div>
 
     <div class="container">
+        <div class="turma-header">
+
+            <h3>turma:{{ turma_nome }}</h3>
+        </div>
+    
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
