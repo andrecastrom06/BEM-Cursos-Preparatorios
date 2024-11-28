@@ -165,67 +165,56 @@
         }
 
         /* Responsividade */
-        @media screen and (max-width: 768px) {
-            .body {
+        
+                /* Responsividade */
+                @media screen and (max-width: 768px) {
+            body {
                 flex-direction: column;
-            }
-            .container {
-                padding-top: 20px; /* Ajusta o espaçamento superior em telas menores */
-            }
-
-            .table-container {
-                width: 100%; /* Deixa as tabelas ocuparem toda a largura em telas pequenas */
-            }
-
-            table th, table td {
-                padding-left: 15px;
-                padding-right: 15px; /* Ajusta o preenchimento das células em telas pequenas */
             }
 
             .sidebar {
+                flex-direction: column;
                 width: 100%;
-                height: auto;
-                display: flex;
-                justify-content: space-between;
-                flex-direction: row;
+                padding: 10px;
+                align-items: center;
+                justify-content: space-around;
+                text-align: center;
+                height: 60vh;
+                box-shadow: none;
             }
 
             .sidebar nav {
-                flex-direction: row;
+                display: flex;
                 justify-content: space-around;
+                width: 100%;
             }
 
-            .sidebar a {
+            .sidebar nav a {
                 font-size: 14px;
+                padding: 8px;
+                margin: 0;
+            }
+            .sidebar a[href="{% url 'login' %}"] {
                 margin-top: 0;
             }
 
-            .sidebar img {
-                width: 60px;
-                height: 60px;
-            }
-
-            .sidebar nav {
-                display: none; /* Oculta a navegação para simplificar a visualização em telas pequenas */
-            }
-
-            .logo {
+            .logo{
                 display: none;
             }
-        }
 
-        @media screen and (max-width: 480px) {
-            .body {
-                flex-direction: column;
-            }
-            .sidebar {
+            .container {
+                padding: 20px;
                 flex-direction: column;
                 align-items: center;
+                width: 100%;
             }
-            .logo {
-                display: none;
+
+            .table-container {
+                width: 80%;
             }
         }
+
+        
 
     </style>
 </head>
@@ -271,14 +260,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for turma in turmas %}
                     <tr>
                         <td>
                             <p><strong>Turma: </strong> {{ aluno.turma.nome }}</p>
                             <p><strong>Unidade: </strong> {{ aluno.turma.unidade }}</p>
                         </td>
                     </tr>
-                    {% endfor %}
                 </tbody>
             </table>
         </div>
