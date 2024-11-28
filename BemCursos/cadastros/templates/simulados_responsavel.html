@@ -27,6 +27,7 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: row;
             height: 100vh;
         }
 
@@ -46,12 +47,6 @@
             margin-bottom: 30px;
         }
 
-        .sidebar .profile img {
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-        }
-
         .sidebar .profile h3 {
             margin: 10px 0 5px;
             color: #f1faee;
@@ -63,6 +58,32 @@
             color: #a8dadc;
             font-size: 0.9em;
         }
+
+        .sidebar .profile img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+        }
+
+        table .td-name a {
+            display: inline-block; /* Permite controle sobre tamanho e comportamento */
+            background-color: var(--primary-bg); /* Mantém a cor primária */
+            color: white;
+            padding: 8px 12px; /* Ajusta o espaço interno */
+            border-radius: 5px; /* Cantos arredondados */
+            font-size: 12px; /* Tamanho do texto */
+            text-align: center; /* Centraliza o texto */
+            text-decoration: none;
+            white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+            overflow: hidden; /* Evita estouro de conteúdo */
+            text-overflow: ellipsis; /* Adiciona "..." em textos muito longos */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        table .td-name a:hover {
+            background-color: rgb(33, 52, 101); /* Alteração de cor ao passar o mouse */
+        }
+
 
         .sidebar nav a {
             display: block;
@@ -108,16 +129,17 @@
         }
 
         .container {
-            flex: 1;
-            margin: 0;
             padding-top: 40px;
             background-color: #ffffff;
             display: flex;
-            justify-content: center;
-            align-items: first baseline;
-            height: 100vh;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%; 
+            height: 100vh;  
+            overflow: auto; 
+            width: calc(100% - 250px); 
         }
-
         .table-container {
             display: flex;
             flex-direction: column;
@@ -158,37 +180,65 @@
             text-decoration: none;
             padding: 8px 12px;
             border-radius: 5px;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
             border: none;
         }
-
+        
         a:hover, button:hover {
             background-color: rgb(33, 52, 101);
         }
 
         @media screen and (max-width: 768px) {
+
+            table .td-name a {
+                font-size: 10px; /* Reduz o tamanho da fonte */
+                padding: 6px 10px; /* Ajusta o espaçamento interno */
+            }
+            body {
+                flex-direction: column;
+            }
             .sidebar {
+                flex-direction: column;
                 width: 100%;
-                height: auto;
-                display: flex;
-                justify-content: space-between;
-                flex-direction: row;
+                padding: 10px;
+                align-items: center;
+                justify-content: space-around;
+                text-align: center;
+                height: 60vh;
+                box-shadow: none;
             }
 
             .sidebar nav {
-                flex-direction: row;
+                display: flex;
                 justify-content: space-around;
+                width: 100%;
             }
-        }
 
-        @media screen and (max-width: 480px) {
-            .sidebar {
+            .sidebar nav a {
+                font-size: 14px;
+                padding: 8px;
+                margin: 0;
+            }
+            .sidebar a[href="{% url 'login' %}"] {
+                margin-top: 0;
+            }
+
+            .logo{
+                display: none;
+            }
+
+            .container {
+                padding: 20px;
                 flex-direction: column;
                 align-items: center;
+                width: 100%;
+            }
+
+            .table-container {
+                width: 80%;
             }
         }
-
 
     </style>
 </head>
@@ -208,7 +258,7 @@
     </div>
 
     <div class="container">
-        <img src="{% static 'img/logo.png' %}" alt="A3" style="height: 10%; width: 5.5%; position: absolute; top: 10px; right: 10px;">
+        <img src="{% static 'img/logo.png' %}" alt="A3" class="logo"  style="height: 10%; width: 5.5%; position: absolute; top: 10px; right: 10px;">
         {% if messages %}
         <ul>
             {% for message in messages %}
@@ -229,7 +279,7 @@
                 <tbody>
                     {% for simulado in simulados %}
                     <tr>
-                        <td>
+                        <td class="td-name">
                             <a href="{% url 'ranking_turma_responsavel' simulado.id %}">{{ simulado.nome }}</a>
                         </td>
                         <td>{{ simulado.get_tipo_display }}</td>
@@ -243,38 +293,5 @@
                 </tbody>
             </table>
         </div>
-    <script>
-        $(document).ready(function() {
-            function abrirModalConfirmacao(simuladoId, callback) {
-                $('#confirm-modal').fadeIn();
-                $('#confirm-yes').off('click').on('click', function() {
-                    $('#confirm-modal').fadeOut();
-                    callback(true);
-                });
-                $('#confirm-no').off('click').on('click', function() {
-                    $('#confirm-modal').fadeOut();
-                    callback(false);
-                });
-            }
-    
-            function abrirModalSucesso(mensagem, reloadAfter) {
-                $('#success-text').text(mensagem);
-                $('#success-modal').fadeIn();
-    
-                $('#success-ok').off('click').on('click', function() {
-                    $('#success-modal').fadeOut();
-                    if (reloadAfter) {
-                        location.reload();
-                    }
-                });
-            }
-    
-            $('.close').on('click', function() {
-                $(this).closest('.modal').fadeOut();
-            });
-           
-            });
-        
-    </script>    
 </body>
 </html>
