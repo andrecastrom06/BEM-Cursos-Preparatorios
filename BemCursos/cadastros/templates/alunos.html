@@ -234,6 +234,9 @@
             }
         }
         .header {
+            top: -10px;
+            right: 40px;
+            position: fixed;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -243,7 +246,7 @@
         .header-title {
             top: 70px;
             left: 300px;
-            position: absolute;
+            position: fixed;
             background-color: var(--primary-bg);
             color: white;
             border: none;
@@ -426,22 +429,11 @@
   
   .turma-header {
     text-align: center;
-    background-color: white;
+    position: fixed;
+    font-size: x-large;
+    background: none;
     padding: 10px 0;
-    border-bottom: 2px solid #ddd;
-    margin-bottom: 20px;
 }
-
-.turma-header h1 {
-    font-size: 2em;
-    color: #333;
-    margin: 0;
-}
-
-
-
-
-
     </style>
 </head>
 <body>
@@ -460,7 +452,7 @@
 
     <div class="container">
         <div class="turma-header">
-            <h3>turma:{{ turma_nome }}</h3>
+            <h3>Turma: {{ turma_nome }}</h3>
         </div>
     
         {% if messages %}
