@@ -8,9 +8,19 @@
     <title>Adicionar Simulado</title>
     <style>
         /* Estilos Gerais */
+        :root {
+            --primary-bg: rgb(52, 82, 160); /* Cor de fundo da área direita */    
+            --secondary-bg: white; /* Cor de fundo da área esquerda */
+            --card-bg: rgb(115, 187, 106); /* Cor de fundo da card-login */
+            --card-bg-hover: rgb(88, 146, 81);
+            --text-color: white; /* Cor do texto nos rótulos e nos botões */
+            --button-hover-bg: rgb(42, 121, 190); /* Cor de fundo ao passar o mouse no botão */
+            --error-bg: red; /* Cor de fundo do erro */
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            background-color: rgb(65, 88, 208);
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f2f5f9;
             color: #333;
             margin: 0;
             padding: 0;
@@ -18,15 +28,15 @@
             height: 100vh;
         }
 
-        /* Sidebar */
         .sidebar {
             width: 250px;
-            background-color: white;
+            background-color: var(--primary-bg);
             padding: 20px;
-            color: black;
+            color: white;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            height: 100vh;
         }
 
         .sidebar .profile {
@@ -36,107 +46,149 @@
 
         .sidebar .profile h3 {
             margin: 10px 0 5px;
-            color: black;
+            color: #f1faee;
+            font-weight: bold;
             text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
         }
 
         .sidebar .profile p {
-            color: #555;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
+            color: #a8dadc;
+            font-size: 0.9em;
         }
 
         .sidebar nav a {
+            display: block;
             text-decoration: none;
             color: white;
-            padding: 15px;
-            border-radius: 5px;
-            background-color: rgb(65, 88, 208);
+            padding: 10px 15px;
+            border-radius: 10px;
+            background-color: transparent;
             margin-bottom: 10px;
             text-align: center;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.9);
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: block;
-           
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar nav a:first-child {
+            background-color: white;
+            color: var(--primary-bg);
         }
 
         .sidebar nav a:hover {
-            background-color: rgb(54, 74, 175);
+            background-color: #1d3557;
+            color: #a8dadc;
         }
 
-        /* Conteúdo Principal */
+        .sidebar a[href="{% url 'login' %}"] {
+            margin-top: 420px;
+            background-color: white;
+            color: var(--primary-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            max-width: 40%;
+            font-weight: bold;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar a[href="{% url 'login' %}"]:hover {
+            background-color: #f1faee;
+            color: var(--primary-bg);
+        }
+
         .container {
             flex: 1;
-            padding: 20px;
-            background-color: rgb(65, 88, 208);
-            color: white;
+            margin: 0;
+            padding-top: 40px;
+            background-color: #ffffff;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: flex-start; /* Alinha o conteúdo ao topo */
+            height: 100vh;
         }
 
-        /* Formulário */
         .form-container {
             width: 100%;
-            max-width: 500px;
-            background-color: rgb(11, 173, 38);
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-            text-align: center;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
         }
 
         h2 {
-            color: white;
-            text-shadow: 0.0625rem 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
+            text-align: center;
             margin-bottom: 20px;
         }
 
         label {
             display: block;
-            font-weight: bold;
-            color: white;
-            margin: 10px 0 5px;
-            text-align: left;
-        }
-
-        input[type="text"], input[type="date"], select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: white;
-            color: black;
-        }
-
-        /* Botões */
-        button, .back-button {
-            background-color: #007BFF;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            margin-bottom: 10px;
             font-size: 16px;
+        }
+
+        input, select, button {
             width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: var(--primary-bg);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
             transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: rgb(33, 52, 101);
+        }
+
+        a {
+            display: inline-block;
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 12px;
+            background-color: var(--primary-bg);
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: rgb(33, 52, 101);
+        }
+
+        /* Ajuste para o botão voltar */
+        .form-container a[href="{% url 'turmas' %}"] {
+            display: flex;
+            justify-content: center; /* Centraliza o botão */
+            margin-top: 20px;
+            background-color: white;
+            color: var(--primary-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
             text-align: center;
             text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        button:hover, .back-button:hover {
-            background-color: #0056b3;
+        .form-container a[href="{% url 'turmas' %}"]:hover {
+            background-color: #f1faee;
+            color: var(--primary-bg);
         }
 
-        .back-button {
-            width: auto;
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
 
         /* Responsividade */
         @media screen and (max-width: 768px) {
