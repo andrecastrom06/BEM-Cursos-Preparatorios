@@ -7,6 +7,9 @@ from django.core.exceptions import ValidationError
 from datetime import date
 class TurmaMediator:
     @staticmethod
+    def obter_turma_especifica(turma_id):
+        return Turma.objects.get(id=turma_id)
+    @staticmethod
     def obter_turmas():
         return Turma.objects.all()
     

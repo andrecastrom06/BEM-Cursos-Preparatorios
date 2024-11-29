@@ -129,9 +129,6 @@
             text-align: center;
             padding: 15px;
             font-weight: bold;
-            border-right: 2px solid #8c8c8c;
-            border-left: 2px solid #8c8c8c;
-            border-bottom: 2px solid #8c8c8c;
         }
 
         th {
@@ -260,6 +257,23 @@
         </table>
         <br>
         <button onclick="window.history.back()" class="voltar-botao">Voltar</button>
+        
+        <br><br>
+        {% if aluno.is_ver_geral %}
+        
+        <div style="text-align: center; margin-bottom: 20px;">
+            <label for="ordenar" style="font-size: 16px; color: rgb(0, 0, 0);">Ordenar por:</label>
+            <select id="ordenar" name="ordenar" 
+                    style="padding: 8px; font-size: 16px; border-radius: 5px; border: none; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);"
+                    onchange="location = this.value;">
+                
+                <option value="">Selecione um filtro de ranking</option>
+                <option value="{% url 'ranking_geral_responsavel' simulado.id %}">Ranking Geral</option>
+                <option value="{% url 'ranking_turma_responsavel' simulado.id %}">Ranking Por Turma</option>
+            </select>
+        </div>
+
+        {% endif %}
     </div>
 </body>
 </html>

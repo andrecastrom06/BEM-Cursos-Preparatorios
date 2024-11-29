@@ -90,8 +90,10 @@ class AlunoView(LoginRequiredMixin, View):
         if request.path.endswith('adicionar/'):
             return render(request, self.template_name_add, {'turma_id': turma_id})
         elif turma_id:
+            # Buscar a turma pelo ID para pegar o nome
+            turma = TurmaMediator.obter_turma_especifica(turma_id)
             alunos = AlunoMediator.listar_alunos(turma_id)
-            return render(request, self.template_name_list, {'alunos': alunos, 'turma_id': turma_id})
+            return render(request, self.template_name_list, {'alunos': alunos, 'turma_id': turma_id, 'turma_nome': turma.nome})
         else:
             return redirect('turmas')
 
