@@ -230,6 +230,8 @@
             <select id="ordenar" name="ordenar" 
                     style="padding: 8px; font-size: 16px; border-radius: 5px; border: none; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);"
                     onchange="location = this.value;">
+                
+                <option value="">Selecione um filtro de ranking</option>
                 <option value="{% url 'ranking' simulado.id %}">Ranking Geral</option>
                 <option value="{% url 'ranking_turma' simulado.id %}">Ranking Por Turma</option>
                 <option value="{% url 'ranking_matematica' simulado.id %}">Nota de Matemática</option>
